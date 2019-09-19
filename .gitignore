@@ -1,0 +1,20 @@
+# directories
+.pytest_cache/
+__pycache__/
+trash/
+__enercore_cache__/
+.ipynb_checkpoints/
+*/.ipynb_checkpoints/
+.idea/
+.eggs/
+
+# file types to ignore
+*.pyc
+*.egg-info
+*.png
+*.log
+*.orig
+
+# temporary office files
+~$*.xls*
+*.xlk
