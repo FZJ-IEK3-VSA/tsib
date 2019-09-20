@@ -1,0 +1,520 @@
+Raw
+Aach, Hegau 78267 11 –14 3,0
+Aachen 52062* 5 –12 8,1
+Aalen, Württ. 73430* 13 –16 7,9
+Ahlen, Westf. 59227* 5 –12 8,1
+Ahrensberg 38707 3 –12 8,5
+Altena, Westf. 58762 6 –12 6,8
+Alzey 55232 6 –12 6,8
+Amberg, Oberpf. 92224 13 –16 7,9
+Andernach 56626 7 –12 8,8
+Anklam 17389 4 –12 9,5
+Annaberg-Buchholz 09456 11 –16 3,0
+Ansbach, Mittelfr. 91522 13 –16 7,9
+Apolda 99510 9 –14 7,9
+Arnsberg 59821 6 –12 6,8
+Arnstadt 99310 9 –14 7,9
+Aschaffenburg 63741* 6 –12 6,8
+Aschersleben, Sachs.-Anh. 06449 4 –14 9,5
+Aue 08280 10 –16 6,3
+Auerbach/Vogtl. 08209 10 –16 6,3
+Augsburg 86150* 13 –14 7,9
+Aulendorf, Württ. 88326 13 –16 7,9
+Backnang 71522 12 –12 10,2
+Baden-Baden 76530* 12 –12 10,2
+Badenweiler 79410 12 –14 10,2
+Bamberg 96047* 13 –16 7,9
+Bautzen 02625 10 –16 6,3
+Bayreuth 95444 13 –16 7,9
+Beckum, Westf. 59269 5 –12 8,1
+Beerfelden, Odenw. 64743 6 –14 6,8
+Bensberg b. Bergisch Gladb. 51429 5 –12 8,1
+Bensheim (Bensheim-Auerbach) 64625 12 –10 10,2
+Berchtesgaden 83471 15 –16 6,8
+Bergen/Rügen 18528 2 –10 8,4
+Bergisch-Gladbach 51427* 6 –12 6,8
+Bergzabern, Bad 76887 6 –12 6,8
+Berlin 10117* 4 –14 9,5
+Bernau b. Berlin 16321 4 –14 9,5
+Bernburg/Saale 06406 4 –14 9,5
+Bernkastel-Kues 54470 7 –10 8,8
+Berus, Überherrn 66802 6 –12 6,8
+Biberach, Riss 88400 13 –16 7,9
+Biedenkopf 35216 7 –12 8,8
+Bielefeld 33602* 6 –12 6,8
+Bingen, Rhein 55411 12 –12 10,2
+Birkenfeld, Nahe 55765 6 –14 6,8
+Bitterfeld 06749 4 –14 9,5
+Blankenburg/Harz 38889 3 –14 8,5
+Blankenrath 56865 7 –14 8,8
+Bocholt 46395* 5 –10 8,1
+Bochum 44787* 5 –10 8,1
+Bockum-Hövel 59075 5 –12 8,1
+Böblingen 71034 12 –14 10,2
+Bonn 53111* 5 –10 8,1
+Borkum 26757 1 –10 9,0
+Borna b. Leipzig 04552 4 –14 9,5
+Bottenweiler, Post Zumhaus (Wörnitz) 06571 4 –16 9,5
+Bottrop 46236* 5 –10 8,1
+Brandenburg/Havel 14770* 4 –14 9,5
+Braunschweig 38100* 3 –14 8,5
+Bremen 28195* 3 –12 8,5
+Bremerhaven 27568* 1 –10 9,0
+Bremervörde 27432 3 –12 8,5
+Brilon 59929 6 –14 6,8
+Brockel, Kr. Rotenburg 27386 3 –16 8,5
+Bruchsal 76646 12 –12 10,2
+Brühl, Rheinl. 50321 5 –10 8,1
+Buchen, Odenw. 74722 13 –14 7,9
+Burg b. Magdeburg 39288 4 –14 9,5
+Burghaslach 96152 13 –16 7,9
+Castrop-Rauxel 44575* 5 –10 8,1
+Celle 29221* 3 –12 8,5
+Chemnitz 09111* 9 –14 7,9
+Clausthal-Zellerfeld 38674* 6 –14 6,8
+Coburg 96450 13 –14 7,9
+Coesfeld 48653 5 –10 8,1
+Coswig 06869 4 –14 9,5
+Cottbus 03042* 4 –16 9,5
+Crailsheim 74564 13 –16 7,9
+Crimmitschau 08451 10 –14 6,3
+Cuxhaven 27472* 1 –10 9,0
+Dachau 85221 13 –16 7,9
+Darmstadt 64283* 12 –12 10,2
+Datteln 45711 5 –12 8,1
+Delitzsch 04509 4 –14 9,5
+Delmenhorst 27749* 3 –12 8,5
+Dessau 06842* 4 –14 9,5
+Detmold 32756* 6 –12 6,8
+Dillenburg 35683* 10 –12 6,3
+Dillingen, Donau 89407 13 –16 7,9
+Dinslaken 46539 5 –10 8,1
+Döbeln 04720 4 –14 9,5
+Dorsten 46282* 5 –10 8,1
+Dortmund 44135* 5 –12 8,1
+Dresden 01067* 4 –14 9,5
+Dudweiler, Saar 66125 6 –12 6,8
+Dülken 41751 5 –10 8,1
+Dülmen 48249 5 –12 8,1
+Düren 52349* 5 –12 8,1
+Düsseldorf 40210* 5 –10 8,1
+Duisburg 47051* 5 –10 8,1
+Eberswalde-Finow 16225* 4 –14 9,5
+Ebingen (Albstadt) 72458 14 –18 6,8
+Eckernförde 24340 2 –10 8,4
+Edewechterdamm (Friesoythe) 26169 1 –12 9,0
+Eilenburg 04838 4 –14 9,5
+Einbeck 37574 7 –16 8,8
+Eisenach 99817 7 –16 8,8
+Eisenhüttenstadt 15890 4 –16 9,5
+Eisleben 06295 4 –14 9,5
+Ellwangen, Jagst 73479 13 –16 7,9
+Elmshorn 25335* 1 –12 9,0
+Elsdorf, Rheinl. 50189 5 –12 8,1
+Emden 26721* 1 –10 9,0
+Ems, Bad 56130 5 –12 8,1
+Emsdetten 48282 5 –12 8,1
+Engelskirchen 51766 6 –10 6,8
+Ennepetal 58256 6 –12 6,8
+Erfurt 99084* 9 –14 7,9
+Erlangen 91052* 13 –16 7,9
+Eschwege 37269 8 –14 6,0
+Eschweiler, Rheinl. 52249 5 –12 8,1
+Essen 45127* 5 –10 8,1
+Esslingen am Neckar 73728* 13 –14 7,9
+Ettlingen 76275 12 –12 10,2
+Euskirchen 53879* 5 –12 8,1
+Eutin 23701 3 –10 8,5
+Falkensee 14612 4 –14 9,5
+Feldberg, Schwarzwald 79868 11 –18 3,0
+Feldberg (Schmitten = Taunus) 61389 10 –16 6,3
+Fellbach, Württ. 70734* 12 –12 10,2
+Fichtelberg, Oberfr. 95686 10 –16 6,3
+Finsterwalde 03238 4 –16 9,5
+Flensburg 24937 3 –10 8,5
+Forchheim, Oberfr. 91301 10 –16 6,3
+Forst/Lausitz 03149 4 –16 9,5
+Frankenthal, Pfalz 67227 12 –12 10,2
+Frankfurt/Main 60311* 12 –12 10,2
+Frankfurt/Oder 15230* 4 –16 9,5
+Frechen 50226 5 –10 8,1
+Freiberg 09599 10 –16 6,3
+Freiburg i. Br. 79100* 12 –12 10,2
+Freising 85354* 13 –16 7,9
+Freital 01705* 5 –14 8,1
+Freudenstadt 72250 14 –16 6,8
+Friedrichshafen 88045* 13 –12 7,9
+Fürstenfeldbruck 82256 13 –16 7,9
+Fürstenwalde/Spree 15517 4 –14 9,5
+Fürth, Bay 90762* 13 –16 7,9
+Fulda 36037* 7 –14 8,8
+Garmisch-Partenkirchen 82467 15 –18 6,8
+Geesthacht 21502 3 –12 8,5
+Geislingen, Steige 73312 14 –16 6,8
+Gelnhausen 63571 6 –12 6,8
+Gelsenkirchen 45881* 5 –10 8,1
+Gera 07545* 9 –14 7,9
+Gerlachsheim (LaudaKönigshofen, Baden) 97922 13 –14 7,9
+Gevelsberg 58285 6 –12 6,8
+Gießen 35390* 10 –12 6,3
+Gifhorn 38518 3 –14 8,5
+Gilserberg 34630 7 –14 8,8
+Gladbeck, Westf. 45964* 5 –10 8,1
+Glauchau 08371 10 –14 6,3
+Glückstadt 25348 1 –10 9,0
+Göppingen 73033* 13 –14 7,9
+Görlitz 02826* 9 –16 7,9
+Gössweinstein 91327 13 –16 7,9
+Gotha 99867 7 –14 8,8
+Göttingen 37073* 7 –16 8,8
+Goslar 38640* 3 –14 8,5
+Greifswald 17489* 2 –12 8,4
+Greiz 07973 9 –16 7,9
+Greven, Westf. 48268 5 –12 8,1
+Grevenbroich 41515* 5 –10 8,1
+Gronau, Westf. 48599 5 –10 8,1
+Großenhain 01558 4 –16 9,5
+Gschwend b. Gaildorf 74417 13 –16 7,9
+Guben 03172 4 –16 9,5
+Gummersbach 51643 6 –12 6,8
+Güstrow 18273 4 –12 9,5
+Gütersloh 33330* 6 –12 6,8
+Hagen 58091* 5 –12 8,1
+Halberstadt 38820 3 –14 8,5
+Haldensleben 39340 4 –14 9,5
+Halle/Saale 06108* 4 –14 9,5
+Hamburg 20144* 3 –12 8,5
+Hameln 31785* 3 –12 8,5
+Hamm, Westf. 59063* 5 –12 8,1
+Hanau 63450* 10 –12 6,3
+Hannover 30159* 3 –14 8,5
+Harzburg, Bad 38667 6 –14 6,8
+Hattingen, Ruhr 45525* 5 –12 8,1
+Hauptschwenda (Neukirchen, Knüllgeb.) 34626 7 –14 8,8
+Heide, Holst. 25746 1 –10 9,0
+Heidelberg 69115* 12 –10 10,2
+Heidenau 01809 4 –14 9,5
+Heidenheim, Brenz 89518* 14 –16 6,8
+Heilbronn 74072* 12 –12 10,2
+Heiligenhaus b. Velbert 42579 5 –12 8,1
+Helmstedt 38350 3 –14 8,5
+Hemer 58675 6 –12 6,8
+Hennigsdorf b. Berlin 16761 4 –14 8,5
+Herchenhain 36355 7 –14 8,8
+Herford 32049* 6 –12 6,8
+Herleshausen 37293 7 –14 8,8
+Herne 44623* 5 –10 8,1
+Herrenalb, Bad 76332 12 –14 10,2
+Hersfeld, Bad 36251 7 –14 8,8
+Herten, Westf. 45699* 5 –10 8,1
+Hettstedt 06333 4 –14 9,5
+Hilden 40721* 5 –10 8,1
+Hildesheim 31134* 3 –14 8,5
+Höchenschwand 79862 6 –16 6,8
+Höllenstein (Post Degerndorf am Inn) 83098 15 –18 6,8
+Hof, Saale 95030* 11 –18 3,0
+Hofheim, Unterfr. 97461 13 –14 7,9
+Hohenlimburg 58119 6 –12 6,8
+Hohenpeissenberg 82383 13 –16 7,9
+Holzminden 37603 7 –12 8,8
+Homberg, Niederrh. 47198 5 –10 8,1
+Homburg, Bad 61348 10 –12 6,3
+Homburg, Saar 66424 6 –12 6,8
+Hoyerswerda 02977 4 –16 9,5
+Hückelhoven 41836 5 –10 8,1
+Hürth 50354 5 –10 8,1
+Husum, Nordsee 25813 1 –10 9,0
+Ibbenbüren 49477* 5 –12 8,1
+Idar-Oberstein 55743 6 –12 6,8
+Ilmenau 98693 13 –16 7,9
+Ingolstadt 85049* 13 –16 7,9
+Inselsberg 98599 10 –16 6,3
+Iserlohn 58638* 6 –12 6,8
+Itzehoe 25524 1 –12 9,0
+Jena 07743 9 –14 7,9
+Kahl am Main 63796 12 –12 10,2
+Kaiserslautern 67655* 6 –12 6,8
+Kamen, Westf. 59174 5 –12 8,1
+Kamenz 01917 4 –16 9,5
+Kamp-Lintford 47475 5 –10 8,1
+Karlshuld 86668 13 –16 7,9
+Karlsruhe 76131* 12 –12 10,2
+Kassel 34117* 7 –12 8,8
+Kaufbeuren 87600 15 –16 6,8
+Kempten, Allgäu 87435 15 –16 6,8
+Kiel 24103* 2 –10 8,4
+Kirchheim, Teck 73230 6 –16 6,8
+Kissingen, Bad 97688 13 –14 7,9
+Kleve, Niederrhein 47533 5 –10 8,1
+Klippeneck (Denkingen, Württ.) 78588 11 –16 3,0
+Koblenz 56068* 5 –12 8,1
+Kohlgrub, Bad 82433 15 –16 6,8
+Köln 50667* 5 –10 8,1
+Königstein, Taunus 61462 10 –12 6,3
+Königs Wusterhausen 15711 4 –14 9,5
+Konstanz 78464* 13 –12 7,9
+Kornwestheim 70806 12 –12 10,2
+Köthen/Anhalt 06366 4 –14 9,5
+Krefeld 47798* 5 –10 8,1
+Kreuznach, Bad 55543* 12 –12 10,2
+Kronach 96317 13 –16 7,9
+Kulmbach 95326 13 –16 7,9
+Künzelsau 74653 13 –14 7,9
+Lahr, Schwarzwald 77933 12 –12 10,2
+Lampertheim, Hessen 68623 12 –12 10,2
+Landau, Pfalz 76829 6 –12 6,8
+Landshut, Bay 84028* 13 –16 7,9
+Langen, Hessen 63225 6 –12 6,8
+Langenfeld, Rheinl. 40764 5 –10 8,1
+Langenhagen, Ha. 37115 3 –14 8,5
+Langeoog 26465 1 –10 9,0
+Lauchhammer 01979 4 –16 9,5
+Leer, Ostfriesland 26789 3 –10 8,5
+Lehrte 31275 3 –14 8,5
+Leipzig 04103* 4 –14 8,7
+Lemgo 32657 6 –12 6,8
+Lengerich, Westf. 49525 3 –12 8,5
+Leonberg, Württ. 71229 6 –12 6,8
+Letmathe 58642 6 –12 6,8
+Leverkusen 51371* 5 –10 8,1
+Limbach-Oberfrohna 09212 10 –14 6,3
+Lindau, Bodensee 88131 13 –12 7,9
+Lingen, Ems 49808* 5 –10 8,1
+Lippstadt 59555* 6 –12 6,8
+List auf Sylt 25992 1 –10 9,0
+Löbau 02708 9 –16 7,9
+Lörrach 79539* 12 –12 10,2
+Lorch, Rheingau 65391 7 –12 8,8
+Lübbenau/Spreewald 03222 4 –16 9,5
+Lübeck 23552* 2 –10 8,4
+Luckenwalde 14943 4 –14 9,5
+Lüdenscheid 58507* 6 –12 6,8
+Ludwigsburg, Württ. 71634* 12 –12 10,2
+Ludwigsfelde 14974 4 –14 9,5
+Ludwigshafen am Rhein 67059* 12 –12 10,2
+Lüneburg 21335* 3 –12 8,5
+Lünen 44532* 5 –12 8,1
+Mainz 55116* 12 –12 10,2
+Magdeburg 39104* 4 –14 9,5
+Mannheim 68159* 12 –12 10,2
+Marburg, Lahn 35037* 7 –12 8,8
+Markkleeberg 04416 4 –14 9,5
+Marl 45768* 5 –10 8,1
+Meerane 08393 9 –14 7,9
+Meersburg, Bodensee 88709 13 –12 7,9
+Meiningen 98617 13 –16 7,9
+Meißen 01662 4 –14 9,5
+Memmingen 87700 13 –16 7,9
+Menden, Sauerland 58706* 6 –12 6,8
+Mengen, Baden 79227 12 –14 10,2
+Merklingen Kr. Leonberg (Weil der Stadt) 71263 6 –16 6,8
+Merseburg/Saale 06217 4 –14 9,5
+Metten, Niederbay 94526 10 –18 6,3
+Mettmann 40822 5 –12 8,1
+Minden, Westf. 32423* 5 –12 8,1
+Mittelberg b. Oy 87466 15 –18 6,8
+Mittenwald 82481 15 –16 6,8
+Mittweida 09648 9 –14 7,9
+Mönchengladbach 41061* 5 –10 8,1
+Moers 47441* 5 –10 8,1
+Monheim, Rheinl. 40789 5 –10 8,1
+Mühlhausen 99974 8 –14 6,0
+Mühlheim, Ruhr 45478 5 –10 8,1
+München 80331* 13 –16 7,9
+Münsingen, Württ. 72525 14 –16 6,8
+Münster, Westf. 48143* 5 –12 8,1
+Nauheim, Bad 61231 10 –14 6,3
+Naumburg 34311 7 –14 8,8
+Neheim-Hüsten 59755* 6 –12 6,8
+Neubrandenburg 17033* 4 –14 9,5
+Neu-Isenburg 63263 12 –12 10,2
+Neukirchen–Vluyn 47506 5 –10 8,1
+Neuland, Kr. Stade (NeulandWaterneversdorf) 21710 1 –10 9,0
+Neumünster 24534* 3 –12 8,5
+Neunkirchen, Saar 66538* 6 –12 6,8
+Neuruppin 16816 4 –14 9,5
+Neuss 41460* 5 –10 8,1
+Neustadt, Weinstraße 67433* 12 –10 10,2
+Neustrelitz 17235 4 –14 9,5
+Neu-Ulm 89231* 13 –14 7,9
+Neuwied 56564* 5 –12 8,1
+Nienburg, Weser 31582 3 –12 8,5
+Nordenham 26954 1 –10 9,0
+Norderney 26548 1 –10 9,0
+Nordhausen 99734 9 –14 7,9
+Nordhorn 48527* 5 –10 8,1
+Nördlingen 86270 13 –16 7,9
+Nürburg 53520 6 –14 6,8
+Nürnberg 90402* 13 –16 7,9
+Nürtingen 72622 6 –14 6,8
+Oberaudorf 83080 15 –18 6,8
+Oberhausen, Rheinland 46045* 5 –10 8,1
+Oberrotweil 79235 12 –12 10,2
+Oberstdorf 87561 15 –20 6,8
+Oberursel, Taunus 61440 10 –12 6,3
+Oberviechtach 92526 10 –16 6,3
+Oberwiesenthal 09484 11 –18 3,0
+Öhringen 74613 13 –14 7,9
+Oer-Erkenschwick 45739 5 –10 8,1
+Offenbach, Main 63065* 12 –12 10,2
+Offenburg 77652* 12 –12 10,2
+Oldenburg, Oldb. 26121* 3 –10 8,5
+Oranienburg 16515 4 –14 9,5
+Oschatz 04758 4 –14 9,5
+Osnabrück 49074* 5 –12 8,1
+Paderborn 33098* 5 –12 8,1
+Parchim 19370 4 –14 8,1
+Parsberg, Oberfr. 92331 13 –16 7,9
+Passau 94032* 13 –14 7,9
+Peine 31224* 3 –14 8,7
+Pforzheim 75172* 6 –12 6,8
+Pinneberg 25421 1 –12 9,0
+Pirmasens 66953* 6 –12 6,8
+Pirna 01796 10 –14 6,3
+Plauen 08523* 10 –16 6,3
+Plettenberg 58840 6 –12 6,8
+Pommelsbrunn 91224 13 –14 7,9
+Porz 50668 5 –10 8,1
+Potsdam 14467* 4 –14 9,5
+Prenzlau 17291 4 –14 9,5
+Quedlinburg 06484 4 –14 9,5
+Quickborn (Ditmarschen) 25712 3 –12 8,5
+Radebeul 01445 4 –14 9,5
+Radevormwald 42477 6 –12 6,8
+Rastatt 76437 12 –12 10,2
+Rathenow 14712 4 –14 9,5
+Ratingen 40878* 5 –10 8,1
+Ravensburg 88212* 13 –14 7,9
+Recklinghausen 45657* 5 –10 8,1
+Regensburg 93047* 13 –16 7,9
+Reichenbach/Vogtl. 08468 10 –16 6,3
+Remscheid 42853* 6 –12 6,8
+Rendsburg 24768 3 –10 8,5
+Reutlingen 72760* 6 –16 6,8
+Rheine 48429* 5 –12 8,1
+Rheinhausen, Niederrh. 79365 12 –10 10,2
+Rheydt 41199 5 –10 8,1
+Riesa 01587* 4 –16 9,5
+Rodenkirchen 50668 5 –10 8,1
+Rötgen, Eifel 52159 6 –12 6,8
+Rosenheim, Oberbay 83022* 13 –16 7,9
+Rostock 18055* 2 –10 8,4
+Rothenburg ob der Tauber 91541 13 –14 7,9
+Rudolstadt 07407 10 –14 6,3
+Rüsselsheim 65428 6 –12 6,8
+Saalfeld/Saale 07318 10 –14 6,3
+Saarbrücken 66111* 6 –12 6,8
+Saarlouis 66740 6 –12 6,8
+Salzgitter 38226* 3 –14 8,5
+Salzungen, Bad 36433 7 –16 8,8
+Salzwedel 29410 4 –14 9,5
+Sangerhausen 06526 4 –14 9,5
+St. Blasien 79837 6 –16 6,8
+St. Ingert 66386 6 –12 6,8
+Schleswig 24837 3 –10 8,5
+Schneeberg 08289 10 –16 6,3
+Schömberg Kr. Freudenstadt (Loßburg) 72290 6 –14 6,8
+Schönebeck/Elbe 39218 4 –14 9,5
+Schopfloch 91626 13 –16 7,9
+Schorndorf, Württ. 73614 13 –16 7,9
+Schotten, Hess. 63679 7 –12 8,8
+Schwabach, Mittelfr. 91126 13 –16 7,9
+Schwäbisch Gmünd 73525* 13 –16 7,9
+Schwäbisch Hall 74523 13 –16 7,9
+Schwarzenberg/Erzgeb. 08340 10 –16 6,3
+Schwedt/Oder 16303 4 –16 9,5
+Schweinfurt 97421* 13 –14 7,9
+Schwelm 58332 6 –12 6,8
+Schwenningen, Neckar 78048 8 –16 6,0
+Schwerin 19053* 4 –12 9,5
+Schwerte, Ruhr 58239 5 –12 8,1
+Segeberg, Bad 23795 3 –10 8,5
+Selb 95100 10 –18 6,3
+Senftenberg 01968 4 –16 9,5
+Siegburg 53721 5 –12 8,1
+Siegen 57072* 6 –12 6,8
+Sigmaringen 72488 14 –14 6,8
+Sindelfingen 71063* 6 –14 6,8
+Singen, Hohentwiel 78224 13 –14 7,9
+Soest, Westf. 59494 5 –12 8,1
+Solingen 42651* 6 –12 6,8
+Soltau 29614 4 –12 9,5
+Sömmerda 99610 9 –14 7,9
+Sondershausen 99706 9 –14 7,9
+Sonneberg 08355 10 –16 6,3
+Speyer 67346 12 –12 10,2
+Spremberg 02742 9 –16 7,9
+Stade 21680 3 –10 8,5
+Staßfurt 39418* 4 –14 9,5
+Stendal 39576 4 –14 9,5
+Stolberg, Rheinl. 52222* 5 –12 8,1
+Stralsund 18437* 2 –10 8,4
+Straubing 94315 11 –18 3,0
+Strausberg 15344 4 –14 9,5
+Stuttgart 70173* 12 –12 10,2
+Suhl 98527* 10 –16 6,3
+Sulzbach, Saar 66280 6 –12 6,8
+Tölz, Bad 83646 15 –18 6,8
+Torgau 04860 4 –16 9,5
+Trier 54290* 7 –10 8,8
+Tübingen 72070* 6 –16 6,8
+Tuttlingen 78532 11 –16 3,0
+Übach–Palenberg 52531 5 –12 8,1
+Uelzen 29525 4 –14 9,5
+Ulm, Donau 89073* 13 –14 7,9
+Unna 59423* 5 –12 8,1
+Velbert 42549* 5 –12 8,1
+Viernheim 68519 12 –12 10,2
+Viersen 41747* 5 –10 8,1
+Villingen, Schwarzwald 78048* 8 –16 6,0
+Völklingen, Saar 66333 6 –12 6,8
+Voerde, Niederrh. 46562 5 –10 8,1
+Waiblingen 71332* 12 –12 10,2
+Waldeck, Hess 34513 7 –14 8,8
+Waltrop 45731 5 –12 8,1
+Wanne-Eickel 44649 5 –10 8,1
+Waren 17192 4 –12 9,5
+Wasserburg a. Inn 83512 13 –16 7,9
+Wasserkuppe 36163 7 –16 8,8
+Wattenscheid 44866 5 –10 8,1
+Wedel, Holstein 22880 1 –10 9,0
+Weiden, Oberpf. 92637 10 –16 6,3
+Weilburg 35781 10 –12 6,3
+Weimar 99423* 9 –14 7,9
+Weinheim, Bergstraße 69469 6 –10 6,8
+Weissenburg in Bay 91781 13 –16 7,9
+Weißenfels 06667 4 –14 9,5
+Weißwasser 02943 4 –16 9,5
+Wendelstein 06642 4 –20 9,5
+Werdau 04886 4 –16 9,5
+Werdohl 58791 6 –12 6,8
+Wermelskirchen 42929 6 –12 6,8
+Werne a. d. Lippe 59368 6 –12 6,8
+Wernigerode 38855 6 –16 6,8
+Wertheim 97877 13 –14 7,9
+Wesel 46483* 5 –10 8,1
+Wesseling, Rheinl. 50389 5 –10 8,1
+Wetzlar 35578* 7 –12 8,8
+Wiesbaden 65183* 12 –10 10,2
+Wildbad 75323 6 –14 6,8
+Wilhelmshaven 26382* 1 –10 9,0
+Willingen, Upland 34508 7 –14 8,8
+Wismar 23966* 2 –10 8,4
+Witten 58452* 5 –12 8,1
+Wittenberg 06886 4 –14 9,5
+Wittenberge 19322 4 –14 9,5
+Witzenhausen 37213* 7 –14 8,8
+Wolfen 06766 4 –14 9,5
+Wolfenbüttel 38300* 3 –14 8,5
+Wolfsburg 38440* 3 –14 8,5
+Worms 67547 12 –12 10,2
+Wülfrath 42489 5 –12 8,1
+Wuppertal 42103* 6 –12 6,8
+Würselen 52146 5 –12 8,1
+Würzburg 97070* 13 –12 7,9
+Wurzen 04808 4 –14 9,5
+Zeitz 39249 4 –14 9,5
+Zerbst 39261 4 –14 9,5
+Zittau 02763 10 –16 6,3
+Zweibrücken 66487 6 –12 6,8
+Zwickau 08056 9 –14 7,9

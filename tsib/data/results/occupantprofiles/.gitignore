@@ -1,0 +1,7 @@
+# Ignore everything in this directory
+*
+# Except these files
+!.gitignore
+!OccupantActivityMFH.csv
+!OccupantActivitySFH.csv
+*.csv

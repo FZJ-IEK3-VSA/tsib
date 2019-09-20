@@ -11,7 +11,7 @@ import random
 
 import pandas as pd
 
-import tsib.5R1C.buildingmodel as bdg
+import tsib.thermal.buildingmodel as bdg
 import tsib.buildingconfig as cfg
 import tsib.timeseriesmanager as tsm
     
@@ -20,7 +20,7 @@ def test_heatload():
     starttime = time.time()
 
     # get raw building data set
-    buildingSet = pd.read_csv(os.path.join(bdg.DATA_PATH, 'buildingdata', 'IWU_wPersons.csv'),
+    buildingSet = pd.read_csv(os.path.join(bdg.DATA_PATH, 'IWU', 'IWU_wPersons.csv'),
                              header = 0, index_col = 0,)
 
     

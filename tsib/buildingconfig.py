@@ -12,7 +12,7 @@ import pandas as pd
 import numpy as np
 import multiprocessing as mp
 import tsib.timeseriesmanager as tsm
-from tsib.CREST.CREST import run_district_year, one_household_year
+from tsib.electric.CREST import run_district_year, one_household_year
 
 import warnings
 
@@ -206,7 +206,7 @@ class BuildingConfiguration(object):
         else:
             # get the iwu database
             self.iwu_bdg = pd.read_csv(
-                os.path.join(DATA_PATH, 'buildingdata', 'IWU_wPersons.csv'),
+                os.path.join(DATA_PATH, 'IWU', 'IWU_wPersons.csv'),
                 index_col=0)
 
             # call all functions which populate the building configurator

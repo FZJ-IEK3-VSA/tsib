@@ -1,0 +1,520 @@
+;Avg T;Min T;Climate Zone;PLZ;Place
+0;3,0;-14;11;78267;Aach, Hegau
+1;8,1;-12;5;52062;Aachen
+2;7,9;-16;13;73430;Aalen, Württ.
+3;8,1;-12;5;59227;Ahlen, Westf.
+4;8,5;-12;3;38707;Ahrensberg
+5;6,8;-12;6;58762;Altena, Westf.
+6;6,8;-12;6;55232;Alzey
+7;7,9;-16;13;92224;Amberg, Oberpf.
+8;8,8;-12;7;56626;Andernach
+9;9,5;-12;4;17389;Anklam
+10;3,0;-16;11;09456;Annaberg-Buchholz
+11;7,9;-16;13;91522;Ansbach, Mittelfr.
+12;7,9;-14;9;99510;Apolda
+13;6,8;-12;6;59821;Arnsberg
+14;7,9;-14;9;99310;Arnstadt
+15;6,8;-12;6;63741;Aschaffenburg
+16;9,5;-14;4;06449;Aschersleben, Sachs.-Anh.
+17;6,3;-16;10;08280;Aue
+18;6,3;-16;10;08209;Auerbach/Vogtl.
+19;7,9;-14;13;86150;Augsburg
+20;7,9;-16;13;88326;Aulendorf, Württ.
+21;10,2;-12;12;71522;Backnang
+22;10,2;-12;12;76530;Baden-Baden
+23;10,2;-14;12;79410;Badenweiler
+24;7,9;-16;13;96047;Bamberg
+25;6,3;-16;10;02625;Bautzen
+26;7,9;-16;13;95444;Bayreuth
+27;8,1;-12;5;59269;Beckum, Westf.
+28;6,8;-14;6;64743;Beerfelden, Odenw.
+29;8,1;-12;5;51429;Bensberg b. Bergisch Gladb.
+30;10,2;-10;12;64625;Bensheim (Bensheim-Auerbach)
+31;6,8;-16;15;83471;Berchtesgaden
+32;8,4;-10;2;18528;Bergen/Rügen
+33;6,8;-12;6;51427;Bergisch-Gladbach
+34;6,8;-12;6;76887;Bergzabern, Bad
+35;9,5;-14;4;10117;Berlin
+36;9,5;-14;4;16321;Bernau b. Berlin
+37;9,5;-14;4;06406;Bernburg/Saale
+38;8,8;-10;7;54470;Bernkastel-Kues
+39;6,8;-12;6;66802;Berus, Überherrn
+40;7,9;-16;13;88400;Biberach, Riss
+41;8,8;-12;7;35216;Biedenkopf
+42;6,8;-12;6;33602;Bielefeld
+43;10,2;-12;12;55411;Bingen, Rhein
+44;6,8;-14;6;55765;Birkenfeld, Nahe
+45;9,5;-14;4;06749;Bitterfeld
+46;8,5;-14;3;38889;Blankenburg/Harz
+47;8,8;-14;7;56865;Blankenrath
+48;8,1;-10;5;46395;Bocholt
+49;8,1;-10;5;44787;Bochum
+50;8,1;-12;5;59075;Bockum-Hövel
+51;10,2;-14;12;71034;Böblingen
+52;8,1;-10;5;53111;Bonn
+53;9,0;-10;1;26757;Borkum
+54;9,5;-14;4;04552;Borna b. Leipzig
+55;9,5;-16;4;06571;Bottenweiler, Post Zumhaus (Wörnitz)
+56;8,1;-10;5;46236;Bottrop
+57;9,5;-14;4;14770;Brandenburg/Havel
+58;8,5;-14;3;38100;Braunschweig
+59;8,5;-12;3;28195;Bremen
+60;9,0;-10;1;27568;Bremerhaven
+61;8,5;-12;3;27432;Bremervörde
+62;6,8;-14;6;59929;Brilon
+63;8,5;-16;3;27386;Brockel, Kr. Rotenburg
+64;10,2;-12;12;76646;Bruchsal
+65;8,1;-10;5;50321;Brühl, Rheinl.
+66;7,9;-14;13;74722;Buchen, Odenw.
+67;9,5;-14;4;39288;Burg b. Magdeburg
+68;7,9;-16;13;96152;Burghaslach
+69;8,1;-10;5;44575;Castrop-Rauxel
+70;8,5;-12;3;29221;Celle
+71;7,9;-14;9;09111;Chemnitz
+72;6,8;-14;6;38674;Clausthal-Zellerfeld
+73;7,9;-14;13;96450;Coburg
+74;8,1;-10;5;48653;Coesfeld
+75;9,5;-14;4;06869;Coswig
+76;9,5;-16;4;03042;Cottbus
+77;7,9;-16;13;74564;Crailsheim
+78;6,3;-14;10;08451;Crimmitschau
+79;9,0;-10;1;27472;Cuxhaven
+80;7,9;-16;13;85221;Dachau
+81;10,2;-12;12;64283;Darmstadt
+82;8,1;-12;5;45711;Datteln
+83;9,5;-14;4;04509;Delitzsch
+84;8,5;-12;3;27749;Delmenhorst
+85;9,5;-14;4;06842;Dessau
+86;6,8;-12;6;32756;Detmold
+87;6,3;-12;10;35683;Dillenburg
+88;7,9;-16;13;89407;Dillingen, Donau
+89;8,1;-10;5;46539;Dinslaken
+90;9,5;-14;4;04720;Döbeln
+91;8,1;-10;5;46282;Dorsten
+92;8,1;-12;5;44135;Dortmund
+93;9,5;-14;4;01067;Dresden
+94;6,8;-12;6;66125;Dudweiler, Saar
+95;8,1;-10;5;41751;Dülken
+96;8,1;-12;5;48249;Dülmen
+97;8,1;-12;5;52349;Düren
+98;8,1;-10;5;40210;Düsseldorf
+99;8,1;-10;5;47051;Duisburg
+100;9,5;-14;4;16225;Eberswalde-Finow
+101;6,8;-18;14;72458;Ebingen (Albstadt)
+102;8,4;-10;2;24340;Eckernförde
+103;9,0;-12;1;26169;Edewechterdamm (Friesoythe)
+104;9,5;-14;4;04838;Eilenburg
+105;8,8;-16;7;37574;Einbeck
+106;8,8;-16;7;99817;Eisenach
+107;9,5;-16;4;15890;Eisenhüttenstadt
+108;9,5;-14;4;06295;Eisleben
+109;7,9;-16;13;73479;Ellwangen, Jagst
+110;9,0;-12;1;25335;Elmshorn
+111;8,1;-12;5;50189;Elsdorf, Rheinl.
+112;9,0;-10;1;26721;Emden
+113;8,1;-12;5;56130;Ems, Bad
+114;8,1;-12;5;48282;Emsdetten
+115;6,8;-10;6;51766;Engelskirchen
+116;6,8;-12;6;58256;Ennepetal
+117;7,9;-14;9;99084;Erfurt
+118;7,9;-16;13;91052;Erlangen
+119;6,0;-14;8;37269;Eschwege
+120;8,1;-12;5;52249;Eschweiler, Rheinl.
+121;8,1;-10;5;45127;Essen
+122;7,9;-14;13;73728;Esslingen am Neckar
+123;10,2;-12;12;76275;Ettlingen
+124;8,1;-12;5;53879;Euskirchen
+125;8,5;-10;3;23701;Eutin
+126;9,5;-14;4;14612;Falkensee
+127;3,0;-18;11;79868;Feldberg, Schwarzwald
+128;6,3;-16;10;61389;Feldberg (Schmitten = Taunus)
+129;10,2;-12;12;70734;Fellbach, Württ.
+130;6,3;-16;10;95686;Fichtelberg, Oberfr.
+131;9,5;-16;4;03238;Finsterwalde
+132;8,5;-10;3;24937;Flensburg
+133;6,3;-16;10;91301;Forchheim, Oberfr.
+134;9,5;-16;4;03149;Forst/Lausitz
+135;10,2;-12;12;67227;Frankenthal, Pfalz
+136;10,2;-12;12;60311;Frankfurt/Main
+137;9,5;-16;4;15230;Frankfurt/Oder
+138;8,1;-10;5;50226;Frechen
+139;6,3;-16;10;09599;Freiberg
+140;10,2;-12;12;79100;Freiburg i. Br.
+141;7,9;-16;13;85354;Freising
+142;8,1;-14;5;01705;Freital
+143;6,8;-16;14;72250;Freudenstadt
+144;7,9;-12;13;88045;Friedrichshafen
+145;7,9;-16;13;82256;Fürstenfeldbruck
+146;9,5;-14;4;15517;Fürstenwalde/Spree
+147;7,9;-16;13;90762;Fürth, Bay
+148;8,8;-14;7;36037;Fulda
+149;6,8;-18;15;82467;Garmisch-Partenkirchen
+150;8,5;-12;3;21502;Geesthacht
+151;6,8;-16;14;73312;Geislingen, Steige
+152;6,8;-12;6;63571;Gelnhausen
+153;8,1;-10;5;45881;Gelsenkirchen
+154;7,9;-14;9;07545;Gera
+155;7,9;-14;13;97922;Gerlachsheim (LaudaKönigshofen, Baden)
+156;6,8;-12;6;58285;Gevelsberg
+157;6,3;-12;10;35390;Gießen
+158;8,5;-14;3;38518;Gifhorn
+159;8,8;-14;7;34630;Gilserberg
+160;8,1;-10;5;45964;Gladbeck, Westf.
+161;6,3;-14;10;08371;Glauchau
+162;9,0;-10;1;25348;Glückstadt
+163;7,9;-14;13;73033;Göppingen
+164;7,9;-16;9;02826;Görlitz
+165;7,9;-16;13;91327;Gössweinstein
+166;8,8;-14;7;99867;Gotha
+167;8,8;-16;7;37073;Göttingen
+168;8,5;-14;3;38640;Goslar
+169;8,4;-12;2;17489;Greifswald
+170;7,9;-16;9;07973;Greiz
+171;8,1;-12;5;48268;Greven, Westf.
+172;8,1;-10;5;41515;Grevenbroich
+173;8,1;-10;5;48599;Gronau, Westf.
+174;9,5;-16;4;01558;Großenhain
+175;7,9;-16;13;74417;Gschwend b. Gaildorf
+176;9,5;-16;4;03172;Guben
+177;6,8;-12;6;51643;Gummersbach
+178;9,5;-12;4;18273;Güstrow
+179;6,8;-12;6;33330;Gütersloh
+180;8,1;-12;5;58091;Hagen
+181;8,5;-14;3;38820;Halberstadt
+182;9,5;-14;4;39340;Haldensleben
+183;9,5;-14;4;06108;Halle/Saale
+184;8,5;-12;3;20144;Hamburg
+185;8,5;-12;3;31785;Hameln
+186;8,1;-12;5;59063;Hamm, Westf.
+187;6,3;-12;10;63450;Hanau
+188;8,5;-14;3;30159;Hannover
+189;6,8;-14;6;38667;Harzburg, Bad
+190;8,1;-12;5;45525;Hattingen, Ruhr
+191;8,8;-14;7;34626;Hauptschwenda (Neukirchen, Knüllgeb.)
+192;9,0;-10;1;25746;Heide, Holst.
+193;10,2;-10;12;69115;Heidelberg
+194;9,5;-14;4;01809;Heidenau
+195;6,8;-16;14;89518;Heidenheim, Brenz
+196;10,2;-12;12;74072;Heilbronn
+197;8,1;-12;5;42579;Heiligenhaus b. Velbert
+198;8,5;-14;3;38350;Helmstedt
+199;6,8;-12;6;58675;Hemer
+200;8,5;-14;4;16761;Hennigsdorf b. Berlin
+201;8,8;-14;7;36355;Herchenhain
+202;6,8;-12;6;32049;Herford
+203;8,8;-14;7;37293;Herleshausen
+204;8,1;-10;5;44623;Herne
+205;10,2;-14;12;76332;Herrenalb, Bad
+206;8,8;-14;7;36251;Hersfeld, Bad
+207;8,1;-10;5;45699;Herten, Westf.
+208;9,5;-14;4;06333;Hettstedt
+209;8,1;-10;5;40721;Hilden
+210;8,5;-14;3;31134;Hildesheim
+211;6,8;-16;6;79862;Höchenschwand
+212;6,8;-18;15;83098;Höllenstein (Post Degerndorf am Inn)
+213;3,0;-18;11;95030;Hof, Saale
+214;7,9;-14;13;97461;Hofheim, Unterfr.
+215;6,8;-12;6;58119;Hohenlimburg
+216;7,9;-16;13;82383;Hohenpeissenberg
+217;8,8;-12;7;37603;Holzminden
+218;8,1;-10;5;47198;Homberg, Niederrh.
+219;6,3;-12;10;61348;Homburg, Bad
+220;6,8;-12;6;66424;Homburg, Saar
+221;9,5;-16;4;02977;Hoyerswerda
+222;8,1;-10;5;41836;Hückelhoven
+223;8,1;-10;5;50354;Hürth
+224;9,0;-10;1;25813;Husum, Nordsee
+225;8,1;-12;5;49477;Ibbenbüren
+226;6,8;-12;6;55743;Idar-Oberstein
+227;7,9;-16;13;98693;Ilmenau
+228;7,9;-16;13;85049;Ingolstadt
+229;6,3;-16;10;98599;Inselsberg
+230;6,8;-12;6;58638;Iserlohn
+231;9,0;-12;1;25524;Itzehoe
+232;7,9;-14;9;07743;Jena
+233;10,2;-12;12;63796;Kahl am Main
+234;6,8;-12;6;67655;Kaiserslautern
+235;8,1;-12;5;59174;Kamen, Westf.
+236;9,5;-16;4;01917;Kamenz
+237;8,1;-10;5;47475;Kamp-Lintford
+238;7,9;-16;13;86668;Karlshuld
+239;10,2;-12;12;76131;Karlsruhe
+240;8,8;-12;7;34117;Kassel
+241;6,8;-16;15;87600;Kaufbeuren
+242;6,8;-16;15;87435;Kempten, Allgäu
+243;8,4;-10;2;24103;Kiel
+244;6,8;-16;6;73230;Kirchheim, Teck
+245;7,9;-14;13;97688;Kissingen, Bad
+246;8,1;-10;5;47533;Kleve, Niederrhein
+247;3,0;-16;11;78588;Klippeneck (Denkingen, Württ.)
+248;8,1;-12;5;56068;Koblenz
+249;6,8;-16;15;82433;Kohlgrub, Bad
+250;8,1;-10;5;50667;Köln
+251;6,3;-12;10;61462;Königstein, Taunus
+252;9,5;-14;4;15711;Königs Wusterhausen
+253;7,9;-12;13;78464;Konstanz
+254;10,2;-12;12;70806;Kornwestheim
+255;9,5;-14;4;06366;Köthen/Anhalt
+256;8,1;-10;5;47798;Krefeld
+257;10,2;-12;12;55543;Kreuznach, Bad
+258;7,9;-16;13;96317;Kronach
+259;7,9;-16;13;95326;Kulmbach
+260;7,9;-14;13;74653;Künzelsau
+261;10,2;-12;12;77933;Lahr, Schwarzwald
+262;10,2;-12;12;68623;Lampertheim, Hessen
+263;6,8;-12;6;76829;Landau, Pfalz
+264;7,9;-16;13;84028;Landshut, Bay
+265;6,8;-12;6;63225;Langen, Hessen
+266;8,1;-10;5;40764;Langenfeld, Rheinl.
+267;8,5;-14;3;37115;Langenhagen, Ha.
+268;9,0;-10;1;26465;Langeoog
+269;9,5;-16;4;01979;Lauchhammer
+270;8,5;-10;3;26789;Leer, Ostfriesland
+271;8,5;-14;3;31275;Lehrte
+272;8,7;-14;4;04103;Leipzig
+273;6,8;-12;6;32657;Lemgo
+274;8,5;-12;3;49525;Lengerich, Westf.
+275;6,8;-12;6;71229;Leonberg, Württ.
+276;6,8;-12;6;58642;Letmathe
+277;8,1;-10;5;51371;Leverkusen
+278;6,3;-14;10;09212;Limbach-Oberfrohna
+279;7,9;-12;13;88131;Lindau, Bodensee
+280;8,1;-10;5;49808;Lingen, Ems
+281;6,8;-12;6;59555;Lippstadt
+282;9,0;-10;1;25992;List auf Sylt
+283;7,9;-16;9;02708;Löbau
+284;10,2;-12;12;79539;Lörrach
+285;8,8;-12;7;65391;Lorch, Rheingau
+286;9,5;-16;4;03222;Lübbenau/Spreewald
+287;8,4;-10;2;23552;Lübeck
+288;9,5;-14;4;14943;Luckenwalde
+289;6,8;-12;6;58507;Lüdenscheid
+290;10,2;-12;12;71634;Ludwigsburg, Württ.
+291;9,5;-14;4;14974;Ludwigsfelde
+292;10,2;-12;12;67059;Ludwigshafen am Rhein
+293;8,5;-12;3;21335;Lüneburg
+294;8,1;-12;5;44532;Lünen
+295;10,2;-12;12;55116;Mainz
+296;9,5;-14;4;39104;Magdeburg
+297;10,2;-12;12;68159;Mannheim
+298;8,8;-12;7;35037;Marburg, Lahn
+299;9,5;-14;4;04416;Markkleeberg
+300;8,1;-10;5;45768;Marl
+301;7,9;-14;9;08393;Meerane
+302;7,9;-12;13;88709;Meersburg, Bodensee
+303;7,9;-16;13;98617;Meiningen
+304;9,5;-14;4;01662;Meißen
+305;7,9;-16;13;87700;Memmingen
+306;6,8;-12;6;58706;Menden, Sauerland
+307;10,2;-14;12;79227;Mengen, Baden
+308;6,8;-16;6;71263;Merklingen Kr. Leonberg (Weil der Stadt)
+309;9,5;-14;4;06217;Merseburg/Saale
+310;6,3;-18;10;94526;Metten, Niederbay
+311;8,1;-12;5;40822;Mettmann
+312;8,1;-12;5;32423;Minden, Westf.
+313;6,8;-18;15;87466;Mittelberg b. Oy
+314;6,8;-16;15;82481;Mittenwald
+315;7,9;-14;9;09648;Mittweida
+316;8,1;-10;5;41061;Mönchengladbach
+317;8,1;-10;5;47441;Moers
+318;8,1;-10;5;40789;Monheim, Rheinl.
+319;6,0;-14;8;99974;Mühlhausen
+320;8,1;-10;5;45478;Mühlheim, Ruhr
+321;7,9;-16;13;80331;München
+322;6,8;-16;14;72525;Münsingen, Württ.
+323;8,1;-12;5;48143;Münster, Westf.
+324;6,3;-14;10;61231;Nauheim, Bad
+325;8,8;-14;7;34311;Naumburg
+326;6,8;-12;6;59755;Neheim-Hüsten
+327;9,5;-14;4;17033;Neubrandenburg
+328;10,2;-12;12;63263;Neu-Isenburg
+329;8,1;-10;5;47506;Neukirchen–Vluyn
+330;9,0;-10;1;21710;Neuland, Kr. Stade (NeulandWaterneversdorf)
+331;8,5;-12;3;24534;Neumünster
+332;6,8;-12;6;66538;Neunkirchen, Saar
+333;9,5;-14;4;16816;Neuruppin
+334;8,1;-10;5;41460;Neuss
+335;10,2;-10;12;67433;Neustadt, Weinstraße
+336;9,5;-14;4;17235;Neustrelitz
+337;7,9;-14;13;89231;Neu-Ulm
+338;8,1;-12;5;56564;Neuwied
+339;8,5;-12;3;31582;Nienburg, Weser
+340;9,0;-10;1;26954;Nordenham
+341;9,0;-10;1;26548;Norderney
+342;7,9;-14;9;99734;Nordhausen
+343;8,1;-10;5;48527;Nordhorn
+344;7,9;-16;13;86270;Nördlingen
+345;6,8;-14;6;53520;Nürburg
+346;7,9;-16;13;90402;Nürnberg
+347;6,8;-14;6;72622;Nürtingen
+348;6,8;-18;15;83080;Oberaudorf
+349;8,1;-10;5;46045;Oberhausen, Rheinland
+350;10,2;-12;12;79235;Oberrotweil
+351;6,8;-20;15;87561;Oberstdorf
+352;6,3;-12;10;61440;Oberursel, Taunus
+353;6,3;-16;10;92526;Oberviechtach
+354;3,0;-18;11;09484;Oberwiesenthal
+355;7,9;-14;13;74613;Öhringen
+356;8,1;-10;5;45739;Oer-Erkenschwick
+357;10,2;-12;12;63065;Offenbach, Main
+358;10,2;-12;12;77652;Offenburg
+359;8,5;-10;3;26121;Oldenburg, Oldb.
+360;9,5;-14;4;16515;Oranienburg
+361;9,5;-14;4;04758;Oschatz
+362;8,1;-12;5;49074;Osnabrück
+363;8,1;-12;5;33098;Paderborn
+364;8,1;-14;4;19370;Parchim
+365;7,9;-16;13;92331;Parsberg, Oberfr.
+366;7,9;-14;13;94032;Passau
+367;8,7;-14;3;31224;Peine
+368;6,8;-12;6;75172;Pforzheim
+369;9,0;-12;1;25421;Pinneberg
+370;6,8;-12;6;66953;Pirmasens
+371;6,3;-14;10;01796;Pirna
+372;6,3;-16;10;08523;Plauen
+373;6,8;-12;6;58840;Plettenberg
+374;7,9;-14;13;91224;Pommelsbrunn
+375;8,1;-10;5;50668;Porz
+376;9,5;-14;4;14467;Potsdam
+377;9,5;-14;4;17291;Prenzlau
+378;9,5;-14;4;06484;Quedlinburg
+379;8,5;-12;3;25712;Quickborn (Ditmarschen)
+380;9,5;-14;4;01445;Radebeul
+381;6,8;-12;6;42477;Radevormwald
+382;10,2;-12;12;76437;Rastatt
+383;9,5;-14;4;14712;Rathenow
+384;8,1;-10;5;40878;Ratingen
+385;7,9;-14;13;88212;Ravensburg
+386;8,1;-10;5;45657;Recklinghausen
+387;7,9;-16;13;93047;Regensburg
+388;6,3;-16;10;08468;Reichenbach/Vogtl.
+389;6,8;-12;6;42853;Remscheid
+390;8,5;-10;3;24768;Rendsburg
+391;6,8;-16;6;72760;Reutlingen
+392;8,1;-12;5;48429;Rheine
+393;10,2;-10;12;79365;Rheinhausen, Niederrh.
+394;8,1;-10;5;41199;Rheydt
+395;9,5;-16;4;01587;Riesa
+396;8,1;-10;5;50668;Rodenkirchen
+397;6,8;-12;6;52159;Rötgen, Eifel
+398;7,9;-16;13;83022;Rosenheim, Oberbay
+399;8,4;-10;2;18055;Rostock
+400;7,9;-14;13;91541;Rothenburg ob der Tauber
+401;6,3;-14;10;07407;Rudolstadt
+402;6,8;-12;6;65428;Rüsselsheim
+403;6,3;-14;10;07318;Saalfeld/Saale
+404;6,8;-12;6;66111;Saarbrücken
+405;6,8;-12;6;66740;Saarlouis
+406;8,5;-14;3;38226;Salzgitter
+407;8,8;-16;7;36433;Salzungen, Bad
+408;9,5;-14;4;29410;Salzwedel
+409;9,5;-14;4;06526;Sangerhausen
+410;6,8;-16;6;79837;St. Blasien
+411;6,8;-12;6;66386;St. Ingert
+412;8,5;-10;3;24837;Schleswig
+413;6,3;-16;10;08289;Schneeberg
+414;6,8;-14;6;72290;Schömberg Kr. Freudenstadt (Loßburg)
+415;9,5;-14;4;39218;Schönebeck/Elbe
+416;7,9;-16;13;91626;Schopfloch
+417;7,9;-16;13;73614;Schorndorf, Württ.
+418;8,8;-12;7;63679;Schotten, Hess.
+419;7,9;-16;13;91126;Schwabach, Mittelfr.
+420;7,9;-16;13;73525;Schwäbisch Gmünd
+421;7,9;-16;13;74523;Schwäbisch Hall
+422;6,3;-16;10;08340;Schwarzenberg/Erzgeb.
+423;9,5;-16;4;16303;Schwedt/Oder
+424;7,9;-14;13;97421;Schweinfurt
+425;6,8;-12;6;58332;Schwelm
+426;6,0;-16;8;78048;Schwenningen, Neckar
+427;9,5;-12;4;19053;Schwerin
+428;8,1;-12;5;58239;Schwerte, Ruhr
+429;8,5;-10;3;23795;Segeberg, Bad
+430;6,3;-18;10;95100;Selb
+431;9,5;-16;4;01968;Senftenberg
+432;8,1;-12;5;53721;Siegburg
+433;6,8;-12;6;57072;Siegen
+434;6,8;-14;14;72488;Sigmaringen
+435;6,8;-14;6;71063;Sindelfingen
+436;7,9;-14;13;78224;Singen, Hohentwiel
+437;8,1;-12;5;59494;Soest, Westf.
+438;6,8;-12;6;42651;Solingen
+439;9,5;-12;4;29614;Soltau
+440;7,9;-14;9;99610;Sömmerda
+441;7,9;-14;9;99706;Sondershausen
+442;6,3;-16;10;08355;Sonneberg
+443;10,2;-12;12;67346;Speyer
+444;7,9;-16;9;02742;Spremberg
+445;8,5;-10;3;21680;Stade
+446;9,5;-14;4;39418;Staßfurt
+447;9,5;-14;4;39576;Stendal
+448;8,1;-12;5;52222;Stolberg, Rheinl.
+449;8,4;-10;2;18437;Stralsund
+450;3,0;-18;11;94315;Straubing
+451;9,5;-14;4;15344;Strausberg
+452;10,2;-12;12;70173;Stuttgart
+453;6,3;-16;10;98527;Suhl
+454;6,8;-12;6;66280;Sulzbach, Saar
+455;6,8;-18;15;83646;Tölz, Bad
+456;9,5;-16;4;04860;Torgau
+457;8,8;-10;7;54290;Trier
+458;6,8;-16;6;72070;Tübingen
+459;3,0;-16;11;78532;Tuttlingen
+460;8,1;-12;5;52531;Übach–Palenberg
+461;9,5;-14;4;29525;Uelzen
+462;7,9;-14;13;89073;Ulm, Donau
+463;8,1;-12;5;59423;Unna
+464;8,1;-12;5;42549;Velbert
+465;10,2;-12;12;68519;Viernheim
+466;8,1;-10;5;41747;Viersen
+467;6,0;-16;8;78048;Villingen, Schwarzwald
+468;6,8;-12;6;66333;Völklingen, Saar
+469;8,1;-10;5;46562;Voerde, Niederrh.
+470;10,2;-12;12;71332;Waiblingen
+471;8,8;-14;7;34513;Waldeck, Hess
+472;8,1;-12;5;45731;Waltrop
+473;8,1;-10;5;44649;Wanne-Eickel
+474;9,5;-12;4;17192;Waren
+475;7,9;-16;13;83512;Wasserburg a. Inn
+476;8,8;-16;7;36163;Wasserkuppe
+477;8,1;-10;5;44866;Wattenscheid
+478;9,0;-10;1;22880;Wedel, Holstein
+479;6,3;-16;10;92637;Weiden, Oberpf.
+480;6,3;-12;10;35781;Weilburg
+481;7,9;-14;9;99423;Weimar
+482;6,8;-10;6;69469;Weinheim, Bergstraße
+483;7,9;-16;13;91781;Weissenburg in Bay
+484;9,5;-14;4;06667;Weißenfels
+485;9,5;-16;4;02943;Weißwasser
+486;9,5;-20;4;06642;Wendelstein
+487;9,5;-16;4;04886;Werdau
+488;6,8;-12;6;58791;Werdohl
+489;6,8;-12;6;42929;Wermelskirchen
+490;6,8;-12;6;59368;Werne a. d. Lippe
+491;6,8;-16;6;38855;Wernigerode
+492;7,9;-14;13;97877;Wertheim
+493;8,1;-10;5;46483;Wesel
+494;8,1;-10;5;50389;Wesseling, Rheinl.
+495;8,8;-12;7;35578;Wetzlar
+496;10,2;-10;12;65183;Wiesbaden
+497;6,8;-14;6;75323;Wildbad
+498;9,0;-10;1;26382;Wilhelmshaven
+499;8,8;-14;7;34508;Willingen, Upland
+500;8,4;-10;2;23966;Wismar
+501;8,1;-12;5;58452;Witten
+502;9,5;-14;4;06886;Wittenberg
+503;9,5;-14;4;19322;Wittenberge
+504;8,8;-14;7;37213;Witzenhausen
+505;9,5;-14;4;06766;Wolfen
+506;8,5;-14;3;38300;Wolfenbüttel
+507;8,5;-14;3;38440;Wolfsburg
+508;10,2;-12;12;67547;Worms
+509;8,1;-12;5;42489;Wülfrath
+510;6,8;-12;6;42103;Wuppertal
+511;8,1;-12;5;52146;Würselen
+512;7,9;-12;13;97070;Würzburg
+513;9,5;-14;4;04808;Wurzen
+514;9,5;-14;4;39249;Zeitz
+515;9,5;-14;4;39261;Zerbst
+516;6,3;-16;10;02763;Zittau
+517;6,8;-12;6;66487;Zweibrücken
+518;7,9;-14;9;08056;Zwickau

@@ -1,4 +1,4 @@
 exclude .gitignore
 prune examples*
 prune static*
-recursive-include enerbuilding/data * 
+recursive-include tsib/data * 

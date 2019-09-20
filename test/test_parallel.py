@@ -3,7 +3,7 @@ import time
 
 import pandas as pd
 
-import tsib.CREST.CREST as CREST
+import tsib.electric.CREST as CREST
 
 def test_parallel():
     
