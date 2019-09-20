@@ -1,6 +1,6 @@
 [![Build Status](https://travis-ci.com/FZJ-IEK3-VSA/tsib.svg?branch=master)](https://travis-ci.com/FZJ-IEK3-VSA/tsib) [![Version](https://img.shields.io/pypi/v/tsib.svg)](https://pypi.python.org/pypi/tsib)
 
-<a href="https://www.fz-juelich.de/iek/iek-3/EN/Forschung/_Process-and-System-Analysis/_node.html"><img src="https://www.fz-juelich.de/SharedDocs/Bilder/INM/INM-1/EN/FZj_Logo.html" alt="Forschungszentrum Juelich Logo" width="230px"></a> 
+<a href="https://www.fz-juelich.de/iek/iek-3/EN/Forschung/_Process-and-System-Analysis/_node.html"><img src="https://www.fz-juelich.de/SharedDocs/Bilder/INM/INM-1/EN/FZj_Logo.jpg?__blob=normal" alt="Forschungszentrum Juelich Logo" width="230px"></a> 
 
 # tsib - Time Series Initialization for Buildings
 

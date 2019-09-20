@@ -8,7 +8,7 @@ import traceback
 
 
 def one_household_year(residents, year, **elp_kwargs):
-    '''
+    """
     Function to build an Electrical Profile for the given number of residents
     in the given year and run it for exactly one household.
     ---------------------------------------------------------------------------
@@ -23,16 +23,16 @@ def one_household_year(residents, year, **elp_kwargs):
     Returns:
         time_series as numpy array with the total electric energy consumption
         for one year with a minutewise resolution
-    '''
+    """
     data_ex_main = DataExchangeCsv()
-    elp = ElectricalLoadProfile(data_ex_main, residents,
-                                **elp_kwargs)
-        
+    elp = ElectricalLoadProfile(data_ex_main, residents, **elp_kwargs)
+
     result = elp.get_rescheduled_profiles(year)
     return result
-    
+
+
 def _run_household_year(queue, residents, year, work_seed, **elp_kwargs):
-    '''
+    """
     Parallel Worker Function to build an Electrical Profile for the given
     number of residents in the given year and run it. It is given a queue to
     save the result of different processes while multiprocessing.
@@ -50,24 +50,29 @@ def _run_household_year(queue, residents, year, work_seed, **elp_kwargs):
     ---------------------------------------------------------------------------
     Returns:
         Saved the time_series of one year inside the given queue
-    '''
-    try: 
+    """
+    try:
         np.random.seed(work_seed)
         data_ex_main = DataExchangeCsv()
-        elp = ElectricalLoadProfile(data_ex_main, residents, **elp_kwargs)  
+        elp = ElectricalLoadProfile(data_ex_main, residents, **elp_kwargs)
         result = elp.get_rescheduled_profiles(year)
-        queue.put((None,result))
+        queue.put((None, result))
         return
     except Exception as e:
-        queue.put((e,traceback.format_exc()))
-#        traceback.print_exc(file=sys.stdout)
+        queue.put((e, traceback.format_exc()))
+        #        traceback.print_exc(file=sys.stdout)
         return
 
 
-def run_district_year(residents, year, no_of_households, 
-                      singleProfiles = False, cores = mp.cpu_count() - 1,
-                      **elp_kwargs):
-    '''
+def run_district_year(
+    residents,
+    year,
+    no_of_households,
+    singleProfiles=False,
+    cores=mp.cpu_count() - 1,
+    **elp_kwargs
+):
+    """
     Use to get a calculation of a chosen number of households with a full year
     electrical LoadProfile.
     Build n-1 (n = number of cores) parallel Processes, start them on different
@@ -93,7 +98,7 @@ def run_district_year(residents, year, no_of_households,
     ---------------------------------------------------------------------------
     Returns:
         return the sum of the ElectricLoadProfiles results
-    '''
+    """
     # setup queue for outputs
     output = mp.Queue()
     # Number of runs (rounded) with usage of n-1 cores
@@ -106,39 +111,49 @@ def run_district_year(residents, year, no_of_households,
         agg_results = []
     else:
         agg_results = None
-    
+
     masterseed = 7
-#    ws = [2]*no_of_households  # Test if workerseeds are all set the same all Households will be the same
+    #    ws = [2]*no_of_households  # Test if workerseeds are all set the same all Households will be the same
     ws = [masterseed + i for i in range(no_of_households)]
 
-    if last_loop_calcs >0:
+    if last_loop_calcs > 0:
         no_loops = no_of_full_loops + 1
     else:
         no_loops = no_of_full_loops
 
     # Loop with parallel calculation for the number of households
     for runs in range(no_loops):
-        # number of parallel processes        
+        # number of parallel processes
         if runs == no_of_full_loops:
             no_parallel = last_loop_calcs
-        else:        
+        else:
             no_parallel = cores
         # Setup a list of processes that we want to run
-        processes = [mp.Process(target=_run_household_year, 
-                                  args=(output, residents, year, 
-                                        ws[x+(cores*runs)], ),
-                                  kwargs = (elp_kwargs),) for x in range(no_parallel)]
+        processes = [
+            mp.Process(
+                target=_run_household_year,
+                args=(output, residents, year, ws[x + (cores * runs)]),
+                kwargs=(elp_kwargs),
+            )
+            for x in range(no_parallel)
+        ]
         # Run processes
-        print('Start '+str(no_parallel)+ ' processes, round ' + str(runs+1) + ' of ' 
-                + str(no_loops))
-        for i,p in enumerate(processes):
-            print('  Process ' + str(i+1))
+        print(
+            "Start "
+            + str(no_parallel)
+            + " processes, round "
+            + str(runs + 1)
+            + " of "
+            + str(no_loops)
+        )
+        for i, p in enumerate(processes):
+            print("  Process " + str(i + 1))
             p.start()
         # Get process results from the output queue
         result_list = [output.get() for p in processes]
         # check if the process failed
         for result in result_list:
-            if isinstance(result[0],Exception):
+            if isinstance(result[0], Exception):
                 print(result[1])
                 raise result[0]
             else:
@@ -149,18 +164,20 @@ def run_district_year(residents, year, no_of_households,
                         agg_results = result[1]
                     else:
                         agg_results += result[1]
-#        # otherwise create list of all results
-#        results = [res[1] for res in result_list]
-#        results_all_temp1 = pd.DataFrame.from_records(results)
-#        df = pd.concat([df, results_all_temp1])
+        #        # otherwise create list of all results
+        #        results = [res[1] for res in result_list]
+        #        results_all_temp1 = pd.DataFrame.from_records(results)
+        #        df = pd.concat([df, results_all_temp1])
         # Exit/Close the completed processes
         for p in processes:
             p.join()
-        print('- closed the round')
+        print("- closed the round")
         mp.active_children()
 
     # Transponate the Array to Columns = Number of Households
     return agg_results
+
+
 #    results_sum = results_all.sum(axis=1)
 #
 #
@@ -187,7 +204,9 @@ def run_district_year(residents, year, no_of_households,
 
 if __name__ == "__main__":
     start_time = time.time()
-    load_5_unique = run_district_year(3, 2010, 5, singleProfiles = True) # , resolved_load = True
-    #one_household_year(2, 2015, irradiance_dir='TRY2010_06_Jahr.dat', TRY_data=True)
-   # _run_household_year(True,4, 2015, 1, irradiance_dir='TRY2010_06_Jahr.dat', TRY_data=True)
+    load_5_unique = run_district_year(
+        3, 2010, 5, singleProfiles=True
+    )  # , resolved_load = True
+    # one_household_year(2, 2015, irradiance_dir='TRY2010_06_Jahr.dat', TRY_data=True)
+    # _run_household_year(True,4, 2015, 1, irradiance_dir='TRY2010_06_Jahr.dat', TRY_data=True)
     print("--- %s seconds ---" % (time.time() - start_time))

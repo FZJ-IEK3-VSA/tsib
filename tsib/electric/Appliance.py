@@ -6,15 +6,29 @@ import math
 
 
 class Appliance(Load):
-    def __init__(self, key, long_name, type_name, act_use_profile,
-                 ownership_probability,
-                 standby_power, mean_cycles_power, cycles_per_year, mean_cycle_length,
-                 restart_delay, calibration, total_energy, active_occ_dependent,
-                 average_activity_profile, mean_power_factor, heat_gain):
-        '''
+    def __init__(
+        self,
+        key,
+        long_name,
+        type_name,
+        act_use_profile,
+        ownership_probability,
+        standby_power,
+        mean_cycles_power,
+        cycles_per_year,
+        mean_cycle_length,
+        restart_delay,
+        calibration,
+        total_energy,
+        active_occ_dependent,
+        average_activity_profile,
+        mean_power_factor,
+        heat_gain,
+    ):
+        """
         Object of class Load used to store the data connected to the
         applications in the household. 
-        '''
+        """
         """
         :param key: Upper case name
         :param long_name: complete name
@@ -66,11 +80,20 @@ class Appliance(Load):
         self.heat_prod = np.zeros(1440)
 
     def __str__(self):
-        return 'Key: {0}, activity use profile: {1}, ownership: {2}, standby power: {3}, mean cycles power: {4},' \
-               'base cycles/y: {5}, mean cycles length (min): {6}, delay restart (min): {7}, calibration scalar: {8}' \
-            .format(self._key, self.act_use_profile, self._ownership_probability, self._standby_power,
-                    self._mean_cycles_power, self._cycles_per_year, self._mean_cycle_length, self._restart_delay,
-                    self._calibration)
+        return (
+            "Key: {0}, activity use profile: {1}, ownership: {2}, standby power: {3}, mean cycles power: {4},"
+            "base cycles/y: {5}, mean cycles length (min): {6}, delay restart (min): {7}, calibration scalar: {8}".format(
+                self._key,
+                self.act_use_profile,
+                self._ownership_probability,
+                self._standby_power,
+                self._mean_cycles_power,
+                self._cycles_per_year,
+                self._mean_cycle_length,
+                self._restart_delay,
+                self._calibration,
+            )
+        )
 
     def _set_restart_delay(self):
         """
@@ -82,7 +105,9 @@ class Appliance(Load):
         """
         Assumes that the true rated_power can be calculated from a normal distribution
         """
-        return Calculations.calc_from_normal_distr(self._mean_cycles_power, self._mean_cycles_power / 10)
+        return Calculations.calc_from_normal_distr(
+            self._mean_cycles_power, self._mean_cycles_power / 10
+        )
 
     @staticmethod
     def _is_between(x, lower, upper):
@@ -116,7 +141,7 @@ class Appliance(Load):
     def _calc_cycle_length(self):
         length = self._mean_cycle_length
         # Use the TV watching length data approximation, derived from the TUS data
-        if self._key == 'TV1' or self._key == 'TV2' or self._key == 'TV3':
+        if self._key == "TV1" or self._key == "TV2" or self._key == "TV3":
             # The cycle length is approximated by the following function
             # The average viewing time is approximately 73 minutes
             length = 70 * math.pow((-np.log(1 - np.random.random())), 1.1)
@@ -132,12 +157,12 @@ class Appliance(Load):
         power = self._rated_power
         # Some appliances have a custom (variable) power profile depending
         # on the time left
-        if self._key == 'WASHING_MACHINE' or self._key == 'WASHER_DRYER':
+        if self._key == "WASHING_MACHINE" or self._key == "WASHER_DRYER":
             total_cycle_time = 0
 
-            if self._key == 'WASHING_MACHINE':
+            if self._key == "WASHING_MACHINE":
                 total_cycle_time = 138
-            if self._key == 'WASHER_DRYER':
+            if self._key == "WASHER_DRYER":
                 total_cycle_time = 198
 
             # This is an example power profile for an example washing
@@ -176,9 +201,9 @@ class Appliance(Load):
         return power
 
     def set_ownership(self, random_app_per_run=True):
-#        np.random.seed(5)       # Test fuer fixe App Ausstattung
+        #        np.random.seed(5)       # Test fuer fixe App Ausstattung
         if random_app_per_run is True:
-#            np.random.seed()         # Test fuer fixe App Ausstattung
+            #            np.random.seed()         # Test fuer fixe App Ausstattung
             self.owned = np.random.random() < self._ownership_probability
         else:
             # set fixed seed for app-ownership (debug purposes)
@@ -197,7 +222,6 @@ class Appliance(Load):
         return self._restart_delay_time_left > 0
 
 
-
 if __name__ == "__main__":
     apps = [Appliance] * 10
     for i in range(10):
@@ -205,16 +229,29 @@ if __name__ == "__main__":
             act_occ_dependent = False
         else:
             act_occ_dependent = True
-        b = Appliance('app_' + str(i), 'app_' + str(i), 'type_name_' + str(i), 'profile_' + str(1), np.random.random(),
-                      10 * np.random.random(), 50 * np.random.random(), 1000 * np.random.random(), 100 * np.random.random(),
-                      50 * np.random.random(), 0.03 * np.random.random(), 100000000 * np.random.random(), act_occ_dependent,
-                      np.random.random(), 0.8 * np.random.random())
+        b = Appliance(
+            "app_" + str(i),
+            "app_" + str(i),
+            "type_name_" + str(i),
+            "profile_" + str(1),
+            np.random.random(),
+            10 * np.random.random(),
+            50 * np.random.random(),
+            1000 * np.random.random(),
+            100 * np.random.random(),
+            50 * np.random.random(),
+            0.03 * np.random.random(),
+            100000000 * np.random.random(),
+            act_occ_dependent,
+            np.random.random(),
+            0.8 * np.random.random(),
+        )
         apps[i] = b
-    
+
     for app in apps:
         print(app)
         app.set_ownership()
         if app.owned:
-            print('owned')
+            print("owned")
         else:
-            print('not owned')
+            print("not owned")
