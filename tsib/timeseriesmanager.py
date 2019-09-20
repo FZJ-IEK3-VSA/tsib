@@ -15,8 +15,8 @@ import os
 import copy
 import pytz
 import warnings
-
 import pvlib
+
 from datetime import date
 
 # ignore pv lib warnings
@@ -233,8 +233,11 @@ def readtCosmoNetCDF4(datapath, lon, lat, year):
     df: pd.DataFrame with the data.
     datapath: Identifier for the weather data.
     """
-    import res
-    import netCDF4 as nc
+    try:
+        import res
+        import netCDF4 as nc
+    except ImportError:
+        raise ImportError('Internal packages are required.')
 
     # required variables and a translation to the terms used in tsib
     VARIABLES2TRY = {
@@ -378,46 +381,6 @@ def TRY2TMY(trydata):
     )
 
 
-def simPV_SAM(weatherData, tilt=30, azimuth=180, losses=0.14, efficiency=0.17):
-    """
-    Simulates a PV System with the help of System Advisor Model (SAM) SDK.
-    At the moment only the simple PV-Watts Model.
-    
-    Parameters
-    ----------
-    
-    """
-
-    import sys
-
-    sys.path.insert(0, "C:\SAM\sam-sdk-2015-6-30-r3\languages\python")
-    from sscapi342 import PySSC
-
-    ssc = PySSC()
-    dat = ssc.data_create()
-    mod = ssc.module_create("pvwattsv5")
-
-    ssc.data_set_string(dat, "solar_resource_data", weatherData)
-    ssc.data_set_number(dat, "system_capacity", 1)  # kW DC System
-    ssc.data_set_number(dat, "module_type", 0)  #
-    ssc.data_set_number(dat, "dc_ac_ratio", 1)  # just want to have the DC power
-    ssc.data_set_number(dat, "inv_eff", 100)
-    # just want to have the DC power
-    ssc.data_set_number(dat, "losses", losses * 100)  # system losses in %
-    ssc.data_set_number(dat, "array_type", 0)
-    ssc.data_set_number(dat, "tilt", tilt)  # tilt angle in degree
-    ssc.data_set_number(dat, "azimuth", azimuth)  # south facing
-    ssc.data_set_number(dat, "gcr", 0.4)
-    ssc.data_set_number(dat, "adjust:constant", 0)
-    res = ssc.module_exec(mod, dat)
-    if not res == 1:
-        print("success!")
-    gen = ssc.data_get_array(dat, "gen")
-    space_req = 1.0 / efficiency  # reference conditions given in 1kW/m^2
-
-    return space_req, gen
-
-
 def simPV_PV_Lib(
     tmy_data,
     surface_tilt=30,
@@ -501,7 +464,7 @@ def simPV_PV_Lib(
         surface_tilt, surface_azimuth, solpos["apparent_zenith"], solpos["azimuth"]
     )
     # calculate plane of array irradiance
-    poa_irrad = pvlib.irradiance.globalinplane(
+    poa_irrad = pvlib.irradiance.poa_components(
         aoi, tmy_data["DNI"], poa_sky_diffuse, poa_ground_diffuse
     )
     # calculate pv cell and module temperature
@@ -540,8 +503,8 @@ def simPV_PV_Lib(
     # calculate effective irradiance on pv module
     sapm_irr = pvlib.pvsystem.sapm_effective_irradiance(
         module=module,
-        poa_direct=poa_irrad.poa_direct,
-        poa_diffuse=poa_irrad.poa_diffuse,
+        poa_direct=poa_irrad['poa_direct'],
+        poa_diffuse=poa_irrad['poa_diffuse'],
         airmass_absolute=airmass,
         aoi=aoi,
     )
