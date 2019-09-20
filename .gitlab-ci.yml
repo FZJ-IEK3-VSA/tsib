@@ -3,7 +3,7 @@ enerx:
   image: everken/enerx:python3.7-cbc2.9
   script:
     - export SOLVER="cbc"
-    - echo "url: https://cds.climate.copernicus.eu/api/v2" >> ~/.cdsapirc 
-    - echo "key: $CDS_KEY" >> ~/.cdsapirc 
+    - 'echo "url: https://cds.climate.copernicus.eu/api/v2" >> ~/.cdsapirc'
+    - 'echo "key: $CDS_KEY" >> ~/.cdsapirc'
     - pip install .
     - pytest --cov tsib --cov-report term-missing
