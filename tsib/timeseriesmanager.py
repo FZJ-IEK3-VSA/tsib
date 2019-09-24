@@ -484,7 +484,7 @@ def simPV_PV_Lib(
         # load module and inverter data from csv
         modules = pd.read_csv(
             os.path.join(
-                DATA_PATH, "additionaldata", "pvmodules", "sandia_modules.csv"
+                DATA_PATH, "sandia", "pvmodules", "sandia_modules.csv"
             ),
             index_col=0,
         )
@@ -493,7 +493,7 @@ def simPV_PV_Lib(
 
         inverters = pd.read_csv(
             os.path.join(
-                DATA_PATH, "additionaldata", "inverters", "sandia_modules.csv"
+                DATA_PATH, "sandia", "inverters", "sandia_modules.csv"
             ),
             index_col=0,
         )
