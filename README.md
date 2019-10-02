@@ -4,17 +4,29 @@
 
 # tsib - Time Series Initialization for Buildings
 
-tsib is a python package that builds up on different databases and models for creating consistent demand time series of residential buildings. This could be either occupancy behavior, electricity demand or heat demand time series.
+tsib is a python package that builds up on different databases and models for creating consistent demand and production time series of residential buildings. This could be either occupancy behavior, electricity demand or heat demand time series as well as photovoltaic (PV) and solar thermal production time series.
 
 
-If you want to use tsam in a published work, please [**kindly cite following publication**](TODO) which applies the time series for Germany. 
+If you want to use tsib in a published work, please [**kindly cite following publication**](TODO) which applies tsib for the creation of building time series for Germany. 
 
 
 ## Features
 * flexible configuration of single buildings by different input arguments
-* simulation of the stochastic occupancy behavior (CREST)
+* simple building definition based on an archetype building catalogue
+* simulation of the occupancy behavior
 * derivation of the electric device load or the demand for thermal comfort
-* prediction of the heat load based on a 5R1C (Schütz)
+* calculation of the heat load based on a thermal building model
+* provision of location specific time series for solar irradition and temperature based on wheather data
+
+
+## Applied databases and models
+tsib is a flexible tool which allows the use of different models and databases for the generation of time series for buildings. In Version 1.0 the following databases and models are included is tsib:
+* CREST demand model for the simulaton of the occupancy behavior (Link einfügen)
+* 5R1C thermal building model based on Schütz (Link einfügen)
+* pvlib (Link einfügen)
+* TABULA archetype builing catalogue
+* Wetterdaten (DWD Testreferenzjahre, Cosmo?)
+
 
 ## Installation
 Directly install via pip as follows:
@@ -25,7 +37,7 @@ Alternatively, clone a local copy of the repository to your computer
 
 	git clone https://github.com/FZJ-IEK3-VSA/tsib.git
 	
-Then install tsam via pip as follow
+Then install tsib via pip as follow
 	
 	cd tsib
 	pip install . 
