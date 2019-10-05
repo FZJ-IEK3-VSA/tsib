@@ -718,7 +718,7 @@ class BuildingConfiguration(object):
         cfg["hotWaterElec"] = kwgs["hotWaterElec"]
         self.IDentries["hotWaterElec"] = cfg["hotWaterElec"]
 
-        # if hot water is generated electrically, correct the hot water demand
+        # if hot water is generated electrically, correct the hot water demand (BDEW table)
         if not self.ignore_profiles:
             if cfg["hotWaterElec"]:
                 cfg["hotWaterLoad"] = cfg["hotWaterLoad"] * 0.6
@@ -735,14 +735,12 @@ class BuildingConfiguration(object):
         if "hasSolarThermal" in kwgs:
             cfg["hasSolarThermal"] = kwgs["hasSolarThermal"]
         else:
-            # define solar thermal for all post enev 2009 gas boiler buildins
+            # define solar thermal for all post enev 2009 gas boiler buildings
             if cfg["existingHeatSupply"] == "Gas boiler" and (
                 cfg["buildingYear"] >= 2009 or kwgs["refurbished"]
             ):
                 cfg["hasSolarThermal"] = True
 
-                # TODO: Not used at the moment
-                cfg["solarThermalSize"] = 10.0 * cfg["n_apartments"]
             else:
                 cfg["hasSolarThermal"] = False
         self.IDentries["hasSolarThermal"] = cfg["hasSolarThermal"]
@@ -946,6 +944,7 @@ def get_household_profiles(
             int(n_persons),
             2010,
             len(not_existing_profiles),
+            singleProfiles=True,
             weather_data=weather_data,
             get_hot_water=True,
             resample_mean=mean_load,
