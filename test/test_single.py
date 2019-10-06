@@ -3,7 +3,7 @@ import time
 
 import pandas as pd
 
-import tsib.electric.CREST as CREST
+import tsorb.CREST as CREST
 
 
 def test_single():

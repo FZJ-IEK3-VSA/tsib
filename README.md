@@ -13,7 +13,7 @@ If you want to use tsib in a published work, please [**kindly cite following pub
 ## Features
 * flexible configuration of single buildings by different input arguments
 * simple building definition based on an archetype building catalogue
-* simulation of the occupancy behavior
+* consideration of the occupancy behavior
 * derivation of the electric device load or the demand for thermal comfort
 * calculation of the heat load based on a thermal building model
 * provision of location specific time series for solar irradition and temperature based on wheather data

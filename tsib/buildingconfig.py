@@ -12,7 +12,7 @@ import pandas as pd
 import numpy as np
 import multiprocessing as mp
 import tsib.timeseriesmanager as tsm
-from tsib.electric.CREST import run_district_year, one_household_year
+from tsorb.CREST import run_district_year, one_household_year
 
 import warnings
 
