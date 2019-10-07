@@ -1,0 +1,6 @@
+,buildingYear,a_ref_app,surrounding,n_persons,roofOrientation,ownership,existingHeatSupply,longitude,latitude,n_apartments,hotWaterElec,comfortT_lb,comfortT_ub,nightReduction,capControl
+0,1919,79.0,Terraced,1,90.0,False,Oil boiler,9.779300783606693,50.92209522852708,11,False,21.0,25.0,True,True
+1,1979,39.0,Terraced,4,67.5,True,Oil boiler,9.479935576949973,50.41087076688451,3,False,21.0,25.0,True,True
+2,1959,59.0,Detached,2,0.0,True,Gas boiler,9.572005217366096,50.86933814241954,1,False,21.0,25.0,True,True
+3,1949,59.0,Semi,2,22.5,False,Electric heater,10.851559067111591,51.29546808826539,37,False,21.0,25.0,True,True
+4,1969,99.0,Semi,3,45.0,False,District heating,9.763012522191604,50.986895963965246,423,False,21.0,25.0,True,True
