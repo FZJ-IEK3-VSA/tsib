@@ -3,6 +3,7 @@ pandas==0.24.0
 Pyomo>=4.2
 numpy
 matplotlib>=3.0.0
+xlrd
 tsam>=1.0.4
 tsorb
 cdsapi
