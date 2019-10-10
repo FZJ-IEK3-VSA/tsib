@@ -3,7 +3,7 @@ import time
 
 import pandas as pd
 
-import tsorb.CREST as CREST
+import tsib.household.profiles as CREST
 
 
 def test_single():

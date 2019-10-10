@@ -11,10 +11,10 @@ import random
 
 import pandas as pd
 
-import tsib.thermal.buildingmodel as bdg
+import tsib.buildingmodel as bdg
 import tsib.buildingconfig as cfg
 import tsib.timeseriesmanager as tsm
-
+import tsib.data
 
 def test_heatload():
 
@@ -22,7 +22,7 @@ def test_heatload():
 
     # get raw building data set
     buildingSet = pd.read_csv(
-        os.path.join(bdg.DATA_PATH, "IWU", "IWU_wPersons.csv"), header=0, index_col=0
+        os.path.join(tsib.data.PATH, "IWU", "IWU_wPersons.csv"), header=0, index_col=0
     )
 
     # get a random building ID

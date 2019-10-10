@@ -16,14 +16,14 @@ import copy
 import pytz
 import warnings
 import pvlib
-
 from datetime import date
+
+import tsib.data
 
 # ignore pv lib warnings
 np.seterr(divide="ignore")
 np.seterr(invalid="ignore")
 
-DATA_PATH = os.path.join(os.path.dirname(os.path.realpath(__file__)), "data")
 
 
 def calcGHI(timeSeries, longitude, latitude):
@@ -49,7 +49,7 @@ def readTMY(filepath=os.path.join("TMY", "Germany DEU Koln (INTL).csv")):
     """
     # get data
     data = pd.read_table(
-        os.path.join(DATA_PATH, "weatherdata", filepath),
+        os.path.join(tsib.data.PATH, "weatherdata", filepath),
         skiprows=([0, 1]),
         delimiter=",",
     )
@@ -60,7 +60,7 @@ def readTMY(filepath=os.path.join("TMY", "Germany DEU Koln (INTL).csv")):
         columns={"Beam": "DNI", "Diffuse": "DHI", "Tdry": "T", "Wspd": "WS"}
     )
     location_data = pd.read_table(
-        os.path.join(DATA_PATH, "profiles", filepath), nrows=1, delimiter=","
+        os.path.join(tsib.data.PATH, "profiles", filepath), nrows=1, delimiter=","
     )
 
     location = {
@@ -175,7 +175,7 @@ def readTRY(try_num=4, year=2010):
     """
     # get the correct file path
     filepath = os.path.join(
-        DATA_PATH,
+        tsib.data.PATH,
         "weatherdata",
         "TRY",
         "TRY" + str(year) + "_" + str(try_num).zfill(2) + "_Jahr",
@@ -258,7 +258,7 @@ def readtCosmoNetCDF4(datapath, lon, lat, year):
 
     # get a filepath for the resulting weather data set, ix[1]
     identifier = "COSMO_Year_" + str(year) + "_ix_" + str(ix[0]) + "_" + str(ix[1])
-    filepath = os.path.join(DATA_PATH, "weatherdata", "COSMO", identifier)
+    filepath = os.path.join(tsib.data.PATH, "weatherdata", "COSMO", identifier)
 
     # get file if existing
     if os.path.isfile(filepath + ".csv"):
@@ -484,7 +484,7 @@ def simPV_PV_Lib(
         # load module and inverter data from csv
         modules = pd.read_csv(
             os.path.join(
-                DATA_PATH, "sandia", "pvmodules", "sandia_modules.csv"
+                tsib.data.PATH, "sandia", "pvmodules", "sandia_modules.csv"
             ),
             index_col=0,
         )
@@ -493,7 +493,7 @@ def simPV_PV_Lib(
 
         inverters = pd.read_csv(
             os.path.join(
-                DATA_PATH, "sandia", "inverters", "sandia_modules.csv"
+                tsib.data.PATH, "sandia", "inverters", "sandia_modules.csv"
             ),
             index_col=0,
         )
@@ -772,6 +772,64 @@ def groupToPeriods(timeSeries, periodStepNumber):
     return timeSeries
 
 
+def get_ISO12831_weather(longitude, latitude, year=2010, cosmo=False):
+    """
+
+    Gets the test reference year location and the design temperatures for
+    the heating system based on the ISO12831.
+    Parameters
+    ----------
+    longitude: float
+    latitude: float
+    year: int, optional (default: 2010)
+    cosmo: bool, optional (default: False)
+        If the weather data shall be extracted from the cosmo database.
+    Returns
+    -------
+    weather (DataFrame with TRY weather)
+    T_min (design temperature for heating),
+    weatherID (str with climate zone)
+    """
+
+    # read weather zones
+    wzones = pd.read_csv(
+        os.path.join(tsib.data.PATH, "weatherdata", "ISO12831", "T_zones_Ger_final.csv"),
+        index_col=0,
+        encoding="ISO-8859-1",
+    )
+
+    # get distance to all reference weather station points
+    dist = ((wzones["Lat"] - latitude) ** 2 + (wzones["Lng"] - longitude) ** 2) ** 0.5
+
+    # if distance to next reference position is to high.
+    if min(dist) > 5:
+        raise NotImplementedError(
+            "The weather data is at the moment" + " only implemented for Germany"
+        )
+
+    # get the data from the one with the minimal distance
+    loc_w = wzones.loc[dist.idxmin(), :]
+    design_T_min = loc_w["Min T"]
+
+    # read weather data of related try region
+    if not cosmo:
+        weatherID = "TRY_" + str(loc_w["Climate Zone"])
+        weather, loc = tsm.readTRY(try_num=loc_w["Climate Zone"], year=year)
+    else:
+        weather, weatherID = tsm.readtCosmoNetCDF4(
+            os.path.join(
+                os.environ["DATA_SHARE"], "weather", "cosmo", "rea6", "processed"
+            ),
+            longitude,
+            latitude,
+            year,
+        )
+
+    return weather, design_T_min, weatherID
+
+
+
+
 def plotTimeSeriesFFT(timeSeries, limiter=None):
     """
     Does a Fast Fourier Transformation and returns the absolute values
@@ -854,7 +912,7 @@ def plotTimeSeriesFFT(timeSeries, limiter=None):
 if __name__ == "__main__":
     #    tmy_data, loc = readTMY()
 
-    #    plt.style.use(os.path.join(DATA_PATH, 'utils', 'matplotlibrc.mplstyle'))
+    #    plt.style.use(os.path.join(tsib.data.PATH, 'utils', 'matplotlibrc.mplstyle'))
     try_data, loc = readTRY()
     #    htw_data = readHTWProfiles()
     raw = pd.DataFrame()

@@ -12,7 +12,8 @@ import pandas as pd
 import numpy as np
 import multiprocessing as mp
 import tsib.timeseriesmanager as tsm
-from tsorb.CREST import run_district_year, one_household_year
+import tsib.data
+from tsib.household.profiles import run_households_parallel, one_household_year
 
 import warnings
 
@@ -24,10 +25,6 @@ HEAT_TECHS = [
     "Electric heater",
     "District heating",
 ]
-
-DATA_PATH = os.path.join(os.path.dirname(os.path.realpath(__file__)), "data")
-
-TOTAL_PROFILE_NUM = 20
 
 KWARG_TYPES = {
     "n_storey": "NOT_IMPLEMENTED",  # number of storeys in the building
@@ -84,7 +81,7 @@ KWARG_TYPES = {
     "comfortT_lb": float,  # lower bound of the comfortable temperature if active
     "comfortT_ub": float,  # upper bound of the comfortable temperature if active
     "n_persons": int,  # number of persons living in a single flat
-    "elecLoad": pd.Series,  # electricity load profile of the flat with correct time index
+    "elecLoad": pd.Series,  # electricity load profile of a single flat with correct time index
     "elecLoadID": str,  # identifier of the load
     "hasFirePlace": bool,  # if the building has a fire place
     "hasSolarThermal": bool,  # if the building has solar thermal to provide hot water
@@ -140,7 +137,7 @@ class BuildingConfiguration(object):
         """
         Initialize a unique building configuration which provides
         database identifier and configuration parameters based on the user
-        input
+        input.
         
         Parameters
         ----------
@@ -248,7 +245,7 @@ class BuildingConfiguration(object):
         else:
             # get the iwu database
             self.iwu_bdg = pd.read_csv(
-                os.path.join(DATA_PATH, "IWU", "IWU_wPersons.csv"), index_col=0
+                os.path.join(tsib.data.PATH, "IWU", "IWU_wPersons.csv"), index_col=0
             )
 
             # call all functions which populate the building configurator
@@ -263,7 +260,7 @@ class BuildingConfiguration(object):
             # check if cost data file exists
             if not os.path.exists(
                 os.path.join(
-                    DATA_PATH, "costdata", self.inputKwargs["costdata"] + ".xlsx"
+                    tsib.data.PATH, "costdata", self.inputKwargs["costdata"] + ".xlsx"
                 )
             ):
                 raise ValueError(
@@ -273,8 +270,9 @@ class BuildingConfiguration(object):
                 )
             # add cost data
             cfg["costdata"] = self.inputKwargs["costdata"]
-
+            cfg["costdatapath"] = os.path.join(tsib.data.PATH, "costdata", self.cfg["costdata"] + ".xlsx")
             self.IDentries["costdata"] = cfg["costdata"]
+ 
             return cfg
 
     def _get_operation(self, cfg, kwgs):
@@ -307,7 +305,7 @@ class BuildingConfiguration(object):
             # get TRY weather and ISO
             cfg["weather"], cfg["design_T_min"], cfg[
                 "weatherID"
-            ] = get_ISO12831_weather(
+            ] = tsm.get_ISO12831_weather(
                 kwgs["longitude"],
                 kwgs["latitude"],
                 year=kwgs["year"],
@@ -361,12 +359,12 @@ class BuildingConfiguration(object):
             else:
                 cfg["elecLoad"] = kwgs["elecLoad"]
                 self.IDentries["elecLoad"] = kwgs["elecLoadID"]
-                addElecLoad = False
+                cfg["tsorb_device_load"] = False
         else:
             self.IDentries["elecLoad"] = (
                 "CREST_" + str(cfg["n_persons"]) + "x" + str(cfg["n_apartments"])
             )
-            addElecLoad = True
+            cfg["tsorb_device_load"] = True
 
         # define if an fire place is in the building
         if "hasFirePlace" in kwgs:
@@ -405,132 +403,7 @@ class BuildingConfiguration(object):
         if len(state_seed) > 8:
             state_seed = state_seed[:8]
         state_seed = int(state_seed)
-
-        # get the profiles
-        if not self.ignore_profiles:
-            cfg = self.get_building_profile(
-                cfg, kwgs, state_seed, addElecLoad=addElecLoad
-            )
-
-        return cfg
-
-    def get_building_profile(self, cfg, kwgs, state_seed, addElecLoad=True):
-        """
-        Get all the occupancy related data, like internal heat gain,
-        electricity load and occupants activity.
-        """
-
-        # get a number of random seeds to generate the profiles
-        seeds = np.random.RandomState(state_seed).randint(
-            0, TOTAL_PROFILE_NUM, size=int(cfg["varyoccupancy"] * cfg["n_apartments"])
-        )
-
-        # get the profiles
-        hh_profiles = get_household_profiles(
-            cfg["n_persons"],
-            cfg["weather"],
-            self.IDentries["weather"],
-            seeds=seeds,
-            ignore_weather=True,
-            mean_load=cfg["mean_load"],
-        )
-
-        # get short form apartments
-        n_app = int(cfg["n_apartments"])
-        # abs number of occupants
-        n_occs = int(cfg["n_persons"]) * n_app
-
-        # get from the household profiles buildingprofiles
-        bdg_profiles = {}
-
-        # get a profile for each occupancy variation
-        for i in range(cfg["varyoccupancy"]):
-            if n_app == 1:
-                occData = hh_profiles[i]
-            else:
-                # merge profiles for multiple appartments
-                occData = pd.concat(
-                    hh_profiles[i * n_app : (i + 1) * n_app],
-                    keys=range(i * n_app, (i + 1) * n_app),
-                )
-                occData = occData.groupby(level=[1]).sum()
-
-            bdg_profiles[i] = {}
-
-            # heat gain values relative (Master thesis cheng feng)
-            OccNotActiveHeatGain = 100
-            OccActiveHeatGain = 150
-
-            # internal heat gain [kW]
-            bdg_profiles[i]["Q_ig"] = (
-                occData["AppHeatGain"].values
-                + occData["OccActive"].values * OccActiveHeatGain
-                + occData["OccNotActive"].values * OccNotActiveHeatGain
-            ) / 1000
-            #        bdg_profiles[i]['occ_active'] = occData['OccActive'] > 0.0
-
-            # the share of occupants which is not at home
-            bdg_profiles[i]["occ_nothome"] = (
-                n_occs - occData["OccActive"] - occData["OccNotActive"]
-            ) / n_occs
-
-            # the share of occupants which is sleeping
-            bdg_profiles[i]["occ_sleeping"] = occData["OccNotActive"].div(n_occs)
-            if addElecLoad:
-                bdg_profiles[i]["elecLoad"] = occData["Load"] / 1000
-
-            # get hot water load
-            bdg_profiles[i]["hotWaterLoad"] = occData["HotWater"] / 1000
-
-            # overall number of occupants
-            bdg_profiles[i]["n_occupants"] = n_occs
-
-            # get fireplace profile
-            if cfg["hasFirePlace"]:
-                pot_filename = os.path.join(
-                    DATA_PATH,
-                    "results",
-                    "fireplaceprofiles",
-                    "Profile"
-                    + "_apps"
-                    + str(int(n_app))
-                    + "_occ"
-                    + str(int(cfg["n_persons"]))
-                    + "_wea"
-                    + str(cfg["weatherID"])
-                    + "_seed"
-                    + str(state_seed)
-                    + ".csv",
-                )
-                if os.path.isfile(pot_filename):
-                    fireplaceLoad = pd.read_csv(
-                        pot_filename,
-                        index_col=0,
-                        header=None,
-                        parse_dates=True,
-                        squeeze=True,
-                    )
-                else:
-                    # get oven profile depending on activity and outside temperature
-                    fireplaceLoad = tsm.createWoodFireProfile(
-                        cfg["weather"]["T"],
-                        occData["OccActive"] / n_occs,
-                        n_ovens=n_app,
-                        T_oven_on=5,
-                        t_cool=5.0,
-                        fullloadSteps=450,
-                        seed=state_seed,
-                    )
-                    fireplaceLoad.to_csv(pot_filename)
-
-                bdg_profiles[i]["fireplaceLoad"] = fireplaceLoad
-
-        # give building config the first profile
-        cfg.update(bdg_profiles[i])
-
-        # give the other profiles to the configuration file as well
-        if cfg["varyoccupancy"] > 1:
-            cfg["vary_profiles"] = bdg_profiles
+        cfg['state_seed'] = state_seed
 
         return cfg
 
@@ -879,156 +752,6 @@ def get_shape(bdg, iwu_bdg, a_ref):
     return bdg
 
 
-def get_household_profiles(
-    n_persons,
-    weather_data,
-    weatherID,
-    seeds=[0],
-    ignore_weather=True,
-    mean_load=True,
-    cores=mp.cpu_count() - 1,
-):
-    """
-    Gets or creates the relevant occupancy profiles for a building
-    simulation or optimization.
-    
-    
-    Parameters
-    ----------
-    n_persons: integer, required
-        Number of persons living in a single appartment.
-    weather_data: pd.DataFrame(), required
-        A time indexed pandas dataframe containing weather data with 
-        the GHI as a column.
-    weatherID: str, required
-        Giving an ID to the weather data to identify the resulting profile.
-    seeds: list, optional (default: [0])
-        List of integer seeds to create a number of profiles which have
-        similar input parameters, but a varying output. Default, no seed is
-        chosen. 
-    ignore_weather: bool, optional (default: False)
-        Since atm only the GHI is required for the electricity load profile,
-        the weather plays a minor role and can be ignored by the identificaiton
-        of profiles.
-    mean_load: bool, optional (default: True)
-        Decides if the created load profiles on 1-minute basis shall be 
-        downsampled by taking the mean of 60 minutes or the first value in
-        every 60 minutes.
-    cores: int, optiona(default: mp.cpu_count() - 1)
-        Number of cores used for profile generation.
-    """
-
-    # get the potential profile names
-    filenames = {}
-    for seed in seeds:
-        profile_ID = "Profile" + "_occ" + str(int(n_persons)) + "_seed" + str(seed)
-        if not ignore_weather:
-            profile_ID = profile_ID + "_wea" + str(weatherID)
-
-        if mean_load:
-            profile_ID = profile_ID + "_mean"
-
-        filenames[seed] = os.path.join(
-            DATA_PATH, "results", "occupantprofiles", profile_ID + ".csv"
-        )
-
-    # check how many profiles do not exist#
-    not_existing_profiles = {}
-    for seed in seeds:
-        if not os.path.isfile(filenames[seed]):
-            not_existing_profiles[seed] = filenames[seed]
-
-    # run in parallel all profiles
-    if len(not_existing_profiles) > 1:
-        new_profiles = run_district_year(
-            int(n_persons),
-            2010,
-            len(not_existing_profiles),
-            singleProfiles=True,
-            weather_data=weather_data,
-            get_hot_water=True,
-            resample_mean=mean_load,
-            cores=cores,
-        )
-    # if single profile just create one profile and avoid multiprocessing
-    elif len(not_existing_profiles) > 0:
-        one_profile = one_household_year(
-            int(n_persons),
-            2010,
-            weather_data=weather_data,
-            get_hot_water=True,
-            resample_mean=mean_load,
-        )
-        new_profiles = [one_profile]
-
-    # write results to csv files
-    for i, seed in enumerate(not_existing_profiles):
-        new_profiles[i].to_csv(not_existing_profiles[seed])
-
-    # load all profiles
-    profiles = []
-    for seed in seeds:
-        profiles.append(pd.read_csv(filenames[seed], index_col=0))
-
-    return profiles
-
-
-def get_ISO12831_weather(longitude, latitude, year=2010, cosmo=False):
-    """
-
-    Gets the test reference year location and the design temperatures for
-    the heating system based on the ISO12831.
-    Parameters
-    ----------
-    longitude: float
-    latitude: float
-    year: int, optional (default: 2010)
-    cosmo: bool, optional (default: False)
-        If the weather data shall be extracted from the cosmo database.
-    Returns
-    -------
-    weather (DataFrame with TRY weather)
-    T_min (design temperature for heating),
-    weatherID (str with climate zone)
-    """
-
-    # read weather zones
-    wzones = pd.read_csv(
-        os.path.join(DATA_PATH, "weatherdata", "ISO12831", "T_zones_Ger_final.csv"),
-        index_col=0,
-        encoding="ISO-8859-1",
-    )
-
-    # get distance to all reference weather station points
-    dist = ((wzones["Lat"] - latitude) ** 2 + (wzones["Lng"] - longitude) ** 2) ** 0.5
-
-    # if distance to next reference position is to high.
-    if min(dist) > 5:
-        raise NotImplementedError(
-            "The weather data is at the moment" + " only implemented for Germany"
-        )
-
-    # get the data from the one with the minimal distance
-    loc_w = wzones.loc[dist.idxmin(), :]
-    design_T_min = loc_w["Min T"]
-
-    # read weather data of related try region
-    if not cosmo:
-        weatherID = "TRY_" + str(loc_w["Climate Zone"])
-        weather, loc = tsm.readTRY(try_num=loc_w["Climate Zone"], year=year)
-    else:
-        weather, weatherID = tsm.readtCosmoNetCDF4(
-            os.path.join(
-                os.environ["DATA_SHARE"], "weather", "cosmo", "rea6", "processed"
-            ),
-            longitude,
-            latitude,
-            year,
-        )
-
-    return weather, design_T_min, weatherID
-
-
 if __name__ == "__main__":
     ref_results = pd.read_csv(
         "file:///C:/Users/Leander/sciebo/FZJ/01_FullStateEco/buildingstock/results/20171017_NRW_2_noBdgs_5/bdgResults_9.csv",
@@ -1054,28 +777,3 @@ if __name__ == "__main__":
 
     bdg = BuildingConfiguration(kwgs)
     cfg = bdg.getBdgCfg()
-
-    #
-    # Form
-    #     roof_tilt
-    #     roof_orientation
-    # Equipment
-    #     existingAge - dict
-    #     T_supply
-    #     refurbished
-    #
-    # Finance
-    #     WACC
-    #     MaxInvestmentVolume
-    #     InsulationWACC
-    # thermalClass
-    # roofTilt
-    # roofOrientation
-    # comfortT_lb
-    # comfortT_ub
-    # ventControl
-    # nightReduction
-    # capControl
-    # costdata
-    # elecLoad
-    # elecLoadID
