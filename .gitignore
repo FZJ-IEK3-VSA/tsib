@@ -7,6 +7,7 @@ __enercore_cache__/
 */.ipynb_checkpoints/
 .idea/
 .eggs/
+.vscode/
 
 # file types to ignore
 *.pyc
