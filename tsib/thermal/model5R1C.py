@@ -7,6 +7,7 @@ Created on Sat Dec 10 12:40:17 2016
 
 import os
 import warnings
+import logging
 import pvlib
 
 import pandas as pd
@@ -672,8 +673,8 @@ class Building5R1C(object):
                 M.bX_solar.append((comp, dec))
 
         # activate or deactivate ventilation control
-        if self.ventControl:
-            warnings.warn("Ventilation control is not validated", UserWarning)
+        if self.cfg["ventControl"]:
+            logging.warning("Ventilation control is not validated")
             M.bVentControl = True
         else:
             M.bVentControl = False

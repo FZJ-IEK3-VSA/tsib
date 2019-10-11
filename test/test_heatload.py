@@ -2,12 +2,11 @@
 """
 Created on Fri Apr 08 11:33:01 2016
 
-@author: Leander
+@author: Leander Kotzur
 """
 
 import time
 import os
-import random
 
 import pandas as pd
 
@@ -26,7 +25,7 @@ def test_heatload():
     )
 
     # get a random building ID
-    ix = 24  # int(random.uniform(0,len(buildingSet)))
+    ix = 24
     ID = buildingSet.index[ix]
 
     # get time series data
@@ -64,7 +63,7 @@ def test_heatload():
     # get specific heat demand
     q_sim = bdgObj.detailedResults["Heating Load"].sum() / bdgObj.cfg["A_ref"]
 
-    #
+    # get calculated heat demand by IWU
     q_iwu = buildingSet.loc[ID, "q_h_nd"]
 
     print("Profile generation took " + str(time.time() - starttime))
@@ -72,13 +71,13 @@ def test_heatload():
     print("Spec. heat demand IWU [kWh/m²/a]: " + str(round(q_iwu)))
     print("Spec. heat demand 5R1C [kWh/m²/a]: " + str(round(q_sim)))
 
-    if abs(q_sim - q_iwu) > 30:
+    if abs(q_sim - q_iwu) > 20:
         raise ValueError(
             "The difference between simulation and the values listed by the IWU is too high."
         )
 
-    if ix == 6:
-        if not round(q_sim) == 124.0:
+    if ix == 24:
+        if not round(q_sim) == 197.0:
             raise ValueError("Different result for mean heat load than expected.")
     return
 

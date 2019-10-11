@@ -2,7 +2,7 @@
 """
 Created on Wed Oct 11 21:17:37 2017
 
-@author: Leander
+@author: Leander Kotzur
 """
 
 import os
@@ -92,6 +92,7 @@ KWARG_TYPES = {
     "walls_refurbished": "NOT_IMPLEMENTED",  # if the walls have already gotton an additional insulation
     "roof_refurbished": "NOT_IMPLEMENTED",  # if the roof area has already gotton an additional insulation
     "costdata": str,  # file identifier with the related cost data
+    "ventControl": bool, # if the ventilation system can be smart controlled
 }
 
 KWARG_DEFAULTS = {
@@ -121,6 +122,7 @@ KWARG_DEFAULTS = {
     "varyoccupancy": 1,  # for how many occupancy profiles the building shall be optimized
     "mean_load": False,  # if the fluctuative profile or the mean hourly profile should be taken
     "costdata": "default_2016",
+    "ventControl": False, # if the ventilation system can be intelligently operated
 }
 
 
@@ -317,7 +319,7 @@ class BuildingConfiguration(object):
         self.IDentries["weather"] = cfg["weatherID"]
 
         # get controller booleans
-        for control in ["nightReduction", "occControl", "capControl"]:
+        for control in ["nightReduction", "occControl", "capControl","ventControl"]:
             cfg[control] = kwgs[control]
             self.IDentries[control] = cfg[control]
 

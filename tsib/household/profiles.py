@@ -1,11 +1,21 @@
-import multiprocessing as mp
-from tsorb.utils.InputData import DataExchangeCsv
-from tsorb.ElectricalLoadProfile import ElectricalLoadProfile
+# -*- coding: utf-8 -*-
+"""
+Created on Fri Apr 08 11:33:01 2016
+
+@author: Leander Kotzur
+"""
+
 import time
 import os
+import traceback
+import logging
+import multiprocessing as mp
+
 import pandas as pd
 import numpy as np
-import traceback
+
+from tsorb.utils.InputData import DataExchangeCsv
+from tsorb.ElectricalLoadProfile import ElectricalLoadProfile
 import tsib.data
 
 
@@ -239,6 +249,12 @@ def get_household_profiles(
     for seed in seeds:
         if not os.path.isfile(filenames[seed]):
             not_existing_profiles[seed] = filenames[seed]
+
+    # info about runtime
+    _runtime = np.floor(float(len(not_existing_profiles))/cores)
+    _log_str = str(len(not_existing_profiles)) + " household profiles need to get calculated. \n"
+    _log_str += "With " + str(cores) + " threads, the estimated runtime is " + str(_runtime) + " minutes."
+    logging.info(_log_str)
 
     # run in parallel all profiles
     if len(not_existing_profiles) > 1:

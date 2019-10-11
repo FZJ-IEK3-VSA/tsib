@@ -7,6 +7,7 @@ Created on Sat Dec 10 12:40:17 2016
 
 import os
 import warnings
+import logging
 
 import pandas as pd
 import numpy as np
@@ -131,6 +132,8 @@ class Building(object):
             for the building optimization
         """
 
+        # TODO get simple arguments for building initialization
+
         if configurator is None:
             # Building Physical Parameters
 
@@ -177,25 +180,18 @@ class Building(object):
 
         self.cfg = self.configurator.getBdgCfg(includeSupply=False)
 
-        # self.sim5R1C
         self.IDentries = self.configurator.IDentries
 
-
-        self.cfg = self.get_occupancy_profile(
-                self.cfg
-            )
-
-
-        self.ventControl = ventControl
-
-        self.times = self.cfg["weather"].index
-
         self.thermalmodel = model5R1C.Building5R1C(self.cfg)
+
+        # status if the profiles have already been initialized
+        self._has_occupancy_profiles = False
+        self._has_heat_profiles = False
+        self._has_renewable_potential_profiles = False
 
         # TODO: kick out
         self.ID = 0  #self.configurator.ID 
 
-        self.times = self.cfg["weather"].index
         return
 
     @property
@@ -236,7 +232,7 @@ class Building(object):
             return False
 
 
-    def get_occupancy_profile(self, cfg):
+    def _get_occupancy_profile(self, cfg):
         """
         Get all the occupancy related data, like internal heat gain,
         electricity load and occupants activity.
@@ -356,6 +352,8 @@ class Building(object):
         if cfg["varyoccupancy"] > 1:
             cfg["vary_profiles"] = bdg_profiles
 
+        self._has_occupancy_profiles = True
+
         return cfg
 
 
@@ -368,19 +366,27 @@ class Building(object):
             defined supply temperature. This supply temperature is an 
             assumption for each building.
         """
+        logging.warning('Method to generate the nominal heat transfer coefficient of the heating system has not been validated."')
         # get design heat load
         self.design_Q = self.thermalmodel.calcDesignHeatLoad()
 
-        self.design_T_return = 25
         # derive the heat transfer coefficient of the heating system kW/K
-
-    #        self.design_H_heat = self.design_Q / (self.cfg['T_sup'] - self.design_T_return)
+        self.design_H_heat = self.design_Q / (self.cfg['T_sup'] - 20.)
+        
+        return
 
     def sim5R1C(self):
         '''
         Runs the 5R1C simulation.
         '''
+        if not self._has_occupancy_profiles:
+            self.cfg = self._get_occupancy_profile(
+                    self.cfg
+                )
         self.thermalmodel.sim5R1C()
+
+        self._has_heat_profiles = True
+
         return
 
 
