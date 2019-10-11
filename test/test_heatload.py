@@ -46,6 +46,7 @@ def test_heatload():
             "comfortT_lb": 20.0,
             "comfortT_ub": 26.0,
             "roofOrientation": 0.0,
+            "n_apartments": 1,
             "longitude": loc["longitude"],
             "latitude": loc["latitude"],
         }
@@ -58,7 +59,7 @@ def test_heatload():
     )
 
     # run simulation
-    bdgObj.sim5R1C(solver=None, tee=True)  # take solver from environment variable
+    bdgObj.sim5R1C()  # take solver from environment variable
 
     # get specific heat demand
     q_sim = bdgObj.detailedResults["Heating Load"].sum() / bdgObj.cfg["A_ref"]
@@ -69,7 +70,7 @@ def test_heatload():
     print("Profile generation took " + str(time.time() - starttime))
 
     print("Spec. heat demand IWU [kWh/m²/a]: " + str(round(q_iwu)))
-    print("Spec. heat demand 5r1C [kWh/m²/a]: " + str(round(q_sim)))
+    print("Spec. heat demand 5R1C [kWh/m²/a]: " + str(round(q_sim)))
 
     if abs(q_sim - q_iwu) > 30:
         raise ValueError(

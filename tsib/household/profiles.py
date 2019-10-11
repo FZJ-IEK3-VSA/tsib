@@ -2,6 +2,7 @@ import multiprocessing as mp
 from tsorb.utils.InputData import DataExchangeCsv
 from tsorb.ElectricalLoadProfile import ElectricalLoadProfile
 import time
+import os
 import pandas as pd
 import numpy as np
 import traceback

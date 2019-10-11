@@ -5,15 +5,17 @@ Created on Sat Dec 10 12:40:17 2016
 @author: Leander Kotzur
 """
 
+import os
+import warnings
+import pvlib
 
 import pandas as pd
 import numpy as np
+import pyomo.environ as pyomo
+import pyomo.opt as opt
+
 import tsib.thermal.utils as utils
 import tsam.timeseriesaggregation as tsam
-import warnings
-import pyomo.environ as pyomo
-
-import pvlib
 
 
 class Building5R1C(object):
@@ -47,15 +49,32 @@ class Building5R1C(object):
         "C_air": 1.006,  # kJ/kg/K
     }
 
-    def __init__(self, cfg):
+    def __init__(self, cfg, maxLoad = None):
+        """
+
+        maxLoad: float, optional (default: DesignHeatLoad)
+            Maximal load of the heating system.
+
+        """
 
 
         self.cfg = cfg 
-        
         self.ventControl = False
+
+        self.maxLoad = maxLoad
+
+        self.times = self.cfg["weather"].index
 
         # initialize dataframe for irradiance on all surface directions
         self._irrad_surf = pd.DataFrame(index=cfg["weather"].index)
+
+
+        # initialize result dictionary and dataframes
+        self.static_results = {}
+        self.detailedResults = pd.DataFrame(index=self.times)
+        self.detailedRefurbish = pd.DataFrame()
+
+
 
         return
 

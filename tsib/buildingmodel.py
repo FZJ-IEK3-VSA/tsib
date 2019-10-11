@@ -5,22 +5,17 @@ Created on Sat Dec 10 12:40:17 2016
 @author: Leander Kotzur
 """
 
-import pandas as pd
 import os
+import warnings
+
+import pandas as pd
 import numpy as np
-import pvlib
-import pvlib.irradiance as irr
-import time
-import pyomo.environ as pyomo
-import pyomo.opt as opt
-import tsib.thermal.utils as utils
+
 import tsib.household.profiles as household
 import tsib.thermal.model5R1C as model5R1C
 import tsib.timeseriesmanager as tsm
 import tsib.buildingconfig as config
 import tsib.data
-import tsam.timeseriesaggregation as tsam
-import warnings
 
 
 TOTAL_PROFILE_NUM = 20
@@ -45,7 +40,6 @@ class Building(object):
         roofTilt=45.0,
         a_ref=None,
         thermalClass=None,
-        maxLoad=None,
         nightReduction=True,
         occControl=False,
         capControl=True,
@@ -102,8 +96,6 @@ class Building(object):
             The themal class is used for the heat simulation and determines
             the heat capacitiy of the building itself:
                 'very light','light', 'medium', 'heavy', 'very heavy'
-        maxLoad: float, optional (default: DesignHeatLoad)
-            Maximal load of the heating system.
         nightReduction: boolean, optional (default: True)
             If activated, the lower bound of the temperature tolerance between 22:00 and 6:59
             is set to 18°C.
@@ -138,8 +130,6 @@ class Building(object):
             Configuration dictionary which includes all parameters required
             for the building optimization
         """
-
-        self.maxLoad = maxLoad
 
         if configurator is None:
             # Building Physical Parameters
@@ -187,14 +177,14 @@ class Building(object):
 
         self.cfg = self.configurator.getBdgCfg(includeSupply=False)
 
-        self.sim5R1C
+        # self.sim5R1C
+        self.IDentries = self.configurator.IDentries
+
 
         self.cfg = self.get_occupancy_profile(
                 self.cfg
             )
 
-
-        self.IDentries = self.configurator.IDentries
 
         self.ventControl = ventControl
 
@@ -202,20 +192,15 @@ class Building(object):
 
         self.thermalmodel = model5R1C.Building5R1C(self.cfg)
 
-        # initialize result dictionary and dataframes
-        self.static_results = {}
-        self.detailedResults = pd.DataFrame(index=self.times)
-        self.detailedRefurbish = pd.DataFrame()
-
         # TODO: kick out
-        self.ID = self.configurator.ID 
+        self.ID = 0  #self.configurator.ID 
 
         self.times = self.cfg["weather"].index
         return
 
     @property
     def ID_attr(self):
-        """'Returns a dictionary of all attributes which make the optimization
+        """'Returns a dictionary of all attributes which make the building
         unique"""
 
         return self.IDentries
@@ -453,7 +438,7 @@ class Building(object):
         """
         Reads the results from 2 csv files:
             filename + "_dynamic"
-            filename + "_static"
+            filename + "_static" 
         
         Parameters
         ----------
@@ -467,6 +452,20 @@ class Building(object):
         )
         self.results = pd.read_csv(filename + "_static.csv", sep=",").to_dict()
         return
+
+    @property
+    def static_results(self):
+        return self.thermalmodel.static_results 
+
+    @property
+    def detailedResults(self):
+        return self.thermalmodel.detailedResults 
+
+    @property
+    def detailedRefurbish(self):
+        return self.thermalmodel.detailedRefurbish 
+
+
 
 
 if __name__ == "__main__":
@@ -494,33 +493,22 @@ if __name__ == "__main__":
     #    cfg = bdg.getBdgCfg()
     example = Building(configurator=bdg, refurbishment=False)
 
-    #    example= Building( a_ref = 300.,
-    #        refurbishment = False, isRefurbished = False,
-    #        nightReduction = True,
-    #        comfortT_lb = 20, comfortT_ub = 26,
-    #    )
-    #    buildingYear = 1990, buildingType = 'SFH',
-    #                 buildingClassification = 'Gen', weatherData = None,
-    #                 eastOrOverall = 'N', annualHeatDemand = None,occControl = True,
-    #                 n_persons = 4, refurbishment = False, ventControl = False,
-
-    # example.sim5R1C(solver="gurobi", tee=True)
-    example.sim5R1C(solver="gurobi", tee=True)
-    example.detailedResults["5R1C Cooling Load T=20-26"] = -example.detailedResults[
+    example.sim5R1C()
+    example.detailedResults["5R1C Cooling Load T=21-24"] = -example.detailedResults[
         "Cooling Load"
     ]
-    example.detailedResults["5R1C Heating Load T=20-26"] = example.detailedResults[
+    example.detailedResults["5R1C Heating Load T=21-24"] = example.detailedResults[
         "Heating Load"
     ]
 
     example.detailedResults[
-        ["5R1C Heating Load T=20-26", "5R1C Cooling Load T=20-26"]
+        ["5R1C Heating Load T=21-24", "5R1C Cooling Load T=21-24"]
     ].plot()
     plt.show()
     example.detailedResults["T_out"] = example.cfg["weather"]["T"]
     example.detailedResults[["T_air", "T_s", "T_m", "T_out"]].plot()
     plt.show()
-    example.M.exVars.display()
+    example.thermalmodel.M.exVars.display()
 
-    example.detailedResults[["5R1C Heating Load T=20-26", "T_air"]].plot(subplots=True)
+    example.detailedResults[["5R1C Heating Load T=21-24", "T_air"]].plot(subplots=True)
     plt.show()
