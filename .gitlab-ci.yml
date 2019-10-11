@@ -2,6 +2,7 @@
 enerx:
   image: everken/enerx:python3.7-cbc2.9
   script:
+    - apt-get update
     - apt-get install -y git
     - git clone https://gitlab-ci-token:${CI_JOB_TOKEN}@jugit.fz-juelich.de/urbanmodels/tsorb.git
     - cd tsorb 
