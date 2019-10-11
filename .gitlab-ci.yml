@@ -2,6 +2,10 @@
 enerx:
   image: everken/enerx:python3.7-cbc2.9
   script:
+    - git clone https://gitlab-ci-token:${CI_JOB_TOKEN}@jugit.fz-juelich.de/urbanmodels/tsorb.git
+    - cd tsorb 
+    - pip install .
+    - cd ..
     - export SOLVER="cbc"
     - 'echo "url: https://cds.climate.copernicus.eu/api/v2" >> ~/.cdsapirc'
     - 'echo "key: $CDS_KEY" >> ~/.cdsapirc'
