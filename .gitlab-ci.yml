@@ -8,6 +8,7 @@ enerx:
     - cd tsorb 
     - pip install .
     - cd ..
+    - rm -r tsorb
     - export SOLVER="cbc"
     - 'echo "url: https://cds.climate.copernicus.eu/api/v2" >> ~/.cdsapirc'
     - 'echo "key: $CDS_KEY" >> ~/.cdsapirc'
