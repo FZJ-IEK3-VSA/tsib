@@ -50,7 +50,11 @@ def test_heatload():
             "latitude": loc["latitude"],
         }
     )
+    # setup a building with the configuration
     bdgObj = bdg.Building(configurator=bdgcfg, refurbishment=False)
+
+    # get the occupancy profiles to manipulate them
+    bdgObj._get_occupancy_profile( bdgObj.cfg)
 
     # manipulate internal gains with tabula mean value
     bdgObj.cfg["Q_ig"] = (
