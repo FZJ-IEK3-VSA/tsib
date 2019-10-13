@@ -116,8 +116,6 @@ class Building(object):
             for the building optimization
         """
 
-        # TODO get simple arguments for building initialization
-
         if configurator is None:
             # Building Physical Parameters
 
@@ -151,13 +149,13 @@ class Building(object):
             self.configurator = config.BuildingConfiguration(_kwgs)
 
         else:
-            if not isinstance(configurator, config.BuildingConfiguration):
+            if isinstance(configurator, config.BuildingConfiguration):
+                self.configurator = configurator
+            else:
                 raise ValueError(
                     "'configurator' needs to be of type "
                     + '"buildingconfig.BuildingConfiguration"'
                 )
-            else:
-                self.configurator = configurator
 
         self.cfg = self.configurator.getBdgCfg(includeSupply=False)
 
@@ -338,7 +336,7 @@ class Building(object):
         return cfg
 
 
-    def getHeatingSystem(self, T_sup=None):
+    def getHeatingSystem(self):
         """
         Determines the heat transfer coefficient between the heating system
         (e.q. the radiator) and the room based on following assumption:
