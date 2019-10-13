@@ -87,6 +87,7 @@ KWARG_TYPES = {
     "hasPhotovoltaic": bool,  # if the building has a photovoltaic panel
     "varyoccupancy": int,  # for how many occupancy profiles the building shall be optimized
     "mean_load": bool,  # if the fluctuative profile or the mean hourly profile should be taken
+    "a_roof": "NOT_IMPLEMENTED",  # the total roof area
     "windows_refurbished": "NOT_IMPLEMENTED",  # if the windows have allready been replaced
     "walls_refurbished": "NOT_IMPLEMENTED",  # if the walls have already gotton an additional insulation
     "roof_refurbished": "NOT_IMPLEMENTED",  # if the roof area has already gotton an additional insulation
@@ -282,7 +283,7 @@ class BuildingConfiguration(object):
 
     def _get_operation(self, cfg, kwgs):
         """
-        Gets all parameters which are relevant for the operation of the system.
+        Gets all parameters which are relevant for the operation of the supply and heating system.
         """
         cfg["latitude"] = kwgs.pop("latitude")
         cfg["longitude"] = kwgs.pop("longitude")
@@ -413,6 +414,9 @@ class BuildingConfiguration(object):
         return cfg
 
     def _get_form(self, cfg, kwgs):
+        '''
+        Derives the form of the building, in terms of the size of the exterior walls etc.
+        '''
 
         ### Get the correct shape of building
         if (
@@ -420,7 +424,7 @@ class BuildingConfiguration(object):
         ) or ("a_ref" in kwgs and "surrounding" in kwgs):
 
             # save the number of apps
-            cfg["n_apartments"] = kwgs.pop("n_apartments")
+            cfg["n_apartments"] = kwgs["n_apartments"]
 
             # calculate full reference area
             if "a_ref" in kwgs and "surrounding" in kwgs:
@@ -435,11 +439,8 @@ class BuildingConfiguration(object):
             iwu_sur = self.iwu_bdg[
                 self.iwu_bdg["Code_AttachedNeighbours"] == kwgs.pop("surrounding")
             ]
-
-            # TODO: validate that this works
-
+            
             # get the most similar building
-
             diff_area = abs(iwu_sur["A_C_Ref"] - cfg['a_ref'])
 
             iwu_idx = diff_area.idxmin()
@@ -500,7 +501,7 @@ class BuildingConfiguration(object):
             cfg['a_ref'] = iwu_bdg["A_C_Ref"]
             cfg["n_apartments"] = iwu_bdg["n_Apartment"]
 
-        # get shape values
+        # get shape values from the chosen iwu bdg
         cfg = get_shape(cfg, iwu_bdg, cfg['a_ref'])
 
         self.IDentries["Shape"] = iwu_idx
@@ -523,6 +524,9 @@ class BuildingConfiguration(object):
         return cfg
 
     def _get_fabric(self, cfg, kwgs):
+        """
+        Get the fabric of the surrounding walls and derives the thermal conductivity
+        """
         if "ID" in kwgs:
             self.IDentries["Fabric"] = kwgs["ID"]
             cfg = get_fabric(cfg, self.iwu_bdg.xs(kwgs["ID"]).to_dict())
@@ -580,14 +584,14 @@ class BuildingConfiguration(object):
         cfg["refurbishment"] = kwgs.pop("refurbishment")
         self.IDentries["refurbishment"] = cfg["refurbishment"]
 
-        # if refurbishment is an option for the optimization
+        # if refurbishment is a forced into the optimization
         cfg["force_refurbishment"] = kwgs.pop("force_refurbishment")
         if cfg["force_refurbishment"] and not cfg["refurbishment"]:
             raise ValueError(
                 'If "force_refurbishment" is activated, "refurbishment" must be activated as well.'
             )
-        # TODO add force_refurbishment to ID entries
-        # self.IDentries['force_refurbishment'] = cfg['force_refurbishment']
+        # force_refurbishment to ID entries
+        self.IDentries['force_refurbishment'] = cfg['force_refurbishment']
 
         return cfg
 
@@ -689,7 +693,6 @@ def get_fabric(bdg, iwu_bdg):
         + iwu_bdg["A_Window_2"] * iwu_bdg["g_gl_n_Window_1"]
     ) / bdg["A_Window"]
 
-    # TODO: what means actual? I think after attic and basement condition...
     # get u values of the walls etc.
     for wall in ["Wall_1", "Wall_2", "Wall_3"]:
         bdg["U_" + wall] = iwu_bdg["U_Actual_" + wall]
@@ -730,7 +733,7 @@ def get_shape(bdg, iwu_bdg, a_ref):
     bdg["n_Storey"] = iwu_bdg["n_Storey"]
     bdg["h_room"] = iwu_bdg["h_room"]
 
-    # get specific and agreagted windows area
+    # get specific and an aggregated windows area
     for di in ["North", "East", "South", "West"]:
         bdg["A_Window_" + di] = iwu_bdg["A_Window_" + di] * (ratio ** 0.5)
     bdg["A_Window_Horizontal"] = (
@@ -762,28 +765,3 @@ def get_shape(bdg, iwu_bdg, a_ref):
     return bdg
 
 
-if __name__ == "__main__":
-    ref_results = pd.read_csv(
-        "file:///C:/Users/Leander/sciebo/FZJ/01_FullStateEco/buildingstock/results/20171017_NRW_2_noBdgs_5/bdgResults_9.csv",
-        index_col=0,
-    )
-    ref_results = ref_results.rename(
-        columns={
-            "Age App.": "buildingYear",
-            "Code_AttachedNeighbours": "surrounding",
-            "n_Apartment": "n_apartments",
-        }
-    )
-    ref_results["buildingYear"] = ref_results["buildingYear"].astype(int)
-    ref_results["a_ref_app"] = ref_results["a_ref_app"].astype(float)
-    ref_results["ownership"] = ref_results["ownership"].astype(bool)
-    ref_results.drop(["app_group", "location"], axis=1, inplace=True)
-    kwgs = ref_results.xs("N28").to_dict()
-
-    cfg["latitude"] = cfg["latitude"] + 54
-    cfg["longitude"] = cfg["longitude"] + 8
-    kwgs["varyoccupancy"] = 4
-    kwgs["n_apartments"] = 3
-
-    bdg = BuildingConfiguration(kwgs)
-    cfg = bdg.getBdgCfg()

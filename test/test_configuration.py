@@ -35,9 +35,37 @@ def test_configuration_2():
             "n_persons": 2,
             "roofOrientation": 0.0,
             "n_apartments": 2,
+            "a_ref": 300.,
+            "surrounding": "Detached",
             "latitude": 52.,
             "longitude": 13.,
         }
     )
     test = bdgcfg.getBdgCfg()
+    return
+
+
+def test_configuration_3():
+    # parameterize a building
+    kwgs = {
+        "buildingYear": 1990,
+        "latitude": 52.0,
+        "longitude": 13.0,
+        "comfortT_lb": 21.,
+        "comfortT_ub": 24.,
+        "WACC": 0.03,
+        "roofTilt": 45.0,
+        "surrounding": "Semi",
+        "n_apartments": 2,
+        "a_ref_app": 100.,
+        "n_persons": 2,
+        "roofOrientation": 135.0,
+        "costdata": "default_2016",
+        "capControl": True,
+    }
+
+    bdgcfg = cfg.BuildingConfiguration(kwgs)
+
+    test = bdgcfg.getBdgCfg()
+
     return

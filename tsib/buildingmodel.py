@@ -29,10 +29,8 @@ class Building(object):
         self,
         buildingYear=1976,
         buildingType="SFH",
-        buildingClassification="Gen",
         weatherData=None,
         weatherID=None,
-        eastOrOverall="N",
         n_persons=None,
         n_apartments=None,
         latitude=50.0,
@@ -40,11 +38,9 @@ class Building(object):
         roofOrientation=135.0,
         roofTilt=45.0,
         a_ref=None,
-        thermalClass=None,
         nightReduction=True,
         occControl=False,
         capControl=True,
-        ventControl=False,
         refurbishment=True,
         isRefurbished=False,
         comfortT_lb=21.0,
@@ -67,16 +63,12 @@ class Building(object):
         buildingType: str, optional (default: SFH)
             Size category of the buildings: 'AB', 'SFH', 'SFH2', 'MFH', 'MFH2', 
             'TH' -> used for IWU
-        buildingClassification: str, optional (default: Gen)
-            If it is a generic or a lightframe house. -> used for IWU
         weatherData: pd.DataFrame, optional (default: None)
             If None, the weather data is derived from the longitude and 
             latitude and the related TRY region.
         weatherID: pd.DataFrame, optional (default: TRY-Zone)
             If weather data is externally set, please define an identifier.
             Otherwise it is automatically set to the TRY-Zone.
-        eastOrOverall: str, optional (default: N)
-            Generic 'N' or buildings from east Germany 'East' -> used for IWU
         n_persons: int, optional (default: None)
             Number of persons living in a single flat in the house. If not set
             it is randomly chosen.
@@ -93,10 +85,6 @@ class Building(object):
         roofTilt: float, optional (default: 45.)
             Tilt of the roof in degree. 0 is flat. The parameter gets 
             overwritten for buildings with flat roofs.
-        thermalClass: str, optional (default: 'medium')
-            The themal class is used for the heat simulation and determines
-            the heat capacitiy of the building itself:
-                'very light','light', 'medium', 'heavy', 'very heavy'
         nightReduction: boolean, optional (default: True)
             If activated, the lower bound of the temperature tolerance between 22:00 and 6:59
             is set to 18°C.
@@ -105,10 +93,6 @@ class Building(object):
             nobody is at home.
         capControl: boolean, optional (default: True)
             Controller which uses the thermal capacity of the building.
-        ventControl: bool, optional (default: False)
-            Allows a control of the ventilation system.
-            Attention: The correct equation is nonlinear, why here a linearized
-            version is used, which results in a small error.
         refurbishment: bool, optional (default: True)
             Activates the degree of freedom to refurbish to true.
         isRefurbished: bool, optional (default: False)
@@ -140,8 +124,6 @@ class Building(object):
             _kwgs = {}
             _kwgs["buildingYear"] = buildingYear
             _kwgs["buildingType"] = buildingType
-            _kwgs["buildingClassification"] = buildingClassification
-            _kwgs["eastOrOverall"] = eastOrOverall
             _kwgs["weatherData"] = weatherData
             _kwgs["weatherID"] = weatherID
             if n_persons is not None:
@@ -153,7 +135,6 @@ class Building(object):
             _kwgs["roofTilt"] = roofTilt
             _kwgs["roofOrientation"] = roofOrientation
             _kwgs["a_ref"] = a_ref
-            _kwgs["thermalClass"] = thermalClass
             _kwgs["occControl"] = occControl
             _kwgs["nightReduction"] = nightReduction
             _kwgs["capControl"] = capControl
@@ -172,8 +153,8 @@ class Building(object):
         else:
             if not isinstance(configurator, config.BuildingConfiguration):
                 raise ValueError(
-                    "configurator needs to be of type "
-                    + '"config.BuildingConfiguration"'
+                    "'configurator' needs to be of type "
+                    + '"buildingconfig.BuildingConfiguration"'
                 )
             else:
                 self.configurator = configurator
@@ -470,51 +451,3 @@ class Building(object):
     @property
     def detailedRefurbish(self):
         return self.thermalmodel.detailedRefurbish 
-
-
-
-
-if __name__ == "__main__":
-
-    import matplotlib.pyplot as plt
-
-    kwgs = {
-        "buildingYear": 1990,
-        "latitude": 52.0,
-        "longitude": 13.0,
-        "comfortT_lb": 21,
-        "comfortT_ub": 24,
-        "WACC": 0.03,
-        "roofTilt": 45.0,
-        "surrounding": "Semi",
-        "n_apartments": 2,
-        "a_ref_app": 100,
-        "n_persons": 2,
-        "roofOrientation": 135.0,
-        "costdata": "default_2016",
-        "capControl": True,
-    }
-
-    bdg = config.BuildingConfiguration(kwgs)
-    #    cfg = bdg.getBdgCfg()
-    example = Building(configurator=bdg, refurbishment=False)
-
-    example.sim5R1C()
-    example.detailedResults["5R1C Cooling Load T=21-24"] = -example.detailedResults[
-        "Cooling Load"
-    ]
-    example.detailedResults["5R1C Heating Load T=21-24"] = example.detailedResults[
-        "Heating Load"
-    ]
-
-    example.detailedResults[
-        ["5R1C Heating Load T=21-24", "5R1C Cooling Load T=21-24"]
-    ].plot()
-    plt.show()
-    example.detailedResults["T_out"] = example.cfg["weather"]["T"]
-    example.detailedResults[["T_air", "T_s", "T_m", "T_out"]].plot()
-    plt.show()
-    example.thermalmodel.M.exVars.display()
-
-    example.detailedResults[["5R1C Heating Load T=21-24", "T_air"]].plot(subplots=True)
-    plt.show()
