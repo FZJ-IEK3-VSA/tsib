@@ -19,8 +19,8 @@ def test_configuration_1():
             "n_persons": 2,
             "roofOrientation": 0.0,
             "n_apartments": 1,
-            "longitude": 58.,
-            "latitude": 8.,
+            "latitude": 49.,
+            "longitude": 12.,
         }
     )
     test = bdgcfg.getBdgCfg()
@@ -32,12 +32,11 @@ def test_configuration_2():
     bdgcfg = cfg.BuildingConfiguration(
         {
             "buildingYear": 1980,
-            "n_floors": 3,
             "n_persons": 2,
             "roofOrientation": 0.0,
-            "n_apartments": 1,
-            "longitude": 58.,
-            "latitude": 8.,
+            "n_apartments": 2,
+            "latitude": 52.,
+            "longitude": 13.,
         }
     )
     test = bdgcfg.getBdgCfg()

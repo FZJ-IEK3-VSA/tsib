@@ -814,9 +814,9 @@ def get_ISO12831_weather(longitude, latitude, year=2010, cosmo=False):
     # read weather data of related try region
     if not cosmo:
         weatherID = "TRY_" + str(loc_w["Climate Zone"])
-        weather, loc = tsm.readTRY(try_num=loc_w["Climate Zone"], year=year)
+        weather, loc = readTRY(try_num=loc_w["Climate Zone"], year=year)
     else:
-        weather, weatherID = tsm.readtCosmoNetCDF4(
+        weather, weatherID = readtCosmoNetCDF4(
             os.path.join(
                 os.environ["DATA_SHARE"], "weather", "cosmo", "rea6", "processed"
             ),

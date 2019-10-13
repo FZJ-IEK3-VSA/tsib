@@ -6,16 +6,15 @@ Created on Wed Oct 11 21:17:37 2017
 """
 
 import os
-import time
 import copy
+import warnings
+
 import pandas as pd
 import numpy as np
-import multiprocessing as mp
+
 import tsib.timeseriesmanager as tsm
 import tsib.data
-from tsib.household.profiles import run_households_parallel, one_household_year
 
-import warnings
 
 HEAT_TECHS = [
     "Oil boiler",
@@ -271,9 +270,13 @@ class BuildingConfiguration(object):
                     + "' does not exists"
                 )
             # add cost data
-            cfg["costdata"] = self.inputKwargs["costdata"]
+            cfg["costdata"] = self.inputKwargs.pop("costdata")
             cfg["costdatapath"] = os.path.join(tsib.data.PATH, "costdata", self.cfg["costdata"] + ".xlsx")
             self.IDentries["costdata"] = cfg["costdata"]
+
+            # check if unused kwargs are left
+            for remaining_kwg in self.inputKwargs:
+                warnings.warn('Keyword ' + str(remaining_kwg) + ' is not used for the building parameterization.\n')
  
             return cfg
 
@@ -281,8 +284,8 @@ class BuildingConfiguration(object):
         """
         Gets all parameters which are relevant for the operation of the system.
         """
-        cfg["latitude"] = kwgs["latitude"]
-        cfg["longitude"] = kwgs["longitude"]
+        cfg["latitude"] = kwgs.pop("latitude")
+        cfg["longitude"] = kwgs.pop("longitude")
 
         if "weatherData" in kwgs:
             if not "weatherID" in kwgs:
@@ -290,12 +293,12 @@ class BuildingConfiguration(object):
                     "If weatherData is defined, also " + "weatherID has to be defined"
                 )
             else:
-                cfg["weather"] = kwgs["weatherData"]
+                cfg["weather"] = kwgs.pop("weatherData")
                 cfg["design_T_min"] = cfg["weather"].min()["T"]
-                cfg["weatherID"] = kwgs["weatherID"]
+                cfg["weatherID"] = kwgs.pop("weatherID")
                 if (
-                    kwgs["longitude"] == KWARG_DEFAULTS["longitude"]
-                    or kwgs["latitude"] == KWARG_DEFAULTS["latitude"]
+                    cfg["longitude"] == KWARG_DEFAULTS["longitude"]
+                    or cfg["latitude"] == KWARG_DEFAULTS["latitude"]
                 ):
                     warnings.warn(
                         "longitude and latitude are set to "
@@ -308,10 +311,10 @@ class BuildingConfiguration(object):
             cfg["weather"], cfg["design_T_min"], cfg[
                 "weatherID"
             ] = tsm.get_ISO12831_weather(
-                kwgs["longitude"],
-                kwgs["latitude"],
-                year=kwgs["year"],
-                cosmo=kwgs["getNetCDF4"],
+                cfg["longitude"],
+                cfg["latitude"],
+                year=kwgs.pop("year"),
+                cosmo=kwgs.pop("getNetCDF4"),
             )
 
         # save relevant ID entries
@@ -320,12 +323,12 @@ class BuildingConfiguration(object):
 
         # get controller booleans
         for control in ["nightReduction", "occControl", "capControl","ventControl"]:
-            cfg[control] = kwgs[control]
+            cfg[control] = kwgs.pop(control)
             self.IDentries[control] = cfg[control]
 
         # get comfort zone
-        cfg["comfortT_lb"] = kwgs["comfortT_lb"]
-        cfg["comfortT_ub"] = kwgs["comfortT_ub"]
+        cfg["comfortT_lb"] = kwgs.pop("comfortT_lb")
+        cfg["comfortT_ub"] = kwgs.pop("comfortT_ub")
         self.IDentries["ComfortZone"] = (
             str(cfg["comfortT_lb"]) + "-" + str(cfg["comfortT_ub"])
         )
@@ -338,13 +341,13 @@ class BuildingConfiguration(object):
 
         # get occupancy
         if "n_persons" in kwgs:
-            cfg["n_persons"] = kwgs["n_persons"]
+            cfg["n_persons"] = kwgs.pop("n_persons")
         else:
             cfg["n_persons"] = self.iwu_bdg.loc[self.IDentries["Shape"], "n_persons"]
             warnings.warn('number of persons. "n_persons" is inherited from IWU')
 
         if "n_apartments" in kwgs:
-            cfg["n_apartments"] = kwgs["n_apartments"]
+            cfg["n_apartments"] = kwgs.pop("n_apartments")
         else:
             cfg["n_apartments"] = self.iwu_bdg.loc[
                 self.IDentries["Shape"], "n_Apartment"
@@ -359,8 +362,8 @@ class BuildingConfiguration(object):
                     "If elecLoad is defined, also " + " elecLoadID has to be defined"
                 )
             else:
-                cfg["elecLoad"] = kwgs["elecLoad"]
-                self.IDentries["elecLoad"] = kwgs["elecLoadID"]
+                cfg["elecLoad"] = kwgs.pop("elecLoad")
+                self.IDentries["elecLoad"] = kwgs.pop("elecLoadID")
                 cfg["tsorb_device_load"] = False
         else:
             self.IDentries["elecLoad"] = (
@@ -370,7 +373,7 @@ class BuildingConfiguration(object):
 
         # define if an fire place is in the building
         if "hasFirePlace" in kwgs:
-            cfg["hasFirePlace"] = kwgs["hasFirePlace"]
+            cfg["hasFirePlace"] = kwgs.pop("hasFirePlace")
         else:
             # define oven only for building where the appartments are bigger
             # than 100 m^2 -> self chosen value
@@ -385,7 +388,7 @@ class BuildingConfiguration(object):
 
         # if a varying occupancy profile should get integrated
         if "varyoccupancy" in kwgs:
-            cfg["varyoccupancy"] = kwgs["varyoccupancy"]
+            cfg["varyoccupancy"] = kwgs.pop("varyoccupancy")
             if cfg["varyoccupancy"] < 1:
                 raise ValueError('"varyoccupancy" needs to be at least 1.')
         else:
@@ -393,7 +396,7 @@ class BuildingConfiguration(object):
         self.IDentries["varyoccupancy"] = cfg["varyoccupancy"]
 
         # if the mean profile or the fluctuation pad profile should be taken
-        cfg["mean_load"] = kwgs["mean_load"]
+        cfg["mean_load"] = kwgs.pop("mean_load")
         self.IDentries["mean_load"] = cfg["mean_load"]
 
         # create seed for every building
@@ -415,27 +418,29 @@ class BuildingConfiguration(object):
         if (
             "a_ref_app" in kwgs and "n_apartments" in kwgs and "surrounding" in kwgs
         ) or ("a_ref" in kwgs and "surrounding" in kwgs):
-            # calculate full reference area
-            if "a_ref" in kwgs and "surrounding" in kwgs:
-                a_ref = kwgs["a_ref"]
-            else:
-                a_ref = kwgs["a_ref_app"] * kwgs["n_apartments"]
 
             # save the number of apps
-            cfg["n_apartments"] = kwgs["n_apartments"]
+            cfg["n_apartments"] = kwgs.pop("n_apartments")
+
+            # calculate full reference area
+            if "a_ref" in kwgs and "surrounding" in kwgs:
+                cfg['a_ref'] = kwgs.pop("a_ref")
+            else:
+                cfg['a_ref'] = kwgs.pop("a_ref_app") * cfg["n_apartments"]
+
 
             # reduce to buildings with equivalent surrounding
             surDict = {"B_Alone": "Detached", "B_N1": "Semi", "B_N2": "Terraced"}
             self.iwu_bdg.replace({"Code_AttachedNeighbours": surDict}, inplace=True)
             iwu_sur = self.iwu_bdg[
-                self.iwu_bdg["Code_AttachedNeighbours"] == kwgs["surrounding"]
+                self.iwu_bdg["Code_AttachedNeighbours"] == kwgs.pop("surrounding")
             ]
 
             # TODO: validate that this works
 
             # get the most similar building
 
-            diff_area = abs(iwu_sur["A_C_Ref"] - a_ref)
+            diff_area = abs(iwu_sur["A_C_Ref"] - cfg['a_ref'])
 
             iwu_idx = diff_area.idxmin()
 
@@ -443,24 +448,24 @@ class BuildingConfiguration(object):
 
         elif "ID" in kwgs:
             iwu_bdg = self.iwu_bdg.ix[kwgs["ID"]].to_dict()
-            a_ref = iwu_bdg["A_C_Ref"]
+            cfg['a_ref'] = iwu_bdg["A_C_Ref"]
             cfg["n_apartments"] = iwu_bdg["n_Apartment"]
             iwu_idx = kwgs["ID"]
         elif "buildingYear" and "buildingType" in kwgs:
 
             if "buildingClassification" in kwgs:
-                bdg_class = kwgs["buildingClassification"]
+                bdg_class = kwgs.pop("buildingClassification")
             else:
                 bdg_class = "Gen"
             if "eastOrOverall" in kwgs:
-                bdg_eastwest = kwgs["eastOrOverall"]
+                bdg_eastwest = kwgs.pop("eastOrOverall")
             else:
                 bdg_eastwest = "N"
-
+            cfg['buildingYear'] = kwgs['buildingYear']
             iwu_bdg = self.iwu_bdg[
-                (self.iwu_bdg["Year1_Building"] <= kwgs["buildingYear"])
-                & (kwgs["buildingYear"] <= self.iwu_bdg["Year2_Building"])
-                & (self.iwu_bdg["Code_BuildingSizeClass"] == kwgs["buildingType"])
+                (self.iwu_bdg["Year1_Building"] <= cfg["buildingYear"])
+                & (cfg["buildingYear"] <= self.iwu_bdg["Year2_Building"])
+                & (self.iwu_bdg["Code_BuildingSizeClass"] == kwgs.pop("buildingType"))
             ]
             # ugly but pycharm complains otherwise
             is_class = [
@@ -484,7 +489,7 @@ class BuildingConfiguration(object):
 
             iwu_bdg = iwu_bdg.loc[iwu_idx, :].to_dict()
 
-            a_ref = iwu_bdg["A_C_Ref"]
+            cfg['a_ref'] = iwu_bdg["A_C_Ref"]
             cfg["n_apartments"] = iwu_bdg["n_Apartment"]
         else:
             warnings.warn(
@@ -492,18 +497,18 @@ class BuildingConfiguration(object):
             )
             iwu_idx = "DE.N.SFH.08.Gen.ReEx.001.001"
             iwu_bdg = self.iwu_bdg.loc[iwu_idx, :]
-            a_ref = iwu_bdg["A_C_Ref"]
+            cfg['a_ref'] = iwu_bdg["A_C_Ref"]
             cfg["n_apartments"] = iwu_bdg["n_Apartment"]
 
         # get shape values
-        cfg = get_shape(cfg, iwu_bdg, a_ref)
+        cfg = get_shape(cfg, iwu_bdg, cfg['a_ref'])
 
         self.IDentries["Shape"] = iwu_idx
         self.IDentries["A_ref"] = cfg["A_ref"]
 
         # integrate roof tilt
         if "roofTilt" in kwgs:
-            cfg["roofTilt"] = kwgs["roofTilt"]
+            cfg["roofTilt"] = kwgs.pop("roofTilt")
         else:
             if iwu_bdg["Code_RoofType"] in ["FR"]:
                 cfg["roofTilt"] = 0.0
@@ -512,7 +517,7 @@ class BuildingConfiguration(object):
         self.IDentries["roofTilt"] = cfg["roofTilt"]
 
         # integrate roof orientation
-        cfg["roofOrientation"] = kwgs["roofOrientation"]
+        cfg["roofOrientation"] = kwgs.pop("roofOrientation")
         self.IDentries["roofOrientation"] = cfg["roofOrientation"]
 
         return cfg
@@ -524,22 +529,25 @@ class BuildingConfiguration(object):
             cfg["buildingYear"] = self.iwu_bdg.xs(kwgs["ID"]).to_dict()[
                 "Year2_Building"
             ]
+            # drop ID kwg after usage
+            kwgs.pop('ID')
         else:
             # get the buildingyear
-            year = kwgs["buildingYear"]
-            if kwgs["refurbished"]:
-                year_before = copy.deepcopy(year)
-                year = min(max(year + 40, 1995), 2020)
-                warnings.warn(
-                    '"refurbished" just overwrites the buildingyear from '
-                    + str(year_before)
-                    + " to "
-                    + str(year)
-                )
-            elif kwgs["buildnew"]:
+            year = None            
+            if kwgs.pop("buildnew"):
                 year = 2020
             elif "buildingYear" in kwgs:
-                year = kwgs["buildingYear"]
+                year = kwgs.pop("buildingYear")
+                if kwgs.pop("refurbished"):
+                    year_before = copy.deepcopy(year)
+                    year = min(max(year + 40, 1995), 2020)
+                    warnings.warn(
+                        '"refurbished" just overwrites the buildingyear from '
+                        + str(year_before)
+                        + " to "
+                        + str(year) 
+                        + " for the chose type of fabric"
+                    )
             else:
                 raise ValueError('"buildingYear" is required as argument')
 
@@ -565,15 +573,15 @@ class BuildingConfiguration(object):
             self.IDentries["Fabric"] = iwu_idx
 
         # define thermal class
-        cfg["thermalClass"] = kwgs["thermalClass"]
+        cfg["thermalClass"] = kwgs.pop("thermalClass")
         self.IDentries["thermalClass"] = cfg["thermalClass"]
 
         # if refurbishment is an option for the optimization
-        cfg["refurbishment"] = kwgs["refurbishment"]
+        cfg["refurbishment"] = kwgs.pop("refurbishment")
         self.IDentries["refurbishment"] = cfg["refurbishment"]
 
         # if refurbishment is an option for the optimization
-        cfg["force_refurbishment"] = kwgs["force_refurbishment"]
+        cfg["force_refurbishment"] = kwgs.pop("force_refurbishment")
         if cfg["force_refurbishment"] and not cfg["refurbishment"]:
             raise ValueError(
                 'If "force_refurbishment" is activated, "refurbishment" must be activated as well.'
@@ -590,7 +598,7 @@ class BuildingConfiguration(object):
         """
         # if the hot water is supplied by an electricity boiler or by the
         # heating system
-        cfg["hotWaterElec"] = kwgs["hotWaterElec"]
+        cfg["hotWaterElec"] = kwgs.pop("hotWaterElec")
         self.IDentries["hotWaterElec"] = cfg["hotWaterElec"]
 
         # if hot water is generated electrically, correct the hot water demand (BDEW table)
@@ -599,20 +607,20 @@ class BuildingConfiguration(object):
                 cfg["hotWaterLoad"] = cfg["hotWaterLoad"] * 0.6
 
         # get existing heat supply
-        cfg["existingHeatSupply"] = kwgs["existingHeatSupply"]
+        cfg["existingHeatSupply"] = kwgs.pop("existingHeatSupply")
         self.IDentries["existingHeatSupply"] = cfg["existingHeatSupply"]
 
         # TODO: replace heat supply with heat equipment age
-        cfg["replaceHeatSupply"] = kwgs["replaceHeatSupply"]
+        cfg["replaceHeatSupply"] = kwgs.pop("replaceHeatSupply")
         self.IDentries["replaceHeatSupply"] = cfg["replaceHeatSupply"]
 
         # define if it has already solar thermal
         if "hasSolarThermal" in kwgs:
-            cfg["hasSolarThermal"] = kwgs["hasSolarThermal"]
+            cfg["hasSolarThermal"] = kwgs.pop("hasSolarThermal")
         else:
             # define solar thermal for all post enev 2009 gas boiler buildings
             if cfg["existingHeatSupply"] == "Gas boiler" and (
-                cfg["buildingYear"] >= 2009 or kwgs["refurbished"]
+                cfg["buildingYear"] >= 2009
             ):
                 cfg["hasSolarThermal"] = True
 
@@ -621,13 +629,13 @@ class BuildingConfiguration(object):
         self.IDentries["hasSolarThermal"] = cfg["hasSolarThermal"]
 
         # define if it has already photovoltaic
-        cfg["hasPhotovoltaic"] = kwgs["hasPhotovoltaic"]
+        cfg["hasPhotovoltaic"] = kwgs.pop("hasPhotovoltaic")
         self.IDentries["hasPhotovoltaic"] = cfg["hasPhotovoltaic"]
 
         # determine the design supply temperature depending on the size of the
         # building and the age
         if "T_sup" in kwgs:
-            T_sup = kwgs["T_sup"]
+            T_sup = kwgs.pop("T_sup")
         else:
             # TODO: find data for this
             T_sup = 70
@@ -640,7 +648,7 @@ class BuildingConfiguration(object):
             if cfg["buildingYear"] > 2010:
                 T_sup -= 10
             if "floorHeating" in kwgs:
-                if kwgs["floorHeating"]:
+                if kwgs.pop("floorHeating"):
                     T_sup = 40.0
         cfg["T_sup"] = T_sup
         # TODO configure return temperature
@@ -653,12 +661,12 @@ class BuildingConfiguration(object):
         """
         Get the interest rate and the ownership structure of the building
         """
-        cfg["ownership"] = kwgs["ownership"]
+        cfg["ownership"] = kwgs.pop("ownership")
 
-        cfg["onlyEnergyInvest"] = kwgs["onlyEnergyInvest"]
+        cfg["onlyEnergyInvest"] = kwgs.pop("onlyEnergyInvest")
 
         if "WACC" in kwgs:
-            cfg["WACC"] = kwgs["WACC"]
+            cfg["WACC"] = kwgs.pop("WACC")
         else:
             if cfg["ownership"]:
                 cfg["WACC"] = 0.03
@@ -772,8 +780,8 @@ if __name__ == "__main__":
     ref_results.drop(["app_group", "location"], axis=1, inplace=True)
     kwgs = ref_results.xs("N28").to_dict()
 
-    kwgs["latitude"] = kwgs["latitude"] + 54
-    kwgs["longitude"] = kwgs["longitude"] + 8
+    cfg["latitude"] = cfg["latitude"] + 54
+    cfg["longitude"] = cfg["longitude"] + 8
     kwgs["varyoccupancy"] = 4
     kwgs["n_apartments"] = 3
 
