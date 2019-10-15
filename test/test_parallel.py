@@ -3,14 +3,14 @@ import time
 
 import pandas as pd
 
-import tsib.household.profiles as CREST
+import tsib
 
 
 def test_parallel():
 
     starttime = time.time()
 
-    res = CREST.run_households_parallel(3, 2010, 2, cores=2, get_hot_water=True)
+    res = tsib.simHouseholdsParallel(3, 2010, 2, cores=2, get_hot_water=True)
 
     print("Profile generation took " + str(time.time() - starttime))
 

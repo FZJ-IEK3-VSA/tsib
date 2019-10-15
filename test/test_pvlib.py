@@ -6,7 +6,7 @@ Created on  Tue Sep 24 09:33:07 2019
 """
 import time
 
-import tsib.timeseriesmanager as tsm
+import tsib
 import pandas as pd
 
 
@@ -15,10 +15,10 @@ def test_pvlib():
     starttime = time.time()
 
     # Run PV simulation with Pv_lib from Sandia (default values)
-    try_data, loc = tsm.readTRY()
-    tmy_data = tsm.TRY2TMY(try_data)
+    try_data, loc = tsib.readTRY()
+    tmy_data = tsib.TRY2TMY(try_data)
 
-    specific_load, space_coverage = tsm.simPV_PV_Lib(tmy_data)
+    specific_load, space_coverage = tsib.simPhotovoltaic(tmy_data)
 
     print("Summary of specific load profile [kW/kWp]:")
     print(specific_load.describe())

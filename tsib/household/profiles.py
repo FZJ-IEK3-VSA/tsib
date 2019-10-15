@@ -19,7 +19,7 @@ from tsorb.ElectricalLoadProfile import ElectricalLoadProfile
 import tsib.data
 
 
-def one_household_year(residents, year, **elp_kwargs):
+def simSingleHousehold(residents, year, **elp_kwargs):
     """
     Function to build an Electrical Profile for the given number of residents
     in the given year and run it for exactly one household.
@@ -76,7 +76,7 @@ def _run_household_year(queue, residents, year, work_seed, **elp_kwargs):
         return
 
 
-def run_households_parallel(
+def simHouseholdsParallel(
     residents,
     year,
     no_of_households,
@@ -191,7 +191,7 @@ def run_households_parallel(
 
 
 
-def get_household_profiles(
+def getHouseholdProfiles(
     n_persons,
     weather_data,
     weatherID,
@@ -258,7 +258,7 @@ def get_household_profiles(
 
     # run in parallel all profiles
     if len(not_existing_profiles) > 1:
-        new_profiles = run_households_parallel(
+        new_profiles = simHouseholdsParallel(
             int(n_persons),
             2010,
             len(not_existing_profiles),
@@ -270,7 +270,7 @@ def get_household_profiles(
         )
     # if single profile just create one profile and avoid multiprocessing
     elif len(not_existing_profiles) > 0:
-        one_profile = one_household_year(
+        one_profile = simSingleHousehold(
             int(n_persons),
             2010,
             weather_data=weather_data,
@@ -295,7 +295,7 @@ def get_household_profiles(
 if __name__ == "__main__":
     
     start_time = time.time()
-    load_5_unique = run_households_parallel(
+    load_5_unique = simHouseholdsParallel(
         3, 2010, 5, singleProfiles=True
     )  # , resolved_load = True
 

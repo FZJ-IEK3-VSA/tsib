@@ -12,10 +12,7 @@ import logging
 import pandas as pd
 import numpy as np
 
-import tsib.household.profiles as household
-import tsib.thermal.model5R1C as model5R1C
-import tsib.timeseriesmanager as tsm
-import tsib.buildingconfig as config
+import tsib
 import tsib.data
 
 
@@ -146,10 +143,10 @@ class Building(object):
             if elecLoadID is not None:
                 _kwgs["elecLoadID"] = elecLoadID
 
-            self.configurator = config.BuildingConfiguration(_kwgs)
+            self.configurator = tsib.BuildingConfiguration(_kwgs)
 
         else:
-            if isinstance(configurator, config.BuildingConfiguration):
+            if isinstance(configurator, tsib.BuildingConfiguration):
                 self.configurator = configurator
             else:
                 raise ValueError(
@@ -161,7 +158,7 @@ class Building(object):
 
         self.IDentries = self.configurator.IDentries
 
-        self.thermalmodel = model5R1C.Building5R1C(self.cfg)
+        self.thermalmodel = tsib.Building5R1C(self.cfg)
 
         # status if the profiles have already been initialized
         self._has_occupancy_profiles = False
@@ -223,7 +220,7 @@ class Building(object):
         )
 
         # get the profiles
-        hh_profiles = household.get_household_profiles(
+        hh_profiles =tsib.getHouseholdProfiles(
             cfg["n_persons"],
             cfg["weather"],
             self.IDentries["weather"],
@@ -311,7 +308,7 @@ class Building(object):
                     )
                 else:
                     # get oven profile depending on activity and outside temperature
-                    fireplaceLoad = tsm.createWoodFireProfile(
+                    fireplaceLoad = tsib.simFireplace(
                         cfg["weather"]["T"],
                         occData["OccActive"] / n_occs,
                         n_ovens=n_app,

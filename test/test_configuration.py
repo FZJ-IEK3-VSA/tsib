@@ -6,11 +6,11 @@ Created on Fri Apr 08 11:33:01 2016
 """
 
 
-import tsib.buildingconfig as cfg
+import tsib
 
 def test_configuration_1():
     # parameterize a building
-    bdgcfg = cfg.BuildingConfiguration(
+    bdgcfg = tsib.BuildingConfiguration(
         {
             "refurbishment": False,
             "nightReduction": False,
@@ -29,7 +29,7 @@ def test_configuration_1():
 
 def test_configuration_2():
     # parameterize a building
-    bdgcfg = cfg.BuildingConfiguration(
+    bdgcfg = tsib.BuildingConfiguration(
         {
             "buildingYear": 1980,
             "n_persons": 2,
@@ -64,7 +64,7 @@ def test_configuration_3():
         "capControl": True,
     }
 
-    bdgcfg = cfg.BuildingConfiguration(kwgs)
+    bdgcfg = tsib.BuildingConfiguration(kwgs)
 
     test = bdgcfg.getBdgCfg()
 

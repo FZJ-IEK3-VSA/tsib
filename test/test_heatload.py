@@ -11,8 +11,8 @@ import os
 import pandas as pd
 
 import tsib.buildingmodel as bdg
-import tsib.buildingconfig as cfg
-import tsib.timeseriesmanager as tsm
+import tsib
+import tsib
 import tsib.data
 
 def test_heatload():
@@ -29,10 +29,10 @@ def test_heatload():
     ID = buildingSet.index[ix]
 
     # get time series data
-    try_data, loc = tsm.readTRY(try_num=4)
+    try_data, loc = tsib.readTRY(try_num=4)
 
     # parameterize a building
-    bdgcfg = cfg.BuildingConfiguration(
+    bdgcfg = tsib.BuildingConfiguration(
         {
             "ID": ID,
             "weatherData": try_data,
@@ -91,20 +91,20 @@ def test_heatload_2():
         "buildingYear": 1990,
         "latitude": 52.0,
         "longitude": 13.0,
-        "comfortT_lb": 21,
-        "comfortT_ub": 24,
+        "comfortT_lb": 21.,
+        "comfortT_ub": 24.,
         "WACC": 0.03,
         "roofTilt": 45.0,
         "surrounding": "Semi",
         "n_apartments": 2,
-        "a_ref_app": 100,
+        "a_ref_app": 100.,
         "n_persons": 2,
         "roofOrientation": 135.0,
         "costdata": "default_2016",
         "capControl": True,
     }
 
-    bdgcfg = cfg.BuildingConfiguration(kwgs)
+    bdgcfg = tsib.BuildingConfiguration(kwgs)
     example = bdg.Building(configurator=bdgcfg, refurbishment=False)
 
     example.sim5R1C()

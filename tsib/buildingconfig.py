@@ -12,7 +12,7 @@ import warnings
 import pandas as pd
 import numpy as np
 
-import tsib.timeseriesmanager as tsm
+import tsib
 import tsib.data
 
 
@@ -311,7 +311,7 @@ class BuildingConfiguration(object):
             # get TRY weather and ISO
             cfg["weather"], cfg["design_T_min"], cfg[
                 "weatherID"
-            ] = tsm.get_ISO12831_weather(
+            ] = tsib.getISO12831weather(
                 cfg["longitude"],
                 cfg["latitude"],
                 year=kwgs.pop("year"),
