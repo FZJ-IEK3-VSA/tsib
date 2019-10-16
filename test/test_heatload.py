@@ -86,32 +86,6 @@ def test_heatload():
     return
 
 
-def test_heatload_2():
-    kwgs = {
-        "buildingYear": 1990,
-        "latitude": 52.0,
-        "longitude": 13.0,
-        "comfortT_lb": 21.,
-        "comfortT_ub": 24.,
-        "WACC": 0.03,
-        "roofTilt": 45.0,
-        "surrounding": "Semi",
-        "n_apartments": 2,
-        "a_ref_app": 100.,
-        "n_persons": 2,
-        "roofOrientation": 135.0,
-        "costdata": "default_2016",
-        "capControl": True,
-    }
-
-    bdgcfg = tsib.BuildingConfiguration(kwgs)
-    example = bdg.Building(configurator=bdgcfg, refurbishment=False)
-
-    example.sim5R1C()
-
-    example.thermalmodel.M.exVars.display()
-
-    return
 
 
 if __name__ == "__main__":
