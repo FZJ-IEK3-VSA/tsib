@@ -21,11 +21,11 @@ If you want to use tsib in a published work, please [**kindly cite following pub
 
 ## Applied databases and models
 tsib is a flexible tool which allows the use of different models and databases for the generation of time series for buildings. In Version 1.0 the following databases and models are included is tsib:
-* CREST demand model for the simulaton of the occupancy behavior (Link einfügen)
-* 5R1C thermal building model based on Schütz (Link einfügen)
-* pvlib (Link einfügen)
-* TABULA archetype builing catalogue
-* Wetterdaten (DWD Testreferenzjahre, Cosmo?)
+* [CREST](https://www.lboro.ac.uk/research/crest/demand-model/) demand model for the simulaton of the occupancy behavior
+* [5R1C](https://www.sciencedirect.com/science/article/abs/pii/S0306261916314933) thermal building model 
+* [pvlib](https://github.com/pvlib/pvlib-python) for solar irradiance calculation and photovoltaic simulation
+* [TABULA/EPISCOPE](http://episcope.eu/) archetype builing catalogue
+* [DWD Testreferenzjahre](https://www.dwd.de/DE/leistungen/testreferenzjahre/testreferenzjahre.html) or [ERA5 reanalysis](https://cds.climate.copernicus.eu/cdsapp#!/dataset/reanalysis-era5-pressure-levels?tab=overview) for providing weather data
 
 
 ## Installation
@@ -53,20 +53,8 @@ To get flexible weather data from the Climate Data Store, register [here](https:
 	
 ## Examples
 
-### Basic workflow
+This [jupyter notebook](TODO) shows the capabilites of tsib to create all relevant time series. 
 
-A small example how tsam can be used is decribed as follows
-```python
-	import pandas as pd
-	import tsib
-```
-
-
-### Detailed examples
-
-A [**first example**](/examples/aggregation_example.ipynb) shows the capabilites of tsib as jupyter notebook. 
-
-The example time series are based on a department [publication](https://www.mdpi.com/1996-1073/10/3/361) and the [test reference years of the DWD](https://www.dwd.de/DE/leistungen/testreferenzjahre/testreferenzjahre.html).
 
 ## License
 
@@ -80,11 +68,10 @@ If not, see https://opensource.org/licenses/MIT
 ## About Us 
 <a href="http://www.fz-juelich.de/iek/iek-3/EN/Forschung/_Process-and-System-Analysis/_node.html"><img src="https://www.fz-juelich.de/SharedDocs/Bilder/IEK/IEK-3/Abteilungen2015/VSA_DepartmentPicture_2019-02-04_459x244_2480x1317.jpg?__blob=normal" width="400px" alt="Abteilung VSA"></a> 
 
-We are the [Techno-Economic Energy Systems Analysis](https://www.fz-juelich.de/iek/iek-3/EN/Forschung/_Process-and-System-Analysis/_node.html) department at the [Institute of Energy and Climate Research: Electrochemical Process Engineering (IEK-3)](https://www.fz-juelich.de/iek/iek-3/EN/Home/home_node.html) belonging to the [Forschungszentrum Jülich](https://www.fz-juelich.de/). Our interdisciplinary department's research is focusing on energy-related process and systems analyses. Data searches and system simulations are used to determine energy and mass balances, as well as to evaluate performance, emissions and costs of energy systems. The results are used for performing comparative assessment studies between the various systems. Our current priorities include the development of energy strategies, in accordance with the German Federal Government’s greenhouse gas reduction targets, by designing new infrastructures for sustainable and secure energy supply chains and by conducting cost analysis studies for integrating new technologies into future energy market frameworks.
+We are the [Institute of Energy and Climate Research: Techno-Economic Energy Systems Analysis (IEK-3)](https://www.fz-juelich.de/iek/iek-3/EN/Forschung/_Process-and-System-Analysis/_node.html) belonging to the [Forschungszentrum Jülich](https://www.fz-juelich.de/). Our interdisciplinary department's research is focusing on energy-related process and systems analyses. Data searches and system simulations are used to determine energy and mass balances, as well as to evaluate performance, emissions and costs of energy systems. The results are used for performing comparative assessment studies between the various systems. Our current priorities include the development of energy strategies, in accordance with the German Federal Government’s greenhouse gas reduction targets, by designing new infrastructures for sustainable and secure energy supply chains and by conducting cost analysis studies for integrating new technologies into future energy market frameworks.
 
 ## Acknowledgement
 
 This work was supported by the Helmholtz Association under the Joint Initiative ["Energy System 2050   A Contribution of the Research Field Energy"](https://www.helmholtz.de/en/research/energy/energy_system_2050/).
 
 <a href="https://www.helmholtz.de/en/"><img src="https://www.helmholtz.de/fileadmin/user_upload/05_aktuelles/Marke_Design/logos/HG_LOGO_S_ENG_RGB.jpg" alt="Helmholtz Logo" width="200px" style="float:right"></a>
-
