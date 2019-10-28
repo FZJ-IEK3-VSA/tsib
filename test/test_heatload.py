@@ -21,7 +21,7 @@ def test_heatload():
 
     # get raw building data set
     buildingSet = pd.read_csv(
-        os.path.join(tsib.data.PATH, "IWU", "IWU_wPersons.csv"), header=0, index_col=0
+        os.path.join(tsib.data.PATH, "episcope", "tabula_DE_wPersons.csv"), header=0, index_col=0
     )
 
     # get a random building ID

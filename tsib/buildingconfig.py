@@ -26,6 +26,8 @@ HEAT_TECHS = [
 ]
 
 KWARG_TYPES = {
+    "country": ['AT', 'BE', 'BG', 'CY', 'CZ', 'DE', 'DK', 'ES', 'FR', 'GB', 'GR',
+       'HU', 'IE', 'IT', 'NL', 'NO', 'PL', 'RS', 'SE', 'SI', 'XX'], # country code used for the choice of the building parameters
     "n_storey": "NOT_IMPLEMENTED",  # number of storeys in the building
     "a_ref_app": float,  # living area of a single flat
     "a_ref": float,  # living area of the whole building
@@ -96,6 +98,7 @@ KWARG_TYPES = {
 }
 
 KWARG_DEFAULTS = {
+    "country": 'DE', 
     "roofOrientation": 135.0,  # roof azimuth with 180 as south
     "refurbished": False,  # if the building is already refurbished
     "buildnew": False,  # if the building is newly constructed
@@ -119,6 +122,7 @@ KWARG_DEFAULTS = {
     "occControl": False,  # if the heating is adapted to occupancy activity
     "comfortT_lb": 21.0,  # lower bound of the comfortable temperature if active
     "comfortT_ub": 24.0,  # upper bound of the comfortable temperature if active
+    "n_persons": 2,  # number of persons living in a single flat
     "varyoccupancy": 1,  # for how many occupancy profiles the building shall be optimized
     "mean_load": False,  # if the fluctuative profile or the mean hourly profile should be taken
     "costdata": "default_2016",
@@ -244,9 +248,11 @@ class BuildingConfiguration(object):
             return self.cfg
         else:
             # get the iwu database
-            self.iwu_bdg = pd.read_csv(
-                os.path.join(tsib.data.PATH, "IWU", "IWU_wPersons.csv"), index_col=0
+            raw = pd.read_csv(
+                os.path.join(tsib.data.PATH, "episcope", "episcope.csv"), index_col=0
             )
+            # reduce to the country list of buildings
+            self.iwu_bdg = raw.loc[self.IDentries["Country_Code"], kwgs.pop("country")]
 
             # call all functions which populate the building configurator
             cfg = self.cfg
@@ -339,11 +345,7 @@ class BuildingConfiguration(object):
             )
 
         # get occupancy
-        if "n_persons" in kwgs:
-            cfg["n_persons"] = kwgs.pop("n_persons")
-        else:
-            cfg["n_persons"] = self.iwu_bdg.loc[self.IDentries["Shape"], "n_persons"]
-            warnings.warn('number of persons. "n_persons" is inherited from IWU')
+        cfg["n_persons"] = kwgs.pop("n_persons")
 
         if "n_apartments" in kwgs:
             cfg["n_apartments"] = kwgs.pop("n_apartments")
