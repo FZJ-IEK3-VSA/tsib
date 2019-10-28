@@ -240,8 +240,6 @@ class BuildingConfiguration(object):
             Decides wether also parameters for the supply optimization
             should be included.
         """
-        # TODO integrate a function which drops used keyword arguments
-
         if self.cfg:
             return self.cfg
         else:
@@ -655,8 +653,7 @@ class BuildingConfiguration(object):
                 if kwgs.pop("floorHeating"):
                     T_sup = 40.0
         cfg["T_sup"] = T_sup
-        # TODO configure return temperature
-        cfg["T_ret"] = 25.0
+        cfg["T_ret"] = T_sup - 20.
         self.IDentries["T_sup"] = cfg["T_sup"]
 
         return cfg
