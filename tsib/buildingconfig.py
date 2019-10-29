@@ -249,10 +249,10 @@ class BuildingConfiguration(object):
         else:
             # get the iwu database
             raw = pd.read_csv(
-                os.path.join(tsib.data.PATH, "episcope", "episcope.csv"), index_col=0
+                os.path.join(tsib.data.PATH, "episcope", "episcope.csv"), index_col=1,
             )
             # reduce to the country list of buildings
-            self.iwu_bdg = raw.loc[self.IDentries["Country_Code"], kwgs.pop("country")]
+            self.iwu_bdg = raw[raw["Code_Country"] == self.inputKwargs.pop("country")]
 
             # call all functions which populate the building configurator
             cfg = self.cfg
