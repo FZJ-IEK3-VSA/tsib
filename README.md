@@ -7,7 +7,7 @@
 tsib is a python package that builds up on different databases and models for creating consistent demand and production time series of residential buildings. This could be either occupancy behavior, electricity demand or heat demand time series as well as photovoltaic (PV) and solar thermal production time series.
 
 
-If you want to use tsib in a published work, please [**kindly cite following publication**](TODO) which applies tsib for the creation of building time series for Germany. 
+If you want to use tsib in a published work, please [**cite following publication**](TODO) which applies tsib for the creation of time series for residential buildings in Germany. 
 
 
 ## Features
@@ -24,7 +24,7 @@ tsib is a flexible tool which allows the use of different models and databases f
 * [CREST](https://www.lboro.ac.uk/research/crest/demand-model/) demand model for the simulaton of the occupancy behavior
 * [5R1C](https://www.sciencedirect.com/science/article/abs/pii/S0306261916314933) thermal building model 
 * [pvlib](https://github.com/pvlib/pvlib-python) for solar irradiance calculation and photovoltaic simulation
-* [TABULA/EPISCOPE](http://episcope.eu/) archetype builing catalogue
+* [TABULA/EPISCOPE](http://episcope.eu/) archetype building catalogue
 * [DWD Testreferenzjahre](https://www.dwd.de/DE/leistungen/testreferenzjahre/testreferenzjahre.html) or [ERA5 reanalysis](https://cds.climate.copernicus.eu/cdsapp#!/dataset/reanalysis-era5-pressure-levels?tab=overview) for providing weather data
 
 
@@ -60,7 +60,7 @@ This [jupyter notebook](TODO) shows the capabilites of tsib to create all releva
 
 MIT License
 
-Copyright (C) 2016-2019 Leander Kotzur (FZJ IEK-3), Kevin Knosala (FZJ IEK-3), Peter Stenzel (FZJ IEK-3), Peter Markewitz (FZJ IEK-3), Martin Robinius (FZJ IEK-3), Detlef Stolten (FZJ IEK-3)
+Copyright (C) 2016-2019 Leander Kotzur (FZJ IEK-3), Timo Kannengießer (FZK-IEK-3), Kevin Knosala (FZJ IEK-3), Peter Stenzel (FZJ IEK-3), Peter Markewitz (FZJ IEK-3), Martin Robinius (FZJ IEK-3), Detlef Stolten (FZJ IEK-3)
 
 You should have received a copy of the MIT License along with this program.
 If not, see https://opensource.org/licenses/MIT
