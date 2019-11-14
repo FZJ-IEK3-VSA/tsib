@@ -62,10 +62,10 @@ def test_heatload():
     )
 
     # run simulation
-    bdgObj.sim5R1C()  # take solver from environment variable
+    bdgObj.getHeatLoad()  # take solver from environment variable
 
     # get specific heat demand
-    q_sim = bdgObj.detailedResults["Heating Load"].sum() / bdgObj.cfg["A_ref"]
+    q_sim = bdgObj.timeseries["Heating Load"].sum() / bdgObj.cfg["A_ref"]
 
     # get calculated heat demand by IWU
     q_iwu = buildingSet.loc[ID, "q_h_nd"]

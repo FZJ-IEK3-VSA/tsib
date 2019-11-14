@@ -162,11 +162,17 @@ class Building(object):
 
         # status if the profiles have already been initialized
         self._has_occupancy_profiles = False
+        self._occupancy_profile_names = []
         self._has_heat_profiles = False
+        self._heat_profile_names = []
         self._has_renewable_potential_profiles = False
+        self._renewable_profile_names = []
 
         # TODO: kick out
         self.ID = 0  #self.configurator.ID 
+
+        # initialize time series for the building
+        self.timeseries = cfg['weatherData']
 
         return
 
@@ -184,7 +190,7 @@ class Building(object):
         datapath2 = os.path.join(
             tsib.data.PATH, "results", "buildingstaticresults", self.ID + ".csv"
         )
-        self.detailedResults.to_csv(datapath1)
+        self.timeseries.to_csv(datapath1)
         pd.Series(self.static_results).to_csv(datapath2)
         return
 
@@ -196,9 +202,9 @@ class Building(object):
             tsib.data.PATH, "results", "buildingstaticresults", self.ID + ".csv"
         )
         if os.path.isfile(datapath1):
-            self.detailedResults = pd.read_csv(datapath1, index_col=0)
-            self.detailedResults.index = pd.to_datetime(
-                self.detailedResults.index, utc=True
+            self.timeseries = pd.read_csv(datapath1, index_col=0)
+            self.timeseries.index = pd.to_datetime(
+                self.timeseries.index, utc=True
             )
             self.static_results = pd.read_csv(
                 datapath2, index_col=0, squeeze=True, header=None
@@ -207,6 +213,67 @@ class Building(object):
         else:
             return False
 
+    def _get_renewable_profile(self, cfg):
+        """
+        Gets all time series for the renewable technologies to supply the building with.
+        """
+
+        # TODO tidy up the whole roof irradiance part - introduce index for different roofs
+        # sim pv for tilted roof (TR) upper floor ceiling (UC) - assumed tilted
+        tmy_data = tsib.TRY2TMY(cfg['weather'])
+
+        # init profiles
+        profiles = pd.DataFrame(index = tmy_data.index)
+
+        # get photovoltaic and solar thermal profiles
+        if cfg['roofTilt'] > 10:
+            profiles['Photovoltaic 1'], pv_cov = tsib.simPhotovoltaic(tmy_data, 
+                                            surface_tilt = cfg['roofTilt'],
+                                            surface_azimuth = cfg['roofOrientation'], 
+                                            latitude = cfg['latitude'],
+                                            longitude = cfg['longitude'], 
+                                            losses = 0.1,)
+            profiles['Solar thermal 1'] = tsib.simSolarThermal(tmy_data, 
+                                            surface_tilt = cfg['roofTilt'],
+                                            surface_azimuth = cfg['roofOrientation'], 
+                                            latitude = cfg['latitude'],
+                                            longitude = cfg['longitude'], )
+            profiles['Photovoltaic 2'], pv_cov = tsib.simPhotovoltaic(tmy_data, 
+                                            surface_tilt = cfg['roofTilt'],
+                                            surface_azimuth = cfg['roofOrientation'] + 180., 
+                                            latitude = cfg['latitude'],
+                                            longitude = cfg['longitude'], 
+                                            losses = 0.1,)
+            profiles['Solar thermal 2'] = tsib.simSolarThermal(tmy_data, 
+                                            surface_tilt = cfg['roofTilt'],
+                                            surface_azimuth = cfg['roofOrientation'] + 180., 
+                                            latitude = cfg['latitude'],
+                                            longitude = cfg['longitude'])
+        else: # flat roof 
+            profiles['Photovoltaic 1'], pv_cov = tsib.simPhotovoltaic(tmy_data,
+                                            surface_tilt = 30., # optimal tilt
+                                            surface_azimuth = 180., #and orient
+                                            latitude = cfg['latitude'],
+                                            longitude = cfg['longitude'], 
+                                            losses = 0.2,) # higher losses 
+                                            # due shadowing between panels
+            profiles['Solar thermal 1'] = tsib.simSolarThermal(tmy_data, 
+                                            surface_tilt = 30., # optimal tilt
+                                            surface_azimuth = 180., #and orient
+                                            latitude = cfg['latitude'],
+                                            longitude = cfg['longitude'], )
+
+        # get heat pump coefficient of performance
+        profiles['Heat pump'] = simHeatpump(tmy_data['T'], T_hot = cfg['T_sup'], efficiency = 0.45, T_limit = -7.)
+
+        self._has_renewable_potential_profiles = True
+
+        self._renewable_profile_names = profiles.columns.values
+
+        self.timeseries.append(profiles)
+
+        return profiles
+                                            
 
     def _get_occupancy_profile(self, cfg):
         """
@@ -214,13 +281,16 @@ class Building(object):
         electricity load and occupants activity.
         """
 
+        logging.info('Occupancy profiles are simulated. ' 
+                    + 'This can take a few minutes.')
+
         # get a number of random seeds to generate the profiles
         seeds = np.random.RandomState(cfg['state_seed']).randint(
             0, TOTAL_PROFILE_NUM, size=int(cfg["varyoccupancy"] * cfg["n_apartments"])
         )
 
         # get the profiles
-        hh_profiles =tsib.getHouseholdProfiles(
+        hh_profiles = tsib.getHouseholdProfiles(
             cfg["n_persons"],
             cfg["weather"],
             self.IDentries["weather"],
@@ -278,9 +348,6 @@ class Building(object):
             # get hot water load
             bdg_profiles[i]["hotWaterLoad"] = occData["HotWater"] / 1000
 
-            # overall number of occupants
-            bdg_profiles[i]["n_occupants"] = n_occs
-
             # get fireplace profile
             if cfg["hasFirePlace"]:
                 pot_filename = os.path.join(
@@ -322,16 +389,64 @@ class Building(object):
                 bdg_profiles[i]["fireplaceLoad"] = fireplaceLoad
 
         # give building config the first profile
-        cfg.update(bdg_profiles[i])
+        cfg.update(bdg_profiles[0])
 
         # give the other profiles to the configuration file as well
         if cfg["varyoccupancy"] > 1:
-            cfg["vary_profiles"] = bdg_profiles
+            cfg["vary_profiles"] = bdgp_rofiles
+
+        # collect all profiles
+        profiles = pd.DataFrame(index = tmy_data.index)
+
+        # TODO
+
+        self._occupancy_profile_names = elecLoad
 
         self._has_occupancy_profiles = True
 
         return cfg
 
+
+    def _get_heatload_profile(self):
+        '''
+        Simulates the heat load based on a 5R1C model
+        '''
+       # occupancy profiles are required for thermal load determination
+        if not self._has_occupancy_profiles:
+            self.cfg = self._get_occupancy_profile(
+                    self.cfg
+                )
+
+        logging.info('Heat load profiles are simulated. ' 
+        + 'This can take a few minutes.')
+        # get thermal load with 5R1C model
+        if self.cfg["refurbishment"]:
+            # save refurbishment satus
+            befRef = True
+            warnings.warn(
+                "For the simulation the refurbishment decisions"
+                + " are deactivated",
+                UserWarning,
+            )
+            self.cfg["refurbishment"] = False
+        else:
+            befRef = False
+
+        # run simulation
+        self.thermalmodel.sim5R1C()
+
+        # overwrite refurbishment options again
+        self.cfg["refurbishment"] = befRef
+
+        self._has_heat_profiles = True
+        
+        # define relevant time series 
+        self._heat_profile_names = ['Heating Load', 'Cooling Load']
+
+        # append simulation (TODO improve this call)
+        self.timeseries.append(self.thermalmodel.detailedResults[self._heat_profile_names])
+
+        return
 
     def getHeatingSystem(self):
         """
@@ -351,20 +466,6 @@ class Building(object):
         
         return
 
-    def sim5R1C(self):
-        '''
-        Runs the 5R1C simulation.
-        '''
-        if not self._has_occupancy_profiles:
-            self.cfg = self._get_occupancy_profile(
-                    self.cfg
-                )
-        self.thermalmodel.sim5R1C()
-
-        self._has_heat_profiles = True
-
-        return
-
 
     def getLoad(self):
         """
@@ -375,7 +476,7 @@ class Building(object):
         
         Returns
         -------
-        None, but in Building.results or Building.detailedResults can the
+        None, but in Building.results or Building.timeseries can the
         results be shown as pandas.DataFrame
         """
 
@@ -394,7 +495,7 @@ class Building(object):
             else:
                 befRef = False
 
-            self.sim5R1C()
+            self._sim5R1()
             self._saveResults()
             self.cfg["refurbishment"] = befRef
         return
@@ -412,7 +513,7 @@ class Building(object):
         """
         if filename[-4:] is ".csv":
             filename = filename[:-4]
-        self.detailedResults.to_csv(filename + "_dynamic.csv", sep=",")
+        self.timeseries.to_csv(filename + "_dynamic.csv", sep=",")
         pd.Series(self.static_results).to_csv(filename + "_static.csv", sep=",")
         return
 
@@ -429,11 +530,63 @@ class Building(object):
         """
         if filename[-4:] is ".csv":
             filename = filename[:-4]
-        self.detailedResults = pd.read_csv(
+        self.timeseries = pd.read_csv(
             filename + "_dynamic.csv", sep=",", index_col=0, parse_dates=True
         )
         self.results = pd.read_csv(filename + "_static.csv", sep=",").to_dict()
         return
+
+
+    def getOccupancy(self):
+        '''
+        Returns the occupancy profiles, and creates those, in case that they do
+        not exist.
+        '''
+        if not self._has_occupancy_profiles:
+            self._get_occupancy_profile(
+                    self.cfg
+                )
+        
+        return self.timeseries[self._occupancy_profile_names]
+
+
+    def getHeatLoad(self):
+        '''
+        Returns the thermal load profile, and creates those, in case that they do
+        not exist.
+        '''
+    
+        if not self._has_heat_profiles:
+            self._get_heatload_profile()
+        
+        return self.timeseries[self._heat_profile_names]
+
+
+
+    def getRenewables(self):
+        '''
+        Returns the renewable potenital profiles, such as solar
+        thermal, photovoltaic or  load profile, and creates those, in case that they do
+        not exist.
+        '''
+        if not self._has_renewable_potential_profiles:
+            logging.info('Occupancy profiles are simulated. ' 
+                        + 'This can take a few minutes.')
+            self._get_renewable_profile(self)
+        
+        return self.timeseries[self._renewable_profile_names]
+
+
+    def getLoad(self):
+        '''
+        Returns all loads of the building
+        '''
+
+        TODO
+
+        return 
+
+
 
     @property
     def static_results(self):
@@ -441,7 +594,20 @@ class Building(object):
 
     @property
     def detailedResults(self):
-        return self.thermalmodel.detailedResults 
+        warnings.warn(
+            "detailedResults is deprecated, use timeseries instead"
+                    DeprecationWarning
+        )
+        return self.thermalmodel.timeseries 
+
+
+
+    def _sim5R1(self):
+        '''
+        Runs the 5R1C simulation.
+        '''
+
+        return
 
     @property
     def detailedRefurbish(self):

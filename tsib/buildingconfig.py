@@ -47,7 +47,7 @@ KWARG_TYPES = {
     ],  # type of building (can be inherited by n_apartments)
     "buildingClassification": ["Gen", "HR", "Lightframe"],
     "eastOrOverall": ["N", "East"],
-    "roofOrientation": float,  # roof azimuth with 180 as south
+    "roofOrientation": float,  # roof azimuth in degree with 180 as south
     "roofTilt": float,  # rooftile angle in degree
     "refurbished": bool,  # if the building is already refurbished
     "buildnew": bool,  # if the building gets completely new constructed
@@ -134,7 +134,7 @@ class BuildingConfiguration(object):
     """
     Class which configures building types and decides based on the provision
     of parameters dynamically how to set the building ID and which parameters
-    from which database have to get added.
+    from which database need to get added.
 
 
     """
