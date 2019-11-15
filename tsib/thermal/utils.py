@@ -1,29 +1,29 @@
-#!/usr/bin/env python
-""" Test Script only
-.. module:: utils
-    :platform Unix, Windows
-    :version $Id: utils.py 68 2014-03-02 20:31:16Z leko $
-.. codeauthor:: Leander Kotzur
-.. codeauthor:: Roland Doll
-
+# -*- coding: utf-8 -*-
 """
-import os
-import sys
-import numpy as np
-import pandas as pd
-import datetime
+Created on Sat Dec 10 12:40:17 2016
 
+@author: Leander Kotzur
+"""
 
-class PowerDict(dict):  # Power Dictionary with additional functions
+class PowerDict(dict):  
+    '''
+    Dictionary with additional functions
+    '''
     def __init__(self, parent=None, key=None):
         self.parent = parent
         self.key = key
 
-    def __missing__(self, key):  # creation of subdictionaries on fly
+    def __missing__(self, key): 
+        '''
+        Creation of subdictionaries on fly
+        '''
         self[key] = PowerDict(self, key)
         return self[key]
 
-    def append(self, item):  # additional append function for lists in dict
+    def append(self, item):
+        '''
+        additional append function for lists in dict
+        '''
         self.parent[self.key] = [item]
 
     def __setitem__(self, key, val):
@@ -35,67 +35,21 @@ class PowerDict(dict):  # Power Dictionary with additional functions
             pass
 
 
-def calcFixCost(WACC, optInterval, Lifetime, CAPEX, OPEXfix):
-    """
-    Annualizes the capital expenditure CAPEX [eur or eur/kW] and the fix operation expenditure OPEXfix [-/a] as relative value of the capital expenditure. 
-    This is done for a horizon or lifetime [years] with an interest rate or WACC [-/a].
-    The annualized cost are then linearly amortized to the optInterval [hours]
-    """
-    raise Warning('Function "calcFixCost" is deprecated')
-    aFactor = (
-        ((1 + WACC) ** Lifetime) * WACC / (((1 + WACC) ** Lifetime) - 1)
-        if WACC > 0
-        else 1.0 / Lifetime
-    )
-    if CAPEX > 0:
-        annCosts = CAPEX * (aFactor + OPEXfix)
-    else:
-        annCosts = OPEXfix
-    return annCosts * optInterval / 8760
-
-
-def readProfile(filePath):
-    """
-    Reads a profile from a .txt file, where each profile entry is in a new line and returns it as a list
-    """
-    data = []
-    f = open(os.path.dirname(os.path.realpath(__file__)) + filePath)
-    for line in f.readlines():
-        data.append(float(line.replace(",", ".")))
-    f.close()
-    return data
-
-
-def writeProfile(data, filePath):
-    """
-    writes a profile t a .txt file, where each profile entry is in a new line and returns it as a list
-    """
-    f = open(os.path.dirname(os.path.realpath(__file__)) + filePath, "w")
-    for datapoint in data:
-        f.write(str(datapoint) + "\n")
-    f.close()
-    return
-
-
-def profilesToHourlyProfiles(sourceFolderPath, aimFolderPath):
-    files = os.listdir(os.path.dirname(os.path.realpath(__file__)) + sourceFolderPath)
-    for file in files:
-        if file[-4:] == ".txt":
-            data = readProfile(sourceFolderPath + "\\" + file)
-            if (
-                len(data) > 8760 and len(data) % 8760 == 0
-            ):  # more timesteps then a year + ganzzahliges vielfaches
-                hourlydata = data[0 :: len(data) / 8760]
-            # normalize to average value of 1
-            sum_val = sum(hourlydata)
-            final_data = [cor_val / sum_val * 8760 for cor_val in hourlydata]
-            writeProfile(final_data, aimFolderPath + "\\" + file[:-4] + "_hourly.txt")
-    return
-
-
-
-
 def manageSolverOpts(solver, solverOpts):
+    '''
+    Adds solver specific options.
+
+    Parameters
+    ----------
+    solver: str, required
+        Solver name used by pyomo
+    solverOpts: dict, required
+        Other solveroptions
+    
+    Returns
+    -------
+    solverOpts: dict
+    '''
 
     defaultOpts = {}
 
@@ -138,6 +92,7 @@ def manageSolverOpts(solver, solverOpts):
             'Solver name unknown. Please use one of "gurobi", "scip", "cbc", "glpk" or "cplex".'
         )
 
+    # just add default options if not defined in solverOpts
     for option in defaultOpts:
         if not option in solverOpts:
             solverOpts[option] = defaultOpts[option]

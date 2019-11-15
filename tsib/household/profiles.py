@@ -286,7 +286,11 @@ def getHouseholdProfiles(
     # load all profiles
     profiles = []
     for seed in seeds:
-        profiles.append(pd.read_csv(filenames[seed], index_col=0))
+        profile = pd.read_csv(filenames[seed], index_col=0)
+        # TODO get a proper indexing in tsorb based on the weather data
+        profile.index = weather_data.index
+
+        profiles.append(profile)
 
     return profiles
 

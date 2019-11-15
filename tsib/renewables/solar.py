@@ -145,7 +145,7 @@ def simPhotovoltaic(
     )
 
     # calculate peak load of single module [W]
-    peak_load = module.ix["Impo"] * module.ix["Vmpo"]
+    peak_load = module.loc["Impo"] * module.loc["Vmpo"]
 
     if integrateInverter:
         # calculate load after inverter
@@ -173,7 +173,7 @@ def simPhotovoltaic(
     specific_load = specific_load * (1 - losses)
 
     # space coverage in [m^2/kW]
-    space_coverage = module.ix["Area"] / peak_load * 1000.0
+    space_coverage = module.loc["Area"] / peak_load * 1000.0
     return specific_load, space_coverage
 
 

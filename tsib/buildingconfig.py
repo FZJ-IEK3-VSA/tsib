@@ -8,6 +8,7 @@ Created on Wed Oct 11 21:17:37 2017
 import os
 import copy
 import warnings
+import logging
 
 import pandas as pd
 import numpy as np
@@ -189,7 +190,11 @@ class BuildingConfiguration(object):
                             "'" + kwarg + "' needs to be of " + str(KWARG_TYPES[kwarg])
                         )
                     else:
-                        pass  # is valid
+                        # format from numpy to python float
+                        if not isinstance(kwargs[kwarg], float):
+                            kwargs[kwarg] = kwargs[kwarg].item()  
+                        else:
+                            pass # is valid
                 elif KWARG_TYPES[kwarg] is int:
                     if not isinstance(
                         kwargs[kwarg], (np.int8, np.int16, np.int32, np.int64, int)
@@ -198,14 +203,22 @@ class BuildingConfiguration(object):
                             "'" + kwarg + "' needs to be of " + str(KWARG_TYPES[kwarg])
                         )
                     else:
-                        pass  # is valid
+                        # format from numpy to python int
+                        if not isinstance(kwargs[kwarg], int):
+                            kwargs[kwarg] = kwargs[kwarg].item()  
+                        else:
+                            pass # is valid
                 elif KWARG_TYPES[kwarg] is bool:
                     if not isinstance(kwargs[kwarg], (bool, np.bool, np.bool_)):
                         raise ValueError(
                             "'" + kwarg + "' needs to be of " + str(KWARG_TYPES[kwarg])
                         )
                     else:
-                        pass  # is valid
+                        # format from numpy to python bool
+                        if not isinstance(kwargs[kwarg], bool):
+                            kwargs[kwarg] = kwargs[kwarg].item()  
+                        else:
+                            pass # is valid
                 elif not isinstance(kwargs[kwarg], KWARG_TYPES[kwarg]):
                     raise ValueError(
                         "'" + kwarg + "' needs to be of " + str(KWARG_TYPES[kwarg])
@@ -229,9 +242,9 @@ class BuildingConfiguration(object):
 
         if not database is None:
             raise NotImplementedError()
+
         return
 
-        # TODO: get just ID
 
     def getBdgCfg(self, includeSupply=True):
         """
@@ -281,8 +294,12 @@ class BuildingConfiguration(object):
 
             # check if unused kwargs are left
             for remaining_kwg in self.inputKwargs:
-                warnings.warn('Keyword ' + str(remaining_kwg) + ' is not used for the building parameterization.\n')
- 
+                if not self.inputKwargs[remaining_kwg] == KWARG_DEFAULTS[remaining_kwg]:
+                    warnings.warn('Keyword ' + str(remaining_kwg) + ' is not used for the building parameterization.\n')
+                else:
+                    logging.info('Keyword ' + str(remaining_kwg) + ' is not used. Nevertheless, it just holds the default value.\n')
+            self._has_cfg = True
+
             return cfg
 
     def _get_operation(self, cfg, kwgs):
@@ -292,6 +309,10 @@ class BuildingConfiguration(object):
         cfg["latitude"] = kwgs.pop("latitude")
         cfg["longitude"] = kwgs.pop("longitude")
 
+        # required weatherdata
+        weather_units = {"DHI": 'W/m^2', "T": '°C', "DNI": 'W/m^2'}
+        cfg["weatherUnits"] = weather_units
+        
         if "weatherData" in kwgs:
             if not "weatherID" in kwgs:
                 raise ValueError(
@@ -299,6 +320,12 @@ class BuildingConfiguration(object):
                 )
             else:
                 cfg["weather"] = kwgs.pop("weatherData")
+                
+                # check if it is the correct weather data
+                for key in weather_units:
+                    if not key in cfg["weather"].columns:
+                        raise ValueError('Column "' + key + '" required in weatherData')
+
                 cfg["design_T_min"] = cfg["weather"].min()["T"]
                 cfg["weatherID"] = kwgs.pop("weatherID")
                 if (
@@ -448,7 +475,7 @@ class BuildingConfiguration(object):
             iwu_bdg = self.iwu_bdg.xs(iwu_idx).to_dict()
 
         elif "ID" in kwgs:
-            iwu_bdg = self.iwu_bdg.ix[kwgs["ID"]].to_dict()
+            iwu_bdg = self.iwu_bdg.loc[kwgs["ID"],:].to_dict()
             cfg['a_ref'] = iwu_bdg["A_C_Ref"]
             cfg["n_apartments"] = iwu_bdg["n_Apartment"]
             iwu_idx = kwgs["ID"]

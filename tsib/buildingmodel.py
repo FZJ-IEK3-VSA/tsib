@@ -9,6 +9,7 @@ import os
 import warnings
 import logging
 
+import tinydb
 import pandas as pd
 import numpy as np
 
@@ -154,7 +155,7 @@ class Building(object):
                     + '"buildingconfig.BuildingConfiguration"'
                 )
 
-        self.cfg = self.configurator.getBdgCfg(includeSupply=False)
+        self.cfg = self.configurator.getBdgCfg(includeSupply=True)
 
         self.IDentries = self.configurator.IDentries
 
@@ -168,13 +169,63 @@ class Building(object):
         self._has_renewable_potential_profiles = False
         self._renewable_profile_names = []
 
-        # TODO: kick out
-        self.ID = 0  #self.configurator.ID 
+        # define identifier for results
+        self._ID = None
 
-        # initialize time series for the building
-        self.timeseries = cfg['weatherData']
+        # initialize time series for the building with relevant weather data
+        self.timeseries = self.cfg['weather'][[key for key in self.cfg['weatherUnits']]]
+
+        # initialize a dictionary to save the units
+        self.units = self.cfg["weatherUnits"]
 
         return
+
+
+    @property
+    def ID(self):
+        '''
+        Returns an identifier of the building configuration as string.
+        '''
+
+        if self._ID is None:
+            db = tinydb.TinyDB(os.path.join(tsib.data.PATH, "results","db.json"))
+
+            # check if building exists in database
+            def predicate(obj, requirements):
+                for k,v in requirements.items():
+                    if k not in obj or obj[k] != v:
+                        return False
+                return True
+            
+            # avoid json data format conflict with numpy
+            db_entry =  {}
+            for field, obj in self.IDentries.items():
+                if isinstance(obj, np.generic):
+                    db_entry[field] = obj.item()
+                else:
+                    db_entry[field] = obj
+            
+            # request db entry
+            db_id = db.get(lambda obj: predicate(obj, db_entry))
+
+            if db_id:
+                logging.info('Building already exists under ID: ' 
+                    +str(db_id) + '. If you do not want to overwrite the results, define a separate ID.')    
+            else:
+                db_id = db.insert(db_entry)
+            
+            self._ID = db_id
+
+        return self._ID
+
+    @ID.setter
+    def ID(self,val):
+        if not isinstance(val,str):
+            raise ValueError('ID needs to be of type str')
+        self._ID = val
+
+        return
+
 
     @property
     def ID_attr(self):
@@ -185,10 +236,10 @@ class Building(object):
 
     def _saveResults(self):
         datapath1 = os.path.join(
-            tsib.data.PATH, "results", "buildingprofiles", self.ID + ".csv"
+            tsib.data.PATH, "results", "buildingprofiles", str(self.ID) + ".csv"
         )
         datapath2 = os.path.join(
-            tsib.data.PATH, "results", "buildingstaticresults", self.ID + ".csv"
+            tsib.data.PATH, "results", "buildingstaticresults", str(self.ID) + ".csv"
         )
         self.timeseries.to_csv(datapath1)
         pd.Series(self.static_results).to_csv(datapath2)
@@ -196,10 +247,10 @@ class Building(object):
 
     def _loadResults(self):
         datapath1 = os.path.join(
-            tsib.data.PATH, "results", "buildingprofiles", self.ID + ".csv"
+            tsib.data.PATH, "results", "buildingprofiles", str(self.ID) + ".csv"
         )
         datapath2 = os.path.join(
-            tsib.data.PATH, "results", "buildingstaticresults", self.ID + ".csv"
+            tsib.data.PATH, "results", "buildingstaticresults", str(self.ID) + ".csv"
         )
         if os.path.isfile(datapath1):
             self.timeseries = pd.read_csv(datapath1, index_col=0)
@@ -264,13 +315,18 @@ class Building(object):
                                             longitude = cfg['longitude'], )
 
         # get heat pump coefficient of performance
-        profiles['Heat pump'] = simHeatpump(tmy_data['T'], T_hot = cfg['T_sup'], efficiency = 0.45, T_limit = -7.)
+        profiles['Heat pump'] = tsib.simHeatpump(tmy_data['T'], T_hot = cfg['T_sup'], efficiency = 0.45, T_limit = -7.)
 
         self._has_renewable_potential_profiles = True
 
         self._renewable_profile_names = profiles.columns.values
 
-        self.timeseries.append(profiles)
+        self.units.update({'Heat pump':'kW_{th}/kW_{el}', 'Photovoltaic 1':'kW/kWp', 
+                            'Photovoltaic 2':'kW/kWp','Solar thermal 1':'kW_{th}/m^2',
+                            'Solar thermal 2':'kW_{th}/m^2',})
+    
+
+        self.timeseries = self.timeseries.join(profiles)
 
         return profiles
                                             
@@ -396,12 +452,25 @@ class Building(object):
             cfg["vary_profiles"] = bdgp_rofiles
 
         # collect all profiles
-        profiles = pd.DataFrame(index = tmy_data.index)
+        profiles = pd.DataFrame(index = self.timeseries.index)
 
-        # TODO
+        # TODO: improve the structure of this code to drop this step and dictionary
+        profileDict = {'elecLoad': 'Electricity Load', 'hotWaterLoad': 'Hot Water Load',
+                        'fireplaceLoad': 'Fireplace Load'}
+        for key in profileDict:
+            # TODO: add other bdg profiles
+            if key in bdg_profiles[0]:
+                profiles.loc[:,profileDict[key]] = bdg_profiles[0][key]
 
-        self._occupancy_profile_names = elecLoad
+        self.units.update({'Electricity Load':'kW_{el}', 'Hot Water Load':'kW_{th}',
+                            'Fireplace Load':'kW/kWp'})
 
+        # define relevant time series 
+        self._occupancy_profile_names = profiles.columns.values
+
+        # append to timeseries
+        self.timeseries = self.timeseries.join(profiles)
+        
         self._has_occupancy_profiles = True
 
         return cfg
@@ -413,7 +482,7 @@ class Building(object):
         '''
        # occupancy profiles are required for thermal load determination
         if not self._has_occupancy_profiles:
-            self.cfg = self._get_occupancy_profile(
+            self._get_occupancy_profile(
                     self.cfg
                 )
 
@@ -443,8 +512,10 @@ class Building(object):
         # define relevant time series 
         self._heat_profile_names = ['Heating Load', 'Cooling Load']
 
+        self.units.update({'Heating Load':'kW_{th}', 'Cooling Load':'kW_{th}'})
+    
         # append simulation (TODO improve this call)
-        self.timeseries.append(self.thermalmodel.detailedResults[self._heat_profile_names])
+        self.timeseries = self.timeseries.join(self.thermalmodel.detailedResults[self._heat_profile_names])
 
         return
 
@@ -466,39 +537,6 @@ class Building(object):
         
         return
 
-
-    def getLoad(self):
-        """
-        It manages existing load profiles, and if it there is one, it just
-        uses this. Otherwise it simulates a new one.
-        Get the relevant heating, cooling and electricity profiles of the
-        building.
-        
-        Returns
-        -------
-        None, but in Building.results or Building.timeseries can the
-        results be shown as pandas.DataFrame
-        """
-
-        resultsExist = self._loadResults()
-        if resultsExist:
-            return
-        else:
-            if self.cfg["refurbishment"]:
-                befRef = True
-                warnings.warn(
-                    "For the simulation the refurbishment decisions"
-                    + " are deactivated",
-                    UserWarning,
-                )
-                self.cfg["refurbishment"] = False
-            else:
-                befRef = False
-
-            self._sim5R1()
-            self._saveResults()
-            self.cfg["refurbishment"] = befRef
-        return
 
     def toCSV(self, filename="result"):
         """
@@ -572,20 +610,42 @@ class Building(object):
         if not self._has_renewable_potential_profiles:
             logging.info('Occupancy profiles are simulated. ' 
                         + 'This can take a few minutes.')
-            self._get_renewable_profile(self)
+            self._get_renewable_profile(self.cfg)
         
         return self.timeseries[self._renewable_profile_names]
 
 
     def getLoad(self):
         '''
-        Returns all loads of the building
+        Returns all time series of the building.
+        It manages existing load profiles, and if existing, 
+        the profile is just read. Otherwise it simulates a new ones
+        and saves those.
+        
+        Returns
+        -------
+        timeseries as pandas.DataFrame
+        """
+
         '''
 
-        TODO
+        resultsExist = self._loadResults()
+        if resultsExist:
+            return self.timeseries
+        else:
 
+            # Get occupancy profile
+            self.getOccupancy()
+
+            # Calculate renewable generation
+            self.getRenewables()
+
+            # Calculate heat profile
+            self.getHeatLoad()
+
+            # stores the time series
+            self._saveResults()
         return 
-
 
 
     @property
@@ -595,19 +655,24 @@ class Building(object):
     @property
     def detailedResults(self):
         warnings.warn(
-            "detailedResults is deprecated, use timeseries instead"
+            "detailedResults is deprecated, use timeseries instead",
                     DeprecationWarning
         )
         return self.thermalmodel.timeseries 
 
 
 
-    def _sim5R1(self):
+    def sim5R1C(self):
         '''
         Runs the 5R1C simulation.
         '''
+        warnings.warn(
+            "sim5R1C is deprecated, use getHeatLoad instead",
+                    DeprecationWarning
+        )
+        self.getHeatLoad()
 
-        return
+        return self.timeseries
 
     @property
     def detailedRefurbish(self):
