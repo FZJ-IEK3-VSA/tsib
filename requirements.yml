@@ -1,0 +1,10 @@
+name: tsib
+
+channels:
+  - conda-forge
+
+dependencies:
+  - python
+  - coin-cbc
+  
+
