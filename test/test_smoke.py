@@ -10,7 +10,6 @@ import os
 import pandas as pd
 
 import tsib
-import tsib.weather.testreferenceyear as wth
 
 
 def test_smoke():
@@ -24,25 +23,9 @@ def test_smoke():
     # NOTE: The right kwargs have to be created
     bdg_cfg = tsib.BuildingConfiguration(bdg_dict)
 
-    # Get weather data
-    try_data, loc = tsib.readTRY()
-
     # Initialize a building object with this configuration for given weather
     # NOTE: Weather data seperated from building configuration
-    bdg_obj = tsib.Building(configurator=bdg_cfg, weather=try_data)
-
-    # Get occupancy profile
-    bdg_obj.getOccupancy()
-
-    # Calculate renewable generation
-    bdg_obj.getRenewables()
+    bdg_obj = tsib.Building(configurator=bdg_cfg)
 
     # Calculate loads
     bdg_obj.getLoad()
-
-    # Plot results
-    bdg_obj.plotDetailedResults()
-
-
-if __name__ == "__main__":
-    test_smoke()

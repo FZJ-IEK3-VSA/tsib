@@ -43,7 +43,7 @@ def test_renewable():
     )
 
     # setup a building with the configuration
-    bdgObj = tsib.Building(configurator=bdgcfg, refurbishment=False)
+    bdgObj = tsib.Building(configurator=bdgcfg)
 
     # get the renewable profiles to manipulate them
     bdgObj.getRenewables()
