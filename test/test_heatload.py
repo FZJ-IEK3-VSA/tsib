@@ -10,7 +10,6 @@ import os
 
 import pandas as pd
 
-import tsib.buildingmodel as bdg
 import tsib
 import tsib
 import tsib.data
@@ -51,7 +50,7 @@ def test_heatload():
         }
     )
     # setup a building with the configuration
-    bdgObj = bdg.Building(configurator=bdgcfg, refurbishment=False)
+    bdgObj = tsib.Building(configurator=bdgcfg, refurbishment=False)
 
     # get the occupancy profiles to manipulate them
     bdgObj._get_occupancy_profile( bdgObj.cfg)

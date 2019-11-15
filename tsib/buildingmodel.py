@@ -25,28 +25,9 @@ class Building(object):
 
     def __init__(
         self,
-        buildingYear=1976,
-        buildingType="SFH",
+        configurator=None,        
         weatherData=None,
         weatherID=None,
-        n_persons=None,
-        n_apartments=None,
-        latitude=50.0,
-        longitude=8.0,
-        roofOrientation=135.0,
-        roofTilt=45.0,
-        a_ref=None,
-        nightReduction=True,
-        occControl=False,
-        capControl=True,
-        refurbishment=True,
-        isRefurbished=False,
-        comfortT_lb=21.0,
-        comfortT_ub=24.0,
-        costdata="default_2016",
-        elecLoad=None,
-        elecLoadID=None,
-        configurator=None,
     ):
         """
         A building model which uses the IWU-Buildingtopology for parameterizing
@@ -56,96 +37,13 @@ class Building(object):
         
         Parameters
         ----------
-        buildingYear: int, optional (default: 1976)
-            Gets the buildingclasses for these years -> used for IWU
-        buildingType: str, optional (default: SFH)
-            Size category of the buildings: 'AB', 'SFH', 'SFH2', 'MFH', 'MFH2', 
-            'TH' -> used for IWU
-        weatherData: pd.DataFrame, optional (default: None)
-            If None, the weather data is derived from the longitude and 
-            latitude and the related TRY region.
-        weatherID: pd.DataFrame, optional (default: TRY-Zone)
-            If weather data is externally set, please define an identifier.
-            Otherwise it is automatically set to the TRY-Zone.
-        n_persons: int, optional (default: None)
-            Number of persons living in a single flat in the house. If not set
-            it is randomly chosen.
-        n_apartments: int, optional (default: None)
-            Number of apartments in the house in the house. If not set
-            it is chosen from the IWU-Data.
-        latitude: float, optional (default: 50.)
-            Location latitude of the building.
-        longitude: float, optional (default: 8.)
-            Location longitude of the building.
-        roofOrientation: float, optional (default: 135.)
-            Orientation of the gable in degree (only relevant for tilted roof)
-            from North = 0
-        roofTilt: float, optional (default: 45.)
-            Tilt of the roof in degree. 0 is flat. The parameter gets 
-            overwritten for buildings with flat roofs.
-        nightReduction: boolean, optional (default: True)
-            If activated, the lower bound of the temperature tolerance between 22:00 and 6:59
-            is set to 18°C.
-        occControl: boolean, optional (default: False)
-            Occupance controller which increases the temperature tolerance to 10-30°C in case
-            nobody is at home.
-        capControl: boolean, optional (default: True)
-            Controller which uses the thermal capacity of the building.
-        refurbishment: bool, optional (default: True)
-            Activates the degree of freedom to refurbish to true.
-        isRefurbished: bool, optional (default: False)
-            If True, an Enev 2016 conform insulation and window type is chosen
-            as given. Nevertheless, the design of the heating system is still
-            based on the old values.
-        comfortT_lb: float, optional (default: 20.)
-            Lower bound of the comfort tepm of the occupants.
-        comfortT_ub: float, optional (default: 26.)
-            Upper bound of the comfort tepm of the occupants.
-        costdata: str, optional (default: default_2016)
-            File name where data to the refurbishment measures can be found. 
-        elecLoad: np.array, optional (default: None)
-            Electricity load profile. Normally it is created by the edemand
-            model on parallel with occupancy profile. 
-        elecLoadID: str, optional (default: None)
-            Identifier of the chosen electricityload. Please set in case
-            electricityLoad is not None.
-        configurator: dict, optional (default: None)
+        configurator: tsib.BuildingConfiguration, optional (default: None)
             Configuration dictionary which includes all parameters required
-            for the building optimization
+            for parameterizing a building.
         """
 
         if configurator is None:
-            # Building Physical Parameters
-
-            _kwgs = {}
-            _kwgs["buildingYear"] = buildingYear
-            _kwgs["buildingType"] = buildingType
-            _kwgs["weatherData"] = weatherData
-            _kwgs["weatherID"] = weatherID
-            if n_persons is not None:
-                _kwgs["n_persons"] = n_persons
-            if n_apartments is not None:
-                _kwgs["n_apartments"] = n_apartments
-            _kwgs["latitude"] = latitude
-            _kwgs["longitude"] = longitude
-            _kwgs["roofTilt"] = roofTilt
-            _kwgs["roofOrientation"] = roofOrientation
-            _kwgs["a_ref"] = a_ref
-            _kwgs["occControl"] = occControl
-            _kwgs["nightReduction"] = nightReduction
-            _kwgs["capControl"] = capControl
-            _kwgs["refurbishment"] = refurbishment
-            _kwgs["refurbished"] = isRefurbished
-            _kwgs["comfortT_lb"] = comfortT_lb
-            _kwgs["comfortT_ub"] = comfortT_ub
-            _kwgs["costdata"] = costdata
-            if elecLoad is not None:
-                _kwgs["elecLoad"] = elecLoad
-            if elecLoadID is not None:
-                _kwgs["elecLoadID"] = elecLoadID
-
-            self.configurator = tsib.BuildingConfiguration(_kwgs)
-
+            self.configurator = tsib.BuildingConfiguration({})
         else:
             if isinstance(configurator, tsib.BuildingConfiguration):
                 self.configurator = configurator

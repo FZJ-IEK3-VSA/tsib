@@ -9,8 +9,7 @@ import os
 
 import pandas as pd
 
-import tsib.buildingmodel as bdg
-import tsib.buildingconfig as cfg
+import tsib
 import tsib.weather.testreferenceyear as wth
 
 
@@ -23,14 +22,14 @@ def test_smoke():
 
     # Create building configuration object
     # NOTE: The right kwargs have to be created
-    bdg_cfg = cfg.BuildingConfiguration(bdg_dict)
+    bdg_cfg = tsib.BuildingConfiguration(bdg_dict)
 
     # Get weather data
-    try_data, loc = wth.readTRY()
+    try_data, loc = tsib.readTRY()
 
     # Initialize a building object with this configuration for given weather
     # NOTE: Weather data seperated from building configuration
-    bdg_obj = bdg.Building(configurator=bdg_cfg, weather=try_data)
+    bdg_obj = tsib.Building(configurator=bdg_cfg, weather=try_data)
 
     # Get occupancy profile
     bdg_obj.getOccupancy()

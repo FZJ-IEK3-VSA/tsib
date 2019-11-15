@@ -21,7 +21,7 @@
 # %load_ext autoreload
 # %autoreload 2
 
-import tsib.buildingconfig as cfg
+import tsib
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
@@ -44,17 +44,17 @@ bdg_cfgs = {}
 bdg_cfgs_print = {}
 
 for bdg_ix in bdgs_dict:
-    bdg_cfgs[bdg_ix] = cfg.BuildingConfiguration(bdgs_dict[bdg_ix])
+    bdg_cfgs[bdg_ix] = tsib.BuildingConfiguration(bdgs_dict[bdg_ix])
     bdg_cfgs_print[bdg_ix] = bdg_cfgs[bdg_ix].getBdgCfg()
 
 bdg_cfgs_print[0]
 
-import tsib.thermal.buildingmodel as bdg
+import tsib
 
 bdgs = {}
 
 for bdg_ix in bdgs_dict:
-    bdgs[bdg_ix] = bdg.Building(configurator = bdg_cfgs[bdg_ix])
+    bdgs[bdg_ix] = tsib.Building(configurator = bdg_cfgs[bdg_ix])
     bdgs[bdg_ix].getLoad()
 
 # ### Plot example results and export to CSV
