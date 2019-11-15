@@ -380,7 +380,7 @@ class BuildingConfiguration(object):
             cfg["n_apartments"] = self.iwu_bdg.loc[
                 self.IDentries["Shape"], "n_Apartment"
             ]
-            warnings.warn('number of app. "n_apartments" is inherited from IWU')
+            logging.info('number of app. "n_apartments" is inherited from IWU')
         self.IDentries["n_persons"] = cfg["n_persons"]
         self.IDentries["n_apartments"] = cfg["n_apartments"]
 

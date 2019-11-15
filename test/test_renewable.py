@@ -50,6 +50,3 @@ def test_renewable():
     bdgObj.getRenewables()
 
     #TODO
-
-if __name__ == "__main__":
-    test_heatload()
