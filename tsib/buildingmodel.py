@@ -347,7 +347,7 @@ class Building(object):
 
         # give the other profiles to the configuration file as well
         if cfg["varyoccupancy"] > 1:
-            cfg["vary_profiles"] = bdgp_rofiles
+            cfg["vary_profiles"] = bdg_profiles
 
         # collect all profiles
         profiles = pd.DataFrame(index = self.timeseries.index)
