@@ -1,4 +1,5 @@
-[![Build Status](https://travis-ci.com/FZJ-IEK3-VSA/tsib.svg?branch=master)](https://travis-ci.com/FZJ-IEK3-VSA/tsib) [![Version](https://img.shields.io/pypi/v/tsib.svg)](https://pypi.python.org/pypi/tsib)
+[![Build Status](https://img.shields.io/gitlab/pipeline/l-kotzur/tsib/master.svg)](https://gitlab.com/l-kotzur/tsib/pipelines)
+[![Version](https://img.shields.io/pypi/v/tsib.svg)](https://pypi.python.org/pypi/tsib)
 
 <a href="https://www.fz-juelich.de/iek/iek-3/EN/Forschung/_Process-and-System-Analysis/_node.html"><img src="https://www.fz-juelich.de/SharedDocs/Bilder/INM/INM-1/EN/FZj_Logo.jpg?__blob=normal" alt="Forschungszentrum Juelich Logo" width="230px"></a> 
 
@@ -25,7 +26,7 @@ tsib is a flexible tool which allows the use of different models and databases f
 * [5R1C](https://www.sciencedirect.com/science/article/abs/pii/S0306261916314933) thermal building model 
 * [pvlib](https://github.com/pvlib/pvlib-python) for solar irradiance calculation and photovoltaic simulation
 * [TABULA/EPISCOPE](http://episcope.eu/) archetype building catalogue
-* [DWD Testreferenzjahre](https://www.dwd.de/DE/leistungen/testreferenzjahre/testreferenzjahre.html) or [ERA5 reanalysis](https://cds.climate.copernicus.eu/cdsapp#!/dataset/reanalysis-era5-pressure-levels?tab=overview) for providing weather data
+* [DWD Testreferenzjahre](https://www.dwd.de/DE/leistungen/testreferenzjahre/testreferenzjahre.html)  for providing weather data
 
 
 ## Installation
