@@ -3,3 +3,4 @@ prune examples*
 prune static*
 recursive-include tsib/data * 
 recursive-exclude tsib/data/results *.csv 
+recursive-exclude tsib/data/results *.json
