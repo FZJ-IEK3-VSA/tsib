@@ -6,12 +6,15 @@ Created on Tue Oct 29 16:17:06 2019
 """
 
 import os
+import pytest
 
 import pandas as pd
 
 import tsib
 
 
+
+@pytest.mark.skip(reason="Seperation of weather and building configuration yet not implemented.")
 def test_smoke():
 
     # Read buildings from episcope database
@@ -23,9 +26,12 @@ def test_smoke():
     # NOTE: The right kwargs have to be created
     bdg_cfg = tsib.BuildingConfiguration(bdg_dict)
 
+    # Get weather data
+    try_data, loc = tsib.readTRY()
+
     # Initialize a building object with this configuration for given weather
     # NOTE: Weather data seperated from building configuration
-    bdg_obj = tsib.Building(configurator=bdg_cfg)
+    bdg_obj = tsib.Building(configurator=bdg_cfg, weather=try_data)
 
     # Calculate loads
     bdg_obj.getLoad()
