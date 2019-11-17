@@ -2,3 +2,4 @@ exclude .gitignore
 prune examples*
 prune static*
 recursive-include tsib/data * 
+recursive-exclude tsib/data/results *.csv 
