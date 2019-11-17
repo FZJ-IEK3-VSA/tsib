@@ -8,7 +8,7 @@ with open(os.path.join(dir_path, "README.md"), "r") as fh:
 
 setuptools.setup(
     name="tsib",
-    version="0.0.1",
+    version="0.1.0",
     author="Leander Kotzur",
     author_email="l.kotzur@fz-juelich.de",
     description="Time Series Initialization for Buildings",
@@ -33,7 +33,7 @@ setuptools.setup(
         "Programming Language :: Python :: 3.4",
         "Programming Language :: Python :: 3.5",
         "Programming Language :: Python :: 3.6",
-        "Topic :: Scientific/Engineering :: Mathematics",
+        "Topic :: Scientific/Engineering",
         "Topic :: Software Development :: Libraries :: Python Modules",
     ],
     keywords=["buildings", "thermal load", "electricity load", "optimization"],

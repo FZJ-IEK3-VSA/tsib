@@ -21,7 +21,7 @@ If you want to use tsib in a published work, please [**cite following publicatio
 
 
 ## Applied databases and models
-tsib is a flexible tool which allows the use of different models and databases for the generation of time series for buildings. In Version 1.0 the following databases and models are included is tsib:
+tsib is a flexible tool which allows the use of different models and databases for the generation of time series for buildings. In Version 0.1.0 the following databases and models are included is tsib:
 * [CREST](https://www.lboro.ac.uk/research/crest/demand-model/) demand model for the simulaton of the occupancy behavior
 * [5R1C](https://www.sciencedirect.com/science/article/abs/pii/S0306261916314933) thermal building model 
 * [pvlib](https://github.com/pvlib/pvlib-python) for solar irradiance calculation and photovoltaic simulation
