@@ -548,6 +548,10 @@ class Building(object):
 
     @property
     def static_results(self):
+        warnings.warn(
+            "static_results is deprecated, use timeseries instead",
+                    DeprecationWarning
+        )
         return self.thermalmodel.static_results 
 
     @property
@@ -556,9 +560,7 @@ class Building(object):
             "detailedResults is deprecated, use timeseries instead",
                     DeprecationWarning
         )
-        return self.thermalmodel.timeseries 
-
-
+        return self.thermalmodel.detailedResults 
 
     def sim5R1C(self):
         '''
@@ -571,7 +573,3 @@ class Building(object):
         self.getHeatLoad()
 
         return self.timeseries
-
-    @property
-    def detailedRefurbish(self):
-        return self.thermalmodel.detailedRefurbish 
