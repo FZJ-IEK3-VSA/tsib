@@ -9,6 +9,8 @@ import time
 import os
 import traceback
 import logging
+import warnings
+
 import multiprocessing as mp
 
 import pandas as pd
@@ -176,10 +178,7 @@ def simHouseholdsParallel(
                         agg_results = result[1]
                     else:
                         agg_results += result[1]
-        #        # otherwise create list of all results
-        #        results = [res[1] for res in result_list]
-        #        results_all_temp1 = pd.DataFrame.from_records(results)
-        #        df = pd.concat([df, results_all_temp1])
+        
         # Exit/Close the completed processes
         for p in processes:
             p.join()
@@ -251,6 +250,10 @@ def getHouseholdProfiles(
             not_existing_profiles[seed] = filenames[seed]
 
     # info about runtime
+    if cores < 1:
+        warnings.warn('Recognized cores are less than one. The code will behave as the number is one.')
+        cores = 1
+
     _runtime = np.floor(float(len(not_existing_profiles))/cores)
     _log_str = str(len(not_existing_profiles)) + " household profiles need to get calculated. \n"
     _log_str += "With " + str(cores) + " threads, the estimated runtime is " + str(_runtime) + " minutes."
