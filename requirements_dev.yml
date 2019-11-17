@@ -1,8 +1,0 @@
-name: tsib
-
-channels:
-  - conda-forge
-
-dependencies:
-  - pytest
-  - pytest-cov
