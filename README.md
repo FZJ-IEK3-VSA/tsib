@@ -17,7 +17,7 @@ If you want to use tsib in a published work, please [**cite following publicatio
 * consideration of the occupancy behavior
 * derivation of the electric device load or the demand for thermal comfort
 * calculation of the heat load based on a thermal building model
-* provision of location specific time series for solar irradition and temperature based on wheather data
+* provision of location specific time series for solar irradiation and temperature based on weather data
 
 
 ## Applied databases and models
