@@ -26,8 +26,6 @@ class Building(object):
     def __init__(
         self,
         configurator=None,        
-        weatherData=None,
-        weatherID=None,
     ):
         """
         A building model which uses the IWU-Buildingtopology for parameterizing
@@ -408,14 +406,14 @@ class Building(object):
         self._has_heat_profiles = True
         
         # define relevant time series 
-        self._heat_profile_names = ['Heating Load', 'Cooling Load']
+        self._heat_profile_names = ['Heating Load', 'Cooling Load', 'T_air']
 
-        self.units.update({'Heating Load':'kW_{th}', 'Cooling Load':'kW_{th}'})
+        self.units.update({'Heating Load':'kW_{th}', 'Cooling Load':'kW_{th}', 'T_air':'°C'})
     
         # append simulation (TODO improve this call)
         self.timeseries = self.timeseries.join(self.thermalmodel.detailedResults[self._heat_profile_names])
 
-        return
+        return self.timeseries[self._heat_profile_names]
 
     def getHeatingSystem(self):
         """

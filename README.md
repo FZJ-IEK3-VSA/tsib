@@ -8,7 +8,7 @@
 tsib is a python package that builds up on different databases and models for creating consistent demand and production time series of residential buildings. This could be either occupancy behavior, electricity demand or heat demand time series as well as photovoltaic (PV) and solar thermal production time series.
 
 
-If you want to use tsib in a published work, please [**cite following publication**](TODO) which applies tsib for the creation of time series for residential buildings in Germany. 
+If you want to use tsib in a published work, please [**cite following publication**](http://juser.fz-juelich.de/record/858675) which applies tsib for the creation of time series for residential buildings in Germany. 
 
 
 ## Features

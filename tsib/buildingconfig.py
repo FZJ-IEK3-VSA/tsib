@@ -294,10 +294,13 @@ class BuildingConfiguration(object):
 
             # check if unused kwargs are left
             for remaining_kwg in self.inputKwargs:
-                if not self.inputKwargs[remaining_kwg] == KWARG_DEFAULTS[remaining_kwg]:
-                    warnings.warn('Keyword ' + str(remaining_kwg) + ' is not used for the building parameterization.\n')
+                if remaining_kwg in KWARG_DEFAULTS:
+                    if not self.inputKwargs[remaining_kwg] == KWARG_DEFAULTS[remaining_kwg]:
+                        warnings.warn('Keyword ' + str(remaining_kwg) + ' is not used for the building parameterization.\n')
+                    else:
+                        logging.info('Keyword ' + str(remaining_kwg) + ' is not used. Nevertheless, it just holds the default value.\n')
                 else:
-                    logging.info('Keyword ' + str(remaining_kwg) + ' is not used. Nevertheless, it just holds the default value.\n')
+                        warnings.warn('Keyword ' + str(remaining_kwg) + ' is not used for the building parameterization.\n')
             self._has_cfg = True
 
             return cfg
