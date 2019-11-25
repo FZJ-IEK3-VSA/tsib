@@ -105,7 +105,7 @@ KWARG_DEFAULTS = {
     "buildnew": False,  # if the building is newly constructed
     "onlyEnergyInvest": False,  # if the cost of refurbishing the walls and the roof are only energy rlated
     "thermalClass": "medium",
-    "refurbishment": True,  # if refurbishment options (changing insulation) shall be considered
+    "refurbishment": False,  # if refurbishment options (changing insulation) shall be considered
     "force_refurbishment": False,  # if refurbishment must be selected
     "hotWaterElec": False,  # if hot water is electrically provided
     "existingHeatSupply": "Oil boiler",
