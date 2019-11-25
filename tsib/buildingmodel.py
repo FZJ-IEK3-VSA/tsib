@@ -211,7 +211,7 @@ class Building(object):
                                             longitude = cfg['longitude'], )
 
         # get heat pump coefficient of performance
-        profiles['Heat pump'] = tsib.simHeatpump(cfg['weather']['T'], T_hot = cfg['T_sup'], efficiency = 0.45, T_limit = -7.)
+        profiles['Heat pump'] = tsib.simHeatpump(cfg['weather']['T'], T_hot = cfg['T_sup'], efficiency = 0.45, T_limit = -20.)
 
         self._has_renewable_potential_profiles = True
 
