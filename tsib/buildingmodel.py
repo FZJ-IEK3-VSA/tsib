@@ -398,7 +398,7 @@ class Building(object):
             befRef = False
 
         # run simulation
-        self.thermalmodel.sim5R1C()
+        self.thermalmodel.sim5R1C(tee=False)
 
         # overwrite refurbishment options again
         self.cfg["refurbishment"] = befRef
