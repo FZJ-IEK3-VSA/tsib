@@ -406,9 +406,9 @@ class Building(object):
         self._has_heat_profiles = True
         
         # define relevant time series 
-        self._heat_profile_names = ['Heating Load', 'Cooling Load', 'T_air']
+        self._heat_profile_names = ['Heating Load', 'Cooling Load']
 
-        self.units.update({'Heating Load':'kW_{th}', 'Cooling Load':'kW_{th}', 'T_air':'°C'})
+        self.units.update({'Heating Load':'kW_{th}', 'Cooling Load':'kW_{th}', })
     
         # append simulation (TODO improve this call)
         self.timeseries = self.timeseries.join(self.thermalmodel.detailedResults[self._heat_profile_names])
