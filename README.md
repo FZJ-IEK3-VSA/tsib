@@ -54,7 +54,7 @@ To get flexible weather data from the Climate Data Store, register [here](https:
 	
 ## Examples
 
-This [jupyter notebook](TODO) shows the capabilites of tsib to create all relevant time series. 
+This [jupyter notebook](examples/showcase.ipynb) shows the capabilites of tsib to create all relevant time series. 
 
 
 ## License
