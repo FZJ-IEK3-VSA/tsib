@@ -8,7 +8,7 @@ import copy
 
 import numpy as np
 
-def simHeatpump(T_cold, T_hot = 50., efficiency = 0.45, T_limit = -5.):
+def simHeatpump(T_cold, T_hot = 50., efficiency = 0.45, T_limit = -20.):
     '''
     Creates a timedepent Coefficient of Performance (Cop)
 
