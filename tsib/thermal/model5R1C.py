@@ -712,8 +712,8 @@ class Building5R1C(object):
         else:
             # in case refurbishment is activated, those variables are dropped in the presolve and
             # can be set continuous
-            M.exVars = pyomo.Var(M.exVarIx, within=pyomo.NonNegativeReals)
-            M.bP_X = pyomo.Var(M.bX_windows, M.bX_solar, within=pyomo.NonNegativeReals)
+            M.exVars = pyomo.Var(M.exVarIx, within=pyomo.NonNegativeReals, bounds=(0,1))
+            M.bP_X = pyomo.Var(M.bX_windows, M.bX_solar, within=pyomo.NonNegativeReals, bounds=(0,1))
 
         # temperature variables
         M.bT_m = pyomo.Var(M.timeIndex)
@@ -744,6 +744,7 @@ class Building5R1C(object):
         # activate or deactivate existing decisions
         for accVar in M.exVarActive:
             M.exVars[accVar].setlb(1.0)
+            M.exVars[accVar].setub(1.0)
         for accVar in M.exVarInActive:
             M.exVars[accVar].setub(0.0)
 
@@ -1318,7 +1319,7 @@ class Building5R1C(object):
                 )
                 * M.bEectricityCost
                 + sum(M.exVarCost[dec] * M.exVars[dec] for dec in M.exVarIx)
-                + M.bMaxLoadViolation * 1e5  # penalty term
+                + M.bMaxLoadViolation * 1e2  # penalty term
             )
 
         M.obj = pyomo.Objective(rule=minLoad)
