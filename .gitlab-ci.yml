@@ -3,5 +3,5 @@ enerx:
   image: everken/enerx:python3.7-cbc2.9
   script:
     - export SOLVER="cbc"
-    - pip install .
-    - pytest --cov tsib --cov-report term-missing
+    - pip install -e .
+    - pytest --cov=tsib --cov-report tsib
