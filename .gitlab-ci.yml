@@ -4,4 +4,4 @@ enerx:
   script:
     - export SOLVER="cbc"
     - pip install -e .
-    - pytest --cov=tsib/ --cov-report test/
+    - pytest --cov=tsib/ test/
