@@ -141,7 +141,7 @@ def simPhotovoltaic(
     )
     # calculate pv performance
     sapm_out = pvlib.pvsystem.sapm(
-        sapm_irr, module=module, temp_cell=pvtemps["temp_cell"]
+        sapm_irr, module=module, temp_cell=pvtemps,
     )
 
     # calculate peak load of single module [W]

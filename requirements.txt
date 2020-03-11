@@ -1,4 +1,4 @@
-pvlib>=0.6.1
+pvlib>=0.7.0
 pandas==0.24.0
 Pyomo>=4.2
 numpy
