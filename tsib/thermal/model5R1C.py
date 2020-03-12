@@ -1220,7 +1220,7 @@ class Building5R1C(object):
             try:
                 solver = os.environ["SOLVER"]
             except KeyError:
-                solver = "gurobi"
+                solver = "cbc"
 
         self.WACC = None
         self.lifetime = 40

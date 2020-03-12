@@ -47,7 +47,15 @@ Or install directly via python as
 
 	python setup.py install
 	
-In order to use the 5R1C thermal building model, make sure that you have installed a MILP solver. As default solver GLPK is used. Nevertheless, in case you have access to a license we recommend commercial solvers (e.g. Gurobi or CPLEX) since they have a better performance.
+In order to use the 5R1C thermal building model, make sure that you have installed a MILP solver. As default solver coin-cbc is used which can either installed by
+
+	sudo apt-get install coinor-cbc
+
+or for Anaconda under windows as
+
+	conda install -c conda-forge coincbc
+
+. Other solvers can be defined by defining the environment variable $SOLVER. 
 	
 To get flexible weather data from the Climate Data Store, register [here](https://cds.climate.copernicus.eu/api-how-to) and follow the instructions to get an own key. Make sure that you have agreed on the [license terms](https://cds.climate.copernicus.eu/cdsapp/#!/terms/licence-to-use-copernicus-products).
 
