@@ -34,6 +34,6 @@ def test_fireplace():
             fullloadSteps=fullloadhours,
             seed=seed,
         )
-        assert fireplaceprofile.sum() < fullloadhours + 50
-        assert fireplaceprofile.sum() > fullloadhours - 50
+        assert fireplaceprofile.sum() < fullloadhours + 100
+        assert fireplaceprofile.sum() > fullloadhours - 100
 
