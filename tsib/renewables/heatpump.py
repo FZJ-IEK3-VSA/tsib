@@ -8,9 +8,10 @@ import copy
 
 import numpy as np
 
-def simHeatpump(T_cold, T_hot = 50., efficiency = 0.45, T_limit = -20.):
+def simHeatpump(T_cold, T_hot = 50., efficiency = 0.45, T_limit = -20., COP_limit = 7.):
     '''
-    Creates a timedepent Coefficient of Performance (Cop)
+    Creates a timedepent Coefficient of Performance (COP) based on the potential carnot
+    efficiency and a quality grade/efficiency of the system.
 
     Parameters
     -----------
@@ -22,6 +23,9 @@ def simHeatpump(T_cold, T_hot = 50., efficiency = 0.45, T_limit = -20.):
         Factor to multiplicate the carnot efficiency with.
     T_limit: float, optional (default: -5)
         Temperature at which the heat pump is shut off.
+    COP_limit: float, optional (default: 6.)
+        Maximum Coefficient of Performance that can be reached due to the 
+        technical limitations of the system.
 
     Returns
     ----------
@@ -29,15 +33,17 @@ def simHeatpump(T_cold, T_hot = 50., efficiency = 0.45, T_limit = -20.):
         Time series of the Coefficient of Performance.
     '''
     
-    # limit outside temperature to a maximum value
-    T_cold_limit = copy.deepcopy(T_cold)
-    if isinstance(T_cold_limit, (np.ndarray, np.generic) ):
-        T_cold_limit[ T_cold_limit > 15.0 ] = 15.0
     
     # calculate timedependet COP      
-    CoP = efficiency * (T_hot + 273.15) / (T_hot - T_cold_limit) 
-
+    CoP = efficiency * (T_hot + 273.15) / (T_hot - T_cold) 
+    
     # cutt of temperature
-    CoP[T_cold<T_limit ] = 0.0
+    CoP[T_cold < T_limit ] = 0.0
+
+    # limit too high CoPS
+    if len(CoP) >  1:
+        CoP[CoP > COP_limit] = COP_limit
+    else:
+        CoP = min(CoP, COP_limit)
 
     return CoP
