@@ -76,6 +76,8 @@ class Building5R1C(object):
         self.detailedRefurbish = pd.DataFrame()
 
 
+        # storage for orignal U-values for scaling of the heat demand
+        self._orig_U_Values={}
 
         return
 
@@ -1164,6 +1166,27 @@ class Building5R1C(object):
         self.result_load = self.detailedResults["Heating Load"]
 
         return
+
+    def scaleHeatLoad(self, scale=1):
+        """
+        Scales the original heat demand of the model to a relative value 
+        by scaling all U-values and the infiltration rate.
+        
+        scale
+        """
+        # check if original values have already been saved
+        if not bool(self._orig_U_Values):
+            for key in self.cfg:
+                if str(key).startswith("U_"):
+                    self._orig_U_Values[key] = self.cfg[key]
+            self._orig_U_Values["n_air_infiltration"] = self.cfg["n_air_infiltration"]
+            self._orig_U_Values["n_air_use"] = self.cfg["n_air_use"]
+        
+        # replace the values in the model
+        for key in self._orig_U_Values:
+            self.cfg[key] = self._orig_U_Values[key] * scale
+
+        return 
 
     def calcDesignHeatLoad(self):
         """
