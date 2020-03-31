@@ -1215,12 +1215,23 @@ class Building5R1C(object):
         results be shown as pandas.DataFrame
         """
 
-        # take default solver from environment variables
         if solver is None:
+            # first, try to take the s default solver from environment variables
             try:
                 solver = os.environ["SOLVER"]
             except KeyError:
-                solver = "cbc"
+                # conside defualt solvers, and choose them in performance priorization
+                DEFAULT_SOLVERS = ["gurobi","cplex","scip","cbc",]
+                for potential_solver in reversed(DEFAULT_SOLVERS):
+                    if opt.SolverFactory(potential_solver).available():
+                        solver = potential_solver
+                if solver is None:
+                    raise LookupError(
+                        "No MILP solver found. Please install one of those:" + "{}".format(DEFAULT_SOLVERS) + " or install another, and declare it with the environment variable 'SOLVER'"
+                    )
+
+        if solver is "gplk":
+            raise ValueError("Solver 'glpk' fails for the 5R1C optimization, although it is a MILP solver")
 
         self.WACC = None
         self.lifetime = 40
