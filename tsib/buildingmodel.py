@@ -336,7 +336,7 @@ class Building(object):
                         fullloadSteps=450,
                         seed=cfg['state_seed'],
                     )
-                    fireplaceLoad.to_csv(pot_filename)
+                    fireplaceLoad.to_csv(pot_filename, header=False)
 
                 bdg_profiles[i]["fireplaceLoad"] = fireplaceLoad
 
