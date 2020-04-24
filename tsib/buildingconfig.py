@@ -165,7 +165,7 @@ class BuildingConfiguration(object):
                 kwargs.pop(kwarg)
             elif kwarg in KWARG_TYPES:
                 # check if implemented
-                if KWARG_TYPES[kwarg] is "NOT_IMPLEMENTED":
+                if KWARG_TYPES[kwarg] == "NOT_IMPLEMENTED":
                     raise NotImplementedError(
                         kwarg + " is not yet considered as keyword"
                     )

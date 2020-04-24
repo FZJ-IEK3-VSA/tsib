@@ -41,22 +41,22 @@ def readLindenberg(filepath, year=2000):
     raw1 = pd.DataFrame()
     raw2 = pd.DataFrame()
     for month in range(1, 13):
-        read1 = pd.read_table(
+        read1 = pd.read_csv(
             os.path.join(
                 filepath,
                 "Irradiance",
                 "LIN_radiation_" + str(year) + "-" + "{:02d}".format(month) + ".tab",
-            ),
+            ), sep="\t",
             header=31,
             index_col=0,
         )
         raw1 = raw1.append(read1)
-        read2 = pd.read_table(
+        read2 = pd.read_csv(
             os.path.join(
                 filepath,
                 "Weather",
                 "LIN_SYNOP_" + str(year) + "-" + "{:02d}".format(month) + ".tab",
-            ),
+            ), sep="\t",
             header=31,
             index_col=0,
         )

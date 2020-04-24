@@ -29,7 +29,7 @@ def simPhotovoltaic(
     Simulates a defined PV array with the Sandia PV Array Performance Model.
     The implementation is done in accordance with following tutorial:
     https://github.com/pvlib/pvlib-python/blob/master/docs/tutorials/tmy_to_power.ipynb
-    
+
     Parameters
     ----------
     tmy_data: pandas.DataFrame(), required
@@ -40,7 +40,7 @@ def simPhotovoltaic(
         Azimuth angle of of the array in degree. 180 degree means south,
         90 degree east and 270 west.
     albedo: float, optional (default: 0.2)
-        Reflection coefficient of the sorounding area.    
+        Reflection coefficient of the sorounding area.
     latitude: float, optional (default: 55)
         Latitude of the position in degree.
     longitude: float, optional (default: 7)
@@ -50,14 +50,14 @@ def simPhotovoltaic(
     load_module_data: Boolean, optional (default: False)
         If True the module data base is loaded from the Sandia Website.
         Otherwise it is loaded from this relative path
-            '\profiles\PV-Modules\sandia_modules.csv'.
+            '\\profiles\\PV-Modules\\sandia_modules.csv'.
     module_name: str, optional (default:'Hanwha_HSL60P6_PA_4_250T__2013_')
         Module name. The string must be existens in Sandia Module database.
     integrateInverter: bool, optional (default: True)
         If an inverter shall be added to the simulation, providing the photovoltaic output after the inverter.
     inverter_name: str, optional (default: 'ABB__MICRO_0_25_I_OUTD_US_208_208V__CEC_2014_')
         Type of inverter.
-        
+
     Returns
     --------
     specific_load: pandas.DataFrame
@@ -99,8 +99,9 @@ def simPhotovoltaic(
         aoi, tmy_data["DNI"], poa_sky_diffuse, poa_ground_diffuse
     )
     # calculate pv cell and module temperature
-    pvtemps = pvlib.pvsystem.sapm_celltemp(
-        poa_irrad["poa_global"], tmy_data["Wspd"], tmy_data["DryBulb"]
+    temp_model = pvlib.temperature.TEMPERATURE_MODEL_PARAMETERS["sapm"]["open_rack_glass_glass"]
+    pvtemps = pvlib.temperature.sapm_cell(
+        poa_irrad["poa_global"], tmy_data["DryBulb"], tmy_data["Wspd"], **temp_model
     )
 
     # load the sandia data
@@ -193,7 +194,7 @@ def simSolarThermal(
     """
     Simulates a defined solar thermal panel. The irradiance calculation
     is based on the PV lib.
-    
+
     Parameters
     ----------
     tmy_data: pandas.DataFrame(), required
@@ -204,7 +205,7 @@ def simSolarThermal(
         Azimuth angle of of the array in degree. 180 degree means south,
         90 degree east and 270 west.
     albedo: float, optional (default: 0.2)
-        Reflection coefficient of the sorounding area.    
+        Reflection coefficient of the sorounding area.
     latitude: float, optional (default: 55)
         Latitude of the position in degree.
     longitude: float, optional (default: 7)
@@ -216,11 +217,11 @@ def simSolarThermal(
         Check http://www.spf.ch/index.php?id=111 for performance coefficients.
         Defailt is SPF-Nr.: C1734
         http://www.spf.ch/index.php?id=111
-        
+
     Returns
     --------
     spec_load: pandas.Series
-        Timeseries of the specific load of such a solar thermal-module per 
+        Timeseries of the specific load of such a solar thermal-module per
         installed m^2. [kW/m^2]
     """
 

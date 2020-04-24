@@ -445,7 +445,7 @@ class Building(object):
         filename: str, optional, default: "result"
             Filepath and name.
         """
-        if filename[-4:] is ".csv":
+        if filename[-4:] == ".csv":
             filename = filename[:-4]
         self.timeseries.to_csv(filename + "_dynamic.csv", sep=",")
         pd.Series(self.static_results).to_csv(filename + "_static.csv", sep=",")
@@ -462,7 +462,7 @@ class Building(object):
         filename: str, optional, default: "result"
             Filepath and name.
         """
-        if filename[-4:] is ".csv":
+        if filename[-4:] == ".csv":
             filename = filename[:-4]
         self.timeseries = pd.read_csv(
             filename + "_dynamic.csv", sep=",", index_col=0, parse_dates=True

@@ -1253,7 +1253,7 @@ class Building5R1C(object):
                         "No MILP solver found. Please install one of those:" + "{}".format(DEFAULT_SOLVERS) + " or install another, and declare it with the environment variable 'SOLVER'"
                     )
 
-        if solver is "gplk":
+        if solver == "gplk":
             raise ValueError("Solver 'glpk' fails for the 5R1C optimization, although it is a MILP solver")
 
         self.WACC = None

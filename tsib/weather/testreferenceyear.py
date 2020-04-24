@@ -44,10 +44,10 @@ def readTMY(filepath=os.path.join("TMY", "Germany DEU Koln (INTL).csv")):
     Reads a typical meteorological year file and gets the GHI, DHI and DNI from it.
     """
     # get data
-    data = pd.read_table(
+    data = pd.read_csv(
         os.path.join(tsib.data.PATH, "weatherdata", filepath),
         skiprows=([0, 1]),
-        delimiter=",",
+        sep=",",
     )
     data.index = pd.date_range(
         "2010-01-01 00:30:00", periods=8760, freq="H", tz="Europe/Berlin"
@@ -55,8 +55,8 @@ def readTMY(filepath=os.path.join("TMY", "Germany DEU Koln (INTL).csv")):
     data = data.rename(
         columns={"Beam": "DNI", "Diffuse": "DHI", "Tdry": "T", "Wspd": "WS"}
     )
-    location_data = pd.read_table(
-        os.path.join(tsib.data.PATH, "profiles", filepath), nrows=1, delimiter=","
+    location_data = pd.read_csv(
+        os.path.join(tsib.data.PATH, "profiles", filepath), nrows=1, sep=","
     )
 
     location = {
@@ -102,8 +102,8 @@ def readTRY(try_num=4, year=2010):
     # else read from .dat and calculate DNI etc.
     else:
         # get data
-        data = pd.read_table(
-            filepath + ".dat", sep="\s+", skiprows=([i for i in range(0, 36)] + [37])
+        data = pd.read_csv(
+            filepath + ".dat", sep=r"\s+", skiprows=([i for i in range(0, 36)] + [37])
         )
         data.index = pd.date_range(
             "2010-01-01 00:30:00", periods=8760, freq="H", tz="Europe/Berlin"
