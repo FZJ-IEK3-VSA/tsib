@@ -4,12 +4,9 @@ Created on Sat Dec 10 12:40:17 2017
 @author: Leander Kotzur
 """
 
-import copy
 
-import numpy as np
-
-def simHeatpump(T_cold, T_hot = 50., efficiency = 0.45, T_limit = -20., COP_limit = 7.):
-    '''
+def simHeatpump(T_cold, T_hot=50.0, efficiency=0.45, T_limit=-20.0, COP_limit=7.0):
+    """
     Creates a timedepent Coefficient of Performance (COP) based on the potential carnot
     efficiency and a quality grade/efficiency of the system.
 
@@ -29,21 +26,20 @@ def simHeatpump(T_cold, T_hot = 50., efficiency = 0.45, T_limit = -20., COP_limi
 
     Returns
     ----------
-    CoP: pandas.Series()
+    cop: pandas.Series()
         Time series of the Coefficient of Performance.
-    '''
-    
-    
-    # calculate timedependet COP      
-    CoP = efficiency * (T_hot + 273.15) / (T_hot - T_cold) 
-    
-    # cutt of temperature
-    CoP[T_cold < T_limit ] = 0.0
+    """
 
-    # limit too high CoPS
-    if len(CoP) >  1:
-        CoP[CoP > COP_limit] = COP_limit
+    # calculate timedependet COP
+    cop = efficiency * (T_hot + 273.15) / (T_hot - T_cold)
+
+    # limit too high COPs
+    if len(cop) > 1:
+        cop[cop > COP_limit] = COP_limit
+        # cut-off temperatures
+        cop[T_cold < T_limit] = 0.0
+        cop[T_cold > T_hot] = COP_limit
     else:
-        CoP = min(CoP, COP_limit)
+        cop = min(cop, COP_limit)
 
-    return CoP
+    return cop
