@@ -1,6 +1,9 @@
 # for further structuring check https://docs.gitlab.com/ee/ci/yaml/
 
 variables:
+  # Clone rather than fetch so we have a completely clean workspace without
+  # any previous temporary_branch left over from past CI runs.
+  GIT_STRATEGY: clone
   temporary_branch: "gitlab-ci-ipynb2py"
   GIT_SSH_COMMAND: "ssh -o StrictHostKeyChecking=no -i .ssh/id_rsa-gitlab-ci"
   # ssh_deploy_key is defined under Settings > CI/CD Pipelines > Secret Variables.
