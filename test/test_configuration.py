@@ -69,3 +69,21 @@ def test_configuration_3():
     test = bdgcfg.getBdgCfg()
 
     return
+
+
+def test_configuration_other_countries():
+    # parameterize a building
+    bdgcfg = tsib.BuildingConfiguration(
+        {
+            "buildingYear": 1980,
+            "country": "BE",
+            "n_persons": 2,
+            "roofOrientation": 0.0,
+            "n_apartments": 1,
+            "surrounding": "Detached",
+            "latitude": 52.,
+            "longitude": 13.,
+        }
+    )
+    test = bdgcfg.getBdgCfg()
+    return

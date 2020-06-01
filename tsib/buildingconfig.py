@@ -448,40 +448,14 @@ class BuildingConfiguration(object):
         Derives the form of the building, in terms of the size of the exterior walls etc.
         '''
 
-        ### Get the correct shape of building
-        if (
-            "a_ref_app" in kwgs and "n_apartments" in kwgs and "surrounding" in kwgs
-        ) or ("a_ref" in kwgs and "surrounding" in kwgs):
-
-            # save the number of apps
-            cfg["n_apartments"] = kwgs["n_apartments"]
-
-            # calculate full reference area
-            if "a_ref" in kwgs and "surrounding" in kwgs:
-                cfg['a_ref'] = kwgs.pop("a_ref")
-            else:
-                cfg['a_ref'] = kwgs.pop("a_ref_app") * cfg["n_apartments"]
-
-
-            # reduce to buildings with equivalent surrounding
-            surDict = {"B_Alone": "Detached", "B_N1": "Semi", "B_N2": "Terraced"}
-            self.iwu_bdg.replace({"Code_AttachedNeighbours": surDict}, inplace=True)
-            iwu_sur = self.iwu_bdg[
-                self.iwu_bdg["Code_AttachedNeighbours"] == kwgs.pop("surrounding")
-            ]
-            
-            # get the most similar building
-            diff_area = abs(iwu_sur["A_C_Ref"] - cfg['a_ref'])
-
-            iwu_idx = diff_area.idxmin()
-
-            iwu_bdg = self.iwu_bdg.xs(iwu_idx).to_dict()
-
-        elif "ID" in kwgs:
+        ### Either use predefined building types
+        if "ID" in kwgs:
             iwu_bdg = self.iwu_bdg.loc[kwgs["ID"],:].to_dict()
             cfg['a_ref'] = iwu_bdg["A_C_Ref"]
             cfg["n_apartments"] = iwu_bdg["n_Apartment"]
             iwu_idx = kwgs["ID"]
+        
+
         elif "buildingYear" and "buildingType" in kwgs:
 
             if "buildingClassification" in kwgs:
@@ -522,16 +496,53 @@ class BuildingConfiguration(object):
 
             cfg['a_ref'] = iwu_bdg["A_C_Ref"]
             cfg["n_apartments"] = iwu_bdg["n_Apartment"]
+        
+        ### Or derive from the shape
         else:
-            warnings.warn(
-                'No suffucient sufficient keyword arguments provided for the shape. Shape of IWU building "DE.N.SFH.08.Gen.ReEx.001.001" chosen.'
-            )
-            iwu_idx = "DE.N.SFH.08.Gen.ReEx.001.001"
-            iwu_bdg = self.iwu_bdg.loc[iwu_idx, :]
-            cfg['a_ref'] = iwu_bdg["A_C_Ref"]
-            cfg["n_apartments"] = iwu_bdg["n_Apartment"]
 
-        # get shape values from the chosen iwu bdg
+            # save the number of apps
+            cfg["n_apartments"] = kwgs["n_apartments"]
+
+            # get living area
+            if ("a_ref_app" in kwgs and "n_apartments" in kwgs):
+                if "a_ref" in kwgs:
+                    cfg['a_ref'] = kwgs.pop("a_ref")
+                else:
+                    # calculate full reference area based on appartments
+                    cfg['a_ref'] = kwgs.pop("a_ref_app") * cfg["n_apartments"]
+            elif "a_ref" in kwgs:
+                cfg['a_ref'] = kwgs.pop("a_ref")
+            else:
+                warnings.warn(
+                    'No suffucient sufficient keyword arguments provided for the living area "a_ref". It is set to 150 m²'
+                )
+                cfg['a_ref'] = 150
+
+            # get the surrounding
+            if "surrounding" in kwgs:
+                cfg["surrounding"] = kwgs.pop("surrounding")
+            else:
+                warnings.warn(
+                    'No "surrounding" provided. Falling back to "detached".'
+                )
+                cfg['surrounding'] = "Detached"
+
+
+            # reduce to buildings with equivalent surrounding
+            surDict = {"B_Alone": "Detached", "B_N1": "Semi", "B_N2": "Terraced"}
+            self.iwu_bdg.replace({"Code_AttachedNeighbours": surDict}, inplace=True)
+            iwu_sur = self.iwu_bdg[
+                self.iwu_bdg["Code_AttachedNeighbours"] == cfg['surrounding'] 
+            ]
+            
+            # get the most similar building
+            diff_area = abs(iwu_sur["A_C_Ref"] - cfg['a_ref'])
+
+            iwu_idx = diff_area.idxmin()
+
+            iwu_bdg = self.iwu_bdg.xs(iwu_idx).to_dict()
+
+        # adaot the shape values from the chosen iwu bdg
         cfg = get_shape(cfg, iwu_bdg, cfg['a_ref'])
 
         self.IDentries["Shape"] = iwu_idx
