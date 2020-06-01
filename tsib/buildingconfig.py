@@ -604,10 +604,21 @@ class BuildingConfiguration(object):
                 & (year <= self.iwu_bdg["Year2_Building"])
             ]
 
+            # first try to get all with similar surrounding
+            surDict = {"B_Alone": "Detached", "B_N1": "Semi", "B_N2": "Terraced"}
+            self.iwu_bdg.replace({"Code_AttachedNeighbours": surDict}, inplace=True)
+            iwu_sur = iwu_year[
+                iwu_year["Code_AttachedNeighbours"] == cfg['surrounding'] 
+            ]
+            # just use those if such a building exist
+            if len(iwu_sur) > 1:
+                iwu_year = iwu_sur
+
+
             # get the one with the most similar reference area
             diff_area = abs(
                 iwu_year["A_C_Ref"] * iwu_year["n_Apartment"]
-                - cfg["A_ref"] * cfg["n_apartments"]
+                - cfg['a_ref']
             )
             iwu_idx = diff_area.idxmin()
             iwu_bdg = iwu_year.xs(iwu_idx).to_dict()
@@ -749,6 +760,9 @@ def get_fabric(bdg, iwu_bdg):
     # TODO: make them as own argument and move them to operation
     bdg["n_air_infiltration"] = iwu_bdg["n_air_infiltration"]
     bdg["n_air_use"] = iwu_bdg["n_air_use"]
+
+    # include specific space heat demand by episcope
+    bdg["q_h_nd"] = iwu_bdg["q_h_nd"]
 
     return bdg
 

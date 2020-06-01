@@ -7,6 +7,7 @@ Created on Fri Apr 08 11:33:01 2016
 
 
 import tsib
+import pandas as pd
 
 def test_configuration_1():
     # parameterize a building
@@ -86,4 +87,25 @@ def test_configuration_other_countries():
         }
     )
     test = bdgcfg.getBdgCfg()
+
+    assert round(test["q_h_nd"]) == 185.
+
+def test_surround_weather_error_with_dummy():
+    # parameterize a building
+    bdgcfg = tsib.BuildingConfiguration(
+        {
+            "buildingYear": 1980,
+            "country": "BE",
+            "n_persons": 2,
+            "roofOrientation": 0.0,
+            "n_apartments": 1,
+            "weatherData": pd.DataFrame([[0,0,0,]], columns=["DHI", "T", "DNI"]),
+            "weatherID": "Dummy",
+            "surrounding": "Detached",
+            "latitude": 50.,
+            "longitude": 1.,
+        }
+    )
+    bdg = tsib.Building(configurator=bdgcfg)
     return
+
