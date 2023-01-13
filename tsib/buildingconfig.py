@@ -209,7 +209,7 @@ class BuildingConfiguration(object):
                         else:
                             pass # is valid
                 elif KWARG_TYPES[kwarg] is bool:
-                    if not isinstance(kwargs[kwarg], (bool, np.bool, np.bool_)):
+                    if not isinstance(kwargs[kwarg], (bool, np.bool_)):
                         raise ValueError(
                             "'" + kwarg + "' needs to be of " + str(KWARG_TYPES[kwarg])
                         )
