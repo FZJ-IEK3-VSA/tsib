@@ -79,7 +79,7 @@ def test_heatload():
         )
 
     if ix == 24:
-        if not round(q_sim) == 197.0:
+        if not round(q_sim) == 198.0:
             raise ValueError("Different result for mean heat load than expected.")
     return
 

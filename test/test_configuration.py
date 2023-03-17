@@ -88,7 +88,7 @@ def test_configuration_other_countries():
     )
     test = bdgcfg.getBdgCfg()
 
-    assert round(test["q_h_nd"]) == 185.
+    assert round(test["q_h_nd"]) == 189.
 
 def test_surround_weather_error_with_dummy():
     # parameterize a building

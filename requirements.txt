@@ -8,3 +8,4 @@ tsam>=1.0.4
 tsorb
 cdsapi
 tinydb
+openpyxl

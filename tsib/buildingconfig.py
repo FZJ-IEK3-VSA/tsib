@@ -46,7 +46,6 @@ KWARG_TYPES = {
         "MFH",
         "TH",
     ],  # type of building (can be inherited by n_apartments)
-    "buildingClassification": ["Gen", "HR", "Lightframe"],
     "eastOrOverall": ["N", "East"],
     "roofOrientation": float,  # roof azimuth in degree with 180 as south
     "roofTilt": float,  # rooftile angle in degree
@@ -99,7 +98,7 @@ KWARG_TYPES = {
 }
 
 KWARG_DEFAULTS = {
-    "country": 'DE', 
+    "country": 'DE',
     "roofOrientation": 135.0,  # roof azimuth with 180 as south
     "refurbished": False,  # if the building is already refurbished
     "buildnew": False,  # if the building is newly constructed
@@ -265,12 +264,15 @@ class BuildingConfiguration(object):
                 os.path.join(tsib.data.PATH, "episcope", "episcope.csv"), index_col=1,
             )
             # reduce to the country list of buildings
-            self.iwu_bdg = raw[raw["Code_Country"] == self.inputKwargs.pop("country")]
+            self.iwu_bdgs = raw
+
+            cfg = self.cfg
 
             # call all functions which populate the building configurator
-            cfg = self.cfg
-            cfg = self._get_form(cfg, self.inputKwargs)
-            cfg = self._get_fabric(cfg, self.inputKwargs)
+            cfg, bdg = self._get_typ_building(cfg, self.inputKwargs)
+            
+            cfg = self._get_form(cfg, self.inputKwargs, bdg)
+            cfg = self._get_fabric(cfg, self.inputKwargs, bdg)
             cfg = self._get_operation(cfg, self.inputKwargs)
             if includeSupply:
                 cfg = self._get_equipment(cfg, self.inputKwargs)
@@ -377,13 +379,6 @@ class BuildingConfiguration(object):
         # get occupancy
         cfg["n_persons"] = kwgs.pop("n_persons")
 
-        if "n_apartments" in kwgs:
-            cfg["n_apartments"] = kwgs.pop("n_apartments")
-        else:
-            cfg["n_apartments"] = self.iwu_bdg.loc[
-                self.IDentries["Shape"], "n_Apartment"
-            ]
-            logging.info('number of app. "n_apartments" is inherited from IWU')
         self.IDentries["n_persons"] = cfg["n_persons"]
         self.IDentries["n_apartments"] = cfg["n_apartments"]
 
@@ -443,109 +438,148 @@ class BuildingConfiguration(object):
 
         return cfg
 
-    def _get_form(self, cfg, kwgs):
+    def _get_typ_building(self, cfg, kwgs):
+        """
+        Derives the building type, in terms of the number of apartments, the size of the apartments etc.
+
+        It provides the basis for the derivation of form and U-values
+
+        Args:
+            cfg (dict): Configuration which gets extend.
+            kwgs (dict): Input arguments.
+        """
+        ### Either use predefined building types
+        iwu_bdgs = self.iwu_bdgs
+        if "ID" in kwgs:
+            iwu_bdg = self.iwu_bdgs.loc[kwgs["ID"],:].to_dict()
+            
+            
+            cfg['a_ref'] = iwu_bdg['A_C_Ref']
+            cfg['buildingYear'] = iwu_bdg['Year1_Building']
+            cfg["n_apartments"] = iwu_bdg["n_Apartment"]
+
+            return cfg, iwu_bdg
+
+
+        ### Or derive building type from input parameters
+        query_parameters = {}
+        sort_by = []
+
+        # -- get the country --
+        if "country" in kwgs:
+            country = kwgs.pop("country")
+
+            iwu_bdgs["country fits"] = iwu_bdgs["Code_Country"] == country
+            sort_by.append("country fits")
+            query_parameters["country"] = country
+
+
+        # -- get the buildingyear --
+        if "buildingYear" in kwgs or "buildnew" in kwgs:
+            if kwgs.pop("buildnew"):
+                query_parameters["year"] = 2020
+            elif "buildingYear" in kwgs:
+                year = kwgs.pop("buildingYear")
+                if kwgs.pop("refurbished"):
+                    year_before = copy.deepcopy(year)
+                    year = min(max(year + 40, 1995), 2020)
+                    warnings.warn(
+                        '"refurbished" just overwrites the buildingyear from '
+                        + str(year_before)
+                        + " to "
+                        + str(year) 
+                        + " for the chose type of fabric"
+                    )
+
+            # append distance as query criteria
+            iwu_bdgs["buildingYear fits"] = ((self.iwu_bdgs["Year1_Building"] <= year)
+                & (year <= self.iwu_bdgs["Year2_Building"]))
+            sort_by.append("buildingYear fits")
+            query_parameters["buildingYear"] = year
+
+
+        # -- get the building type --
+        if "buildingType" in kwgs:
+            type = kwgs.pop("buildingType")
+
+            iwu_bdgs["buildingType fits"] = iwu_bdgs["Code_BuildingSizeClass"] == type
+            sort_by.append("buildingType fits")
+            query_parameters["buildingType"] = type
+        
+
+
+        # -- get the surrounding --
+        # first try to get all with similar surrounding
+        if "surrounding" in kwgs:
+            sur = kwgs.pop("surrounding")
+            surDict = {"B_Alone": "Detached", "B_N1": "Semi", "B_N2": "Terraced"}
+            iwu_bdgs.replace({"Code_AttachedNeighbours": surDict}, inplace=True)
+
+            iwu_bdgs["surrounding fits"] = iwu_bdgs["Code_AttachedNeighbours"] == sur
+            sort_by.append("surrounding fits")
+            query_parameters["surrounding"] = sur
+
+        # -- get living area --
+        if "a_ref" in kwgs or ("a_ref_app" in kwgs and "n_apartments" in kwgs):
+            if "a_ref" in kwgs:
+                query_parameters['a_ref'] = kwgs.pop("a_ref")
+            else:
+                # calculate full reference area based on appartments
+                query_parameters['a_ref'] = kwgs.get("a_ref_app") * kwgs["n_apartments"]
+
+            # append distance as query criteria
+            iwu_bdgs["a_ref fits"] = abs(iwu_bdgs["A_C_Ref"] - query_parameters['a_ref'] )
+            sort_by.append("a_ref fits")
+
+
+        # sort in the merit order of the query parameters
+        iwu_bdgs.sort_values(by=sort_by, inplace=True)
+        # take the first building
+        iwu_bdg = iwu_bdgs.iloc[0, :].to_dict()
+        # check if the building fits the query parameters
+        for key, value in query_parameters.items():
+            
+            if not iwu_bdg[key + ' fits'] != value and key != 'a_ref':
+                warnings.warn(
+                    "Building with ID "
+                    + str(iwu_bdg.name)
+                    + " does not fit the query parameter "
+                    + key
+                    + " with value "
+                    + str(value)
+                )
+
+        # save a_ref for further processing
+        if 'a_ref' in query_parameters:
+            cfg['a_ref'] = query_parameters['a_ref']
+        else:
+            cfg['a_ref'] = iwu_bdg['A_C_Ref']
+        
+        # save year for further processing
+        if 'buildingYear' in query_parameters:
+            cfg['buildingYear'] = query_parameters['buildingYear']
+        else:
+            cfg['buildingYear'] = iwu_bdg['Year1_Building']
+            
+        if "n_apartments" in kwgs:
+            cfg["n_apartments"] = kwgs.pop("n_apartments")
+        else:
+            cfg["n_apartments"] = iwu_bdg["n_Apartment"]
+            logging.info('number of app. "n_apartments" is inherited from IWU')
+
+        return cfg, iwu_bdg
+    
+
+    def _get_form(self, cfg, kwgs, iwu_bdg):
         '''
         Derives the form of the building, in terms of the size of the exterior walls etc.
         '''
 
-        ### Either use predefined building types
-        if "ID" in kwgs:
-            iwu_bdg = self.iwu_bdg.loc[kwgs["ID"],:].to_dict()
-            cfg['a_ref'] = iwu_bdg["A_C_Ref"]
-            cfg["n_apartments"] = iwu_bdg["n_Apartment"]
-            iwu_idx = kwgs["ID"]
-        
-
-        elif "buildingYear" and "buildingType" in kwgs:
-
-            if "buildingClassification" in kwgs:
-                bdg_class = kwgs.pop("buildingClassification")
-            else:
-                bdg_class = "Gen"
-            if "eastOrOverall" in kwgs:
-                bdg_eastwest = kwgs.pop("eastOrOverall")
-            else:
-                bdg_eastwest = "N"
-            cfg['buildingYear'] = kwgs['buildingYear']
-            iwu_bdg = self.iwu_bdg[
-                (self.iwu_bdg["Year1_Building"] <= cfg["buildingYear"])
-                & (cfg["buildingYear"] <= self.iwu_bdg["Year2_Building"])
-                & (self.iwu_bdg["Code_BuildingSizeClass"] == kwgs.pop("buildingType"))
-            ]
-            # ugly but pycharm complains otherwise
-            is_class = [
-                bdg_class in btype.split(".") for btype in iwu_bdg["Code_BuildingType"]
-            ]
-            iwu_bdg = iwu_bdg[is_class]
-            is_eastwest = [
-                bdg_eastwest in btype.split(".")
-                for btype in iwu_bdg["Code_BuildingType"]
-            ]
-            iwu_bdg = iwu_bdg[is_eastwest]
-            # test if a building was chosen
-            if not iwu_bdg.index.any():
-                raise ValueError(
-                    "Building with this definition does not exist in IWU-Database"
-                )
-            if len(iwu_bdg.index) > 1:
-                raise ValueError("Internal Error: To many building data to unpack")
-
-            iwu_idx = iwu_bdg.index[0]
-
-            iwu_bdg = iwu_bdg.loc[iwu_idx, :].to_dict()
-
-            cfg['a_ref'] = iwu_bdg["A_C_Ref"]
-            cfg["n_apartments"] = iwu_bdg["n_Apartment"]
-        
-        ### Or derive from the shape
-        else:
-
-            # save the number of apps
-            cfg["n_apartments"] = kwgs["n_apartments"]
-
-            # get living area
-            if ("a_ref_app" in kwgs and "n_apartments" in kwgs):
-                if "a_ref" in kwgs:
-                    cfg['a_ref'] = kwgs.pop("a_ref")
-                else:
-                    # calculate full reference area based on appartments
-                    cfg['a_ref'] = kwgs.pop("a_ref_app") * cfg["n_apartments"]
-            elif "a_ref" in kwgs:
-                cfg['a_ref'] = kwgs.pop("a_ref")
-            else:
-                warnings.warn(
-                    'No suffucient sufficient keyword arguments provided for the living area "a_ref". It is set to 150 m²'
-                )
-                cfg['a_ref'] = 150
-
-            # get the surrounding
-            if "surrounding" in kwgs:
-                cfg["surrounding"] = kwgs.pop("surrounding")
-            else:
-                warnings.warn(
-                    'No "surrounding" provided. Falling back to "detached".'
-                )
-                cfg['surrounding'] = "Detached"
-
-
-            # reduce to buildings with equivalent surrounding
-            surDict = {"B_Alone": "Detached", "B_N1": "Semi", "B_N2": "Terraced"}
-            self.iwu_bdg.replace({"Code_AttachedNeighbours": surDict}, inplace=True)
-            iwu_sur = self.iwu_bdg[
-                self.iwu_bdg["Code_AttachedNeighbours"] == cfg['surrounding'] 
-            ]
-            
-            # get the most similar building
-            diff_area = abs(iwu_sur["A_C_Ref"] - cfg['a_ref'])
-
-            iwu_idx = diff_area.idxmin()
-
-            iwu_bdg = self.iwu_bdg.xs(iwu_idx).to_dict()
 
         # adaot the shape values from the chosen iwu bdg
         cfg = get_shape(cfg, iwu_bdg, cfg['a_ref'])
 
-        self.IDentries["Shape"] = iwu_idx
+        self.IDentries["Shape"] = iwu_bdg['Code_Building']
         self.IDentries["A_ref"] = cfg["A_ref"]
 
         # integrate roof tilt
@@ -564,69 +598,15 @@ class BuildingConfiguration(object):
 
         return cfg
 
-    def _get_fabric(self, cfg, kwgs):
+    def _get_fabric(self, cfg, kwgs, iwu_bdg):
         """
         Get the fabric of the surrounding walls and derives the thermal conductivity
         """
-        if "ID" in kwgs:
-            self.IDentries["Fabric"] = kwgs["ID"]
-            cfg = get_fabric(cfg, self.iwu_bdg.xs(kwgs["ID"]).to_dict())
-            cfg["buildingYear"] = self.iwu_bdg.xs(kwgs["ID"]).to_dict()[
-                "Year2_Building"
-            ]
-            # drop ID kwg after usage
-            kwgs.pop('ID')
-        else:
-            # get the buildingyear
-            year = None            
-            if kwgs.pop("buildnew"):
-                year = 2020
-            elif "buildingYear" in kwgs:
-                year = kwgs.pop("buildingYear")
-                if kwgs.pop("refurbished"):
-                    year_before = copy.deepcopy(year)
-                    year = min(max(year + 40, 1995), 2020)
-                    warnings.warn(
-                        '"refurbished" just overwrites the buildingyear from '
-                        + str(year_before)
-                        + " to "
-                        + str(year) 
-                        + " for the chose type of fabric"
-                    )
-            else:
-                raise ValueError('"buildingYear" is required as argument')
 
-            cfg["buildingYear"] = year
+        cfg = get_fabric(cfg, iwu_bdg,)
 
-            # get all buildings with this year
-            iwu_year = self.iwu_bdg[
-                (self.iwu_bdg["Year1_Building"] <= year)
-                & (year <= self.iwu_bdg["Year2_Building"])
-            ]
-
-            # first try to get all with similar surrounding
-            surDict = {"B_Alone": "Detached", "B_N1": "Semi", "B_N2": "Terraced"}
-            self.iwu_bdg.replace({"Code_AttachedNeighbours": surDict}, inplace=True)
-            iwu_sur = iwu_year[
-                iwu_year["Code_AttachedNeighbours"] == cfg['surrounding'] 
-            ]
-            # just use those if such a building exist
-            if len(iwu_sur) > 1:
-                iwu_year = iwu_sur
-
-
-            # get the one with the most similar reference area
-            diff_area = abs(
-                iwu_year["A_C_Ref"] * iwu_year["n_Apartment"]
-                - cfg['a_ref']
-            )
-            iwu_idx = diff_area.idxmin()
-            iwu_bdg = iwu_year.xs(iwu_idx).to_dict()
-
-            cfg = get_fabric(cfg, iwu_bdg)
-
-            # set chjosen buildingType as fabric entry
-            self.IDentries["Fabric"] = iwu_idx
+        # set chjosen buildingType as fabric entry
+        self.IDentries["Fabric"] = iwu_bdg["Code_Building"]
 
         # define thermal class
         cfg["thermalClass"] = kwgs.pop("thermalClass")
