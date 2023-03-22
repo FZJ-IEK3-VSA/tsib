@@ -527,22 +527,23 @@ class BuildingConfiguration(object):
                 # calculate full reference area based on appartments
                 query_parameters['a_ref'] = kwgs.get("a_ref_app") * kwgs["n_apartments"]
 
-            # append distance as query criteria
-            iwu_bdgs["a_ref fits"] = abs(iwu_bdgs["A_C_Ref"] - query_parameters['a_ref'] )
+            # append distance as query criteria (reverse distance to get the best fit when sorting the values, take min to avoid division by zero)
+            iwu_bdgs["a_ref diff"] = abs(iwu_bdgs["A_C_Ref"] - query_parameters['a_ref'])
+            iwu_bdgs["a_ref fits"] = 1/iwu_bdgs["a_ref diff"].replace(0, 1e-10)
             sort_by.append("a_ref fits")
 
 
         # sort in the merit order of the query parameters
         iwu_bdgs.sort_values(by=sort_by, inplace=True)
-        # take the first building
-        iwu_bdg = iwu_bdgs.iloc[0, :].to_dict()
+        # take the last building
+        iwu_bdg = iwu_bdgs.iloc[-1, :].to_dict()
         # check if the building fits the query parameters
         for key, value in query_parameters.items():
             
-            if not iwu_bdg[key + ' fits'] != value and key != 'a_ref':
+            if not iwu_bdg[key + ' fits'] and key != 'a_ref':
                 warnings.warn(
                     "Building with ID "
-                    + str(iwu_bdg.name)
+                    + str(iwu_bdg["Code_Building"])
                     + " does not fit the query parameter "
                     + key
                     + " with value "
@@ -771,7 +772,7 @@ def get_shape(bdg, iwu_bdg, a_ref):
     for di in ["North", "East", "South", "West"]:
         bdg["A_Window_" + di] = iwu_bdg["A_Window_" + di] * (ratio ** 0.5)
     bdg["A_Window_Horizontal"] = (
-        iwu_bdg["A_Window_Horizontal"] * ratio / iwu_bdg["n_Storey"]
+        iwu_bdg["A_Window_Horizontal"] * ratio / max(iwu_bdg["n_Storey"],1)
     )
     bdg["A_Window"] = sum(
         bdg["A_Window_" + di] for di in ["North", "East", "South", "West", "Horizontal"]

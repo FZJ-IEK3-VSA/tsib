@@ -72,6 +72,23 @@ def test_configuration_3():
     return
 
 
+def test_configuration_4():
+    # parameterize a building
+    kwgs = {
+        "country": "DE",
+        "n_apartments": 1,
+        "a_ref": 150.,
+        "buildingYear": 1990,
+        "surrounding": "Detached",
+    }
+
+    bdgcfg = tsib.BuildingConfiguration(kwgs)
+
+    test = bdgcfg.getBdgCfg()
+
+    return
+
+
 def test_configuration_other_countries():
     # parameterize a building
     bdgcfg = tsib.BuildingConfiguration(
@@ -88,7 +105,7 @@ def test_configuration_other_countries():
     )
     test = bdgcfg.getBdgCfg()
 
-    assert round(test["q_h_nd"]) == 189.
+    assert round(test["q_h_nd"]) == 227.
 
 def test_surround_weather_error_with_dummy():
     # parameterize a building
