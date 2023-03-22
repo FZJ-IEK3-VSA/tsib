@@ -1,6 +1,6 @@
 pytest:
   stage: test
-  image: python:slim-buster
+  image: python:3.9-slim-buster
   script:
     - pip install --no-cache-dir -e .
     - export SOLVER="highs"
