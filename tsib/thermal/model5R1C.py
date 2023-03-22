@@ -16,7 +16,6 @@ import pyomo.environ as pyomo
 import pyomo.opt as opt
 
 import tsib.thermal.utils as utils
-import tsam.timeseriesaggregation as tsam
 
 
 class Building5R1C(object):
@@ -624,11 +623,8 @@ class Building5R1C(object):
         # get occupancy data and internal heat gains and electricity load
         # evaluate all profiles with 0 in case of time series aggregation
         M.profiles["bQ_ig"] = self.cfg["Q_ig"]
-        M.profilesEval["bQ_ig"] = tsam.MIN_WEIGHT
         M.profiles["bOccNotHome"] = self.cfg["occ_nothome"].values
-        M.profilesEval["bOccNotHome"] = tsam.MIN_WEIGHT
         M.profiles["bOccSleeping"] = self.cfg["occ_sleeping"].values
-        M.profilesEval["bOccSleeping"] = tsam.MIN_WEIGHT
         M.profiles["bElecLoad"] = self.cfg["elecLoad"].values
         M.profilesEval["bElecLoad"] = 1.0
 

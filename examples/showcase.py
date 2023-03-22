@@ -28,7 +28,11 @@
 import copy
 import tsib
 import matplotlib.pyplot as plt
-import tsam.timeseriesaggregation as tsam
+try:
+    import tsam.timeseriesaggregation as tsam
+except:
+    print('Please install tsam first')
+    print('pip install tsam')
 # %matplotlib inline
 
 # %% [markdown]
