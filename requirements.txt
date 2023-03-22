@@ -8,3 +8,4 @@ tsorb
 cdsapi
 tinydb
 openpyxl
+highspy

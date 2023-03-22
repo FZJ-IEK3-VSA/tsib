@@ -16,6 +16,7 @@ import pyomo.environ as pyomo
 import pyomo.opt as opt
 
 import tsib.thermal.utils as utils
+from pyomo.contrib import appsi
 
 
 class Building5R1C(object):
@@ -1362,7 +1363,15 @@ class Building5R1C(object):
         )  # , 'LogToConsole':0
 
         # solve
-        self.opt_results = optprob.solve(M, tee=tee)
+        if solver == "highs":
+            solver = appsi.solvers.Highs()
+            solver.config.stream_solver=True
+            solver.highs_options = {"solver": "ipm",
+                                    "simplex_scale_strategy": "off",}
+            self.opt_results = solver.solve(self.M)
+            print(self.opt_results.termination_condition)
+        else:
+            self.opt_results = optprob.solve(M, tee=tee)
 
         if not M.bMaxLoadViolation.value is None:
             if M.bMaxLoadViolation.value > 0.0:
