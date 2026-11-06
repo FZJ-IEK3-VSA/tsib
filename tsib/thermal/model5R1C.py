@@ -486,6 +486,7 @@ class Building5R1C(object):
             # thermal radiation [kW] (Schuetz et al. 2017 - eq. 13)
             thermal_rad = (
                 M.bH["Walls"][var]
+                * F_r["North"]
                 * M.bConst["h_r"]
                 * M.bConst["R_se"]
                 * M.bConst["delta_T_sky"]
@@ -505,6 +506,7 @@ class Building5R1C(object):
             # thermal radiation (Schuetz et al. 2017 - eq. 13)
             thermal_rad = (
                 M.bH["Roof"][var]
+                * (1 + np.cos(np.radians(rt))) / 2
                 * M.bConst["h_r"]
                 * M.bConst["R_se"]
                 * M.bConst["delta_T_sky"]
